@@ -1,0 +1,39 @@
+1. Create the intersectingLines function
+
+	- create a function that takes as its input the coordinates of 2 lines and does the following:
+	(a) if the lines intersect return { intersecting: true, intersectionPoint: [x, y] }
+	(b) if the lines do not intersect return { intersecting: false, intersectionPoint: null }
+
+2. Detecting shape overlap
+
+	(a) Check each point of object A against of object B for collision.	                                                                                  /**** COMPLETED ****/
+	(b) Create "cross-lines", use the intersectingLines function to check if 2 shapes (convex) are overlapping if the fail check (a)
+	(c) If check (b) fails check to see if cross-lines are intersecting an object using the intersectingLines function
+	(d) If all the above checks fail use the intersectingLines function to check all the sides of object A against all the sides of object B
+	
+	** Note: The above checks are computationally expensive, make sure that each one is used only when absolutely necessary.
+	
+
+3. Calculate accurate repulsion force
+
+	(a) Compare the line between the centroid of object A and it's colliding vertex to every side in object B
+	(b) Once the line from the centroid has been defined turn it into an inward pointing vector and use it as the repulsion vector
+	
+
+4. Friction
+
+	(a) Apply the standard friction formula which takes the following into account.
+		1. the angle of inclination
+		2. reaction force of the surface due to gravity
+	
+	(b) Make sure that the torque that friction exerts on the body is taken into account
+	
+
+5. Toppling
+
+	- Objects behave strangely when toppling, especially the small ones
+	
+	
+6. Sliding when resting on a surface
+
+	- Prevent sliding by making repulsion perpendicular to the colliding side
