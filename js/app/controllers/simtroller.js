@@ -23,14 +23,12 @@ function SimCtrl($scope, $http){
 		});
 	}
 	
-	
 	$scope.update = function(id){
 		$http.put('/scenes/' + id, $scope.simulation)
 		.success(function(response){
 			console.log('update ', response);
 		});
 	}
-	
 	
 	$scope.remove = function(id){
 		$http.delete('/scenes/' + id)
@@ -48,12 +46,10 @@ function SimCtrl($scope, $http){
 		$scope.getAll();
 	}
 	
-	
 	$scope.updateScene = function(id){
 		$scope.simulation = shapeSelection;
 		$scope.update(id);
 	}
-	
 	
 	$scope.getAll = function(){
 		$http.get('/scenes')
@@ -62,20 +58,10 @@ function SimCtrl($scope, $http){
 			$scope.scenes = response;
 		});
 	}
-	
-	$scope.save = function(){
-		$scope.simulation = shapeSelection;
-		$scope.create();
-		
-	}
-	
+
 	$scope.retrieve = function(id){
 		clearAll(wallConfig);
 		$scope.select(id);
-	}
-	
-	$scope.again = function(){
-		console.log('again: ', shapeSelection);
 	}
 	
 	$scope.newScene = function(){

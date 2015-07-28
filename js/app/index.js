@@ -219,17 +219,6 @@ function rotateListStyle(){
 	}
 }
 
-function curveListStyle(){
-	//if(shapes){
-		//$('#line').click(function(){
-			//$('#curveList').css('display', 'none');
-			//console.log('clicked');
-			//line = true;
-		//});
-	//}
-}
-
-
 $(document).ready(function(){
 	$('#bar').hover(function(){
 	if(rotate)
@@ -491,7 +480,6 @@ function mouseMove(){
 function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
 	mouse_down = true;
-	//console.log(line, shapes);
 	if(shapeSelection.curve.curveArray){ console.log(shapeSelection.curve.curveArray.length);}
 	eraser();
 	rotater();
@@ -502,7 +490,6 @@ function mouseDown(){
 	physTest();
 	var points = [1,1];
 	var arrays = [[1,2], [2,2], [3,3]];
-	//closestPoint(points, arrays);
 	if(pencils){startPencil = true;}	
 	}, false)
 }
@@ -510,7 +497,6 @@ function mouseDown(){
 
 function mouseUp(){
 	canvas.addEventListener('mouseup', function(evt){
-	//referencer();
 	mouse_down = false;
 	onSlider = false;
 	startPencil = false;
@@ -520,8 +506,6 @@ function mouseUp(){
 	stopResize();
 	if(reShape){offReshaper();}
 	clearPhysMove();
-	//pointEnd();
-	//lineGen();
 	}, false)
 }
 
@@ -792,7 +776,6 @@ function reShaper(){
 					if(distance(Xpoint - mousePos.x, Ypoint - mousePos.y)< 5){
 						shapeSelection[key][2][i].vertices[j][2] = true;
 						currentlyReshaping = key;
-						//console.log('currentlyReshaping', currentlyReshaping);
 					}
 				}
 			}
@@ -802,9 +785,7 @@ function reShaper(){
 
 
 function offReshaper(){
-	//console.log('offReshaper2');
-	for(key in shapeSelection){
-	//console.log('offReshaper3'); //Very inefficient! this part of the code gets called 7 times on mouseup
+	for(key in shapeSelection){ //Very inefficient! this part of the code gets called 7 times on mouseup
 			var centralDifference = [0,0];
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 			/** this section calculates the coordinates of the centroid **/
@@ -845,7 +826,6 @@ function offReshaper(){
 				shapeSelection[key][2][i].referencer();
 				shapeSelection[key][2][i].findOuterRadius();
 				if(currentlyReshaping == key){
-					//console.log('offReshaper1');
 					shapeSelection[key][2][i].calculateMass(shapeSelection[key][2][i].vertices, shapeSelection[key][2][i].boundingRectangle.width, shapeSelection[key][2][i].boundingRectangle.height, resolution);
 				}
 			}
@@ -897,7 +877,6 @@ function physTest(){
 	for(key in shapeSelection){
 		for(var i = 0; i < shapeSelection[key][2].length; i++){
 			if(physics && dragging && shapeSelection[key][2][i].selected){
-				//console.log('Yay, Physics!!');
 				shapeSelection[key][2][i].angularVelocity = 0;
 			}
 		}
@@ -983,7 +962,6 @@ if(physics)
 										
 										if(shapeSelection[key][2][i].vertices[k][3].collision === false){
 										/*****************************************Body A ***************************************************/
-										//console.log('shapeA Vertices: ' + shapeSelection[key][2][i].vertices, 'shapeB vertices: ' + shapeSelection[unit][2][j].vertices);
 										//finding collision points on A
 										var massA = shapeSelection[key][2][i].mass;
 										var momentOfInertiaA = shapeSelection[key][2][i].momentOfInertia;
@@ -1071,8 +1049,6 @@ if(physics)
 										velocityChangeB_x = -impulse * normalVector_x/massB;
 										velocityChangeB_y = -impulse * normalVector_y/massB;
 										
-																					console.log('restitution: ', restitution, 'dotColVelocityABNormal: ', dotColVelocityABNormal, 'crossVelocityANormal: ', crossVelocityANormal, 'momentOfInertiaB: ', momentOfInertiaB);
-																					
 										angularVelocityChangeA = impulse * crossVelocityANormal/momentOfInertiaA;
 										angularVelocityChangeB = -impulse * crossVelocityBNormal/momentOfInertiaB;
 
@@ -1099,7 +1075,6 @@ if(physics)
 										}
 
 										//move shapes apart immediately after collision to prevent them from sticking
-										//var factor = 2;
 										var factor = 2;
 										shapeSelection[key][2][i].X += velocityChangeA_x * factor;
 										shapeSelection[key][2][i].Y += velocityChangeA_y * factor;
@@ -1108,22 +1083,11 @@ if(physics)
 										shapeSelection[unit][2][j].Y += velocityChangeB_y * factor;
 
 										collisionCounter++;
-										
-										//console.log('collisionCounter1', collisionCounter);
-										//console.log('angularVelocityChangeA '+ angularVelocityChangeA, 'angularVelocityChangeB ' + angularVelocityChangeB);
-										//console.log('velocityChangeA_x ' + velocityChangeA_x, 'velocityChangeB_x ' + velocityChangeB_x);
-										//console.log('velocityChangeA_y ' + velocityChangeA_y, 'velocityChangeB_y ' + velocityChangeB_y);
-										
 										shapeSelection[key][2][i].vertices[k][3] = {collision: true};
 										
 										shapeSelection[unit][2][j].X
 										startPoint = collision_Data.collision_Data.sideOnB.first;
 										endPoint = collision_Data.collision_Data.sideOnB.second;
-										/*shapeBCenter[0] = shapeSelection[unit][2][j].X;//collision_Data.collision_Data.center[0];
-										shapeBCenter[1] = shapeSelection[unit][2][j].Y;//collision_Data.collision_Data.center[1];
-										shapeACenter[0] = shapeSelection[key][2][i].X;
-										shapeACenter[1] = shapeSelection[key][2][i].Y;*/
-
 
 							}
 									if(key != 'wall'){
@@ -1167,10 +1131,6 @@ if(physics)
 											console.log('############################################################################################################  collision_Data.x', collision_Data.collision_Data.x);*/
 										//}
 
-
-										//if(collision_Data.isColInternal){/**** Work In Progress ****/
-											//penDepth *= -1;
-										//}
 										
 										/***************************** Getting the objects to rest on each other ****************************/
 										
@@ -1185,7 +1145,6 @@ if(physics)
 										var perpPointY = collisionPointA_y + shapeSelection[key][2][i].Y;
 										
 										/***  Colliding Side ***/
-										//console.log('collision_Data.collision_Data.gradient', collision_Data.collision_Data.gradient);
 										var gradient = collision_Data.collision_Data.gradient;
 										sidePointX = collision_Data.collision_Data.x;
 										sidePointY = collision_Data.collision_Data.y;
@@ -1193,19 +1152,18 @@ if(physics)
 										
 										shapeA = [];
 										shapeB = [];
-											//for(var s = 0; s < collision_Data.collision_Data.shapeA.length; s++){
+										
 											for(var s = 0; s < shapeSelection[key][2][i].vertices.length; s++){
 												shapeA[s] = [];
 												shapeA[s][0] = shapeSelection[key][2][i].vertices[s][0]; 
 												shapeA[s][1] = shapeSelection[key][2][i].vertices[s][1]; 
 											}
-											//for(var s = 0; s < collision_Data.collision_Data.shapeB.length; s++){
 											for(var s = 0; s < shapeSelection[unit][2][j].vertices.length; s++){	
 												shapeB[s] = [];
 												shapeB[s][0] = shapeSelection[unit][2][j].vertices[s][0]; 
 												shapeB[s][1] = shapeSelection[unit][2][j].vertices[s][1]; 
 											}
-										console.log('shapeA', shapeA)
+											
 										shapeACenter = collision_Data.collision_Data.shapeACenter;
 										shapeBCenter = collision_Data.collision_Data.shapeBCenter;
 										
@@ -1287,14 +1245,11 @@ if(physics)
 										/** repulsiveF is just for blueprint**/
 										repulsiveF[0] = -repulsion[0] * penDepth;
 										repulsiveF[1] = -repulsion[1] * penDepth;	
-										//console.log('repulsiveF_1: ', repulsiveF);//collision_Data.collision_Data.y**
-										//console.log('repulsion: ', repulsion); //distance(collisionPointA_x + shapeSelection[key][2][i].X - collision_Data.collision_Data.x, collisionPointA_y + shapeSelection[key][2][i].Y - collision_Data.collision_Data.y)
-										//console.log('X: ', shapeSelection[key][2][i].X, 'Y: ', shapeSelection[unit][2][i].Y);
+
 										
 									}
 									
 								}else{
-									//console.log('collisionCounter2', collisionCounter);
 									shapeSelection[key][2][i].vertices[k][3] = {collision: false};
 									shapeSelection[key][2][i].contactList = [];
 									}
@@ -1313,7 +1268,7 @@ if(physics)
 							
 							//}
 
-						}//console.log(key, shapeSelection[key][2][i].collision);
+						}
 					}
 				}
 			}
@@ -1338,8 +1293,6 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 	var intersection = [];
 	var _collisionData = {};
 	var gradient = velocity[1]/velocity[0];
-	//console.log('velocity_x: '+ velocity[0], 'velocity_y: '+ velocity[1]);
-	//if (gradient === 1.7976931348623157E+10308){ //if gradient equals infinity
 	if (velocity[0] === 0){ //if gradient equals infinity
 		gradient = 1.7976931348623157E+10;
 	}
@@ -1361,10 +1314,8 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 			
 			if(Math.abs(gradient) >= 100){ // if the gradient is very steep use swap the roles of x and y axis in the calculation to get more accurate values for x and y at the point of intersection
 			
-				//var gradient_1 = velocity[0]/velocity[1];
 				var gradient_1 = 1 / gradient;
 				
-				//var gradient_i_1 = (shapeB[j][0] - shapeB[i][0])/(shapeB[j][1] - shapeB[i][1]);
 				var gradient_i_1 = 1 / gradient_i;
 				
 				var c_1 = collidingVertex[0] - gradient_1 * collidingVertex[1];
@@ -1433,7 +1384,6 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 				}
 			}
 		}
-	//console.log('intersection: ', intersection);
 	
 	var closestPoint1 = [];
 	var closestPoint0 = [];
@@ -1443,14 +1393,8 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 		var vertexDistanceVector = [intersection[n].intersection_x - collidingVertex[0], intersection[n].intersection_y - collidingVertex[1]]; //distance vector between the colliding vertex and the intersection point
 		var _velocity = distance(velocity[0], velocity[1]); // magnitude of the velocity vector
 		var _vertexDistance = distance(vertexDistanceVector[0], vertexDistanceVector[1]);
-		
-		/*console.log('vertexDistanceVector: ' + vertexDistanceVector[0] + ', ' + vertexDistanceVector[1]);
-		console.log('velocity: ' + velocity[0] + ', ' + velocity[1]);
-		console.log('|vertexDistanceVector|: ', distance(vertexDistanceVector[0], vertexDistanceVector[1]));
-		console.log('|velocity|: ', _velocity);*/
-				
-				closestPoint1.push(_vertexDistance);
-				closestPoint0.push(_vertexDistance);
+		closestPoint1.push(_vertexDistance);
+		closestPoint0.push(_vertexDistance);
 		}
 				
 		closestPoint0.sort(function(a, b){return a-b});
@@ -1479,20 +1423,6 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 					break;
 				}
 			}
-				
-			/*console.log('closestPoint0: ', closestPoint0);
-			console.log('closestPoint1: ', closestPoint1);
-			console.log('closestIndex: ', closestIndex);
-			console.log('_collisionData: ', _collisionData);
-			console.log('unitNormal: ', unitNormal);*/
-			
-			//console.log('_collisionData', _collisionData);
-			//console.log('shapeA', shapeA);
-			//console.log('shapeB', shapeB);
-			console.log('shapeA', _collisionData.collision_Data.shapeA);
-			console.log('shapeB', _collisionData.collision_Data.shapeB);
-			console.log('_collisionData', _collisionData);
-			
 	return _collisionData;
 }
 
@@ -1509,27 +1439,14 @@ function normalVector(gradient, translationalVelocity, rotationVelocity){
 	var isColInternal = false;
 	var normalGradient = -1/gradient;
 	var theta = Math.atan(normalGradient);
-	//var normalVector_x = Math.cos(theta);
-	//var normalVector_y = Math.sin(theta);
 	var _normalVector = [Math.cos(theta), Math.sin(theta)];
 												//make sure that the normal vector is pointing outward										
-	/*if(sameDirection(translationalVelocity, _normalVector)){
-		_normalVector[0] *= -1;
-		_normalVector[1] *= -1;
-	}*/
 	
 	if(sameDirection(translationalVelocity, _normalVector)/* && sameDirection(translationalVelocity, rotationVelocity)*/){
 		_normalVector[0] *= -1;
 		_normalVector[1] *= -1;
-		//console.log('#################################################################################################REVERSING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', _normalVector, translationalVelocity);
 		isColInternal = true;
 	}
-	/*if(typeof rotationVelocity != 'undefined'){
-		if(sameDirection(translationalVelocity, rotationVelocity)){
-			_normalVector[0] *= 1;
-			_normalVector[1] *= 1;
-		}
-	}*/
 
 	return [_normalVector[0], _normalVector[1], isColInternal];
 }
@@ -1578,20 +1495,6 @@ function getMousePos(canvas, evt) {       //canvas.addEventListener uses this fu
 		y: evt.clientY - rect.top
 		};
 	}
-
-/*
-function Line(){
-	this.firstLine = false;
-	this.start = [0, 0];
-	this.end = [0, 0];
-}
-
-function lineGen(){
-	line = new Line();
-	lineArray[lineArray.length] = line;
-}
-
-*/
 
 function rotationRecalculation(shape){
 	for(var i = 0; i < shape.pointsArray.length; i++){
@@ -2065,30 +1968,13 @@ function triangleGen(){
 		triangle.calculateMass(triangle.vertices, triangle.boundingRectangle.width, triangle.boundingRectangle.height, resolution);
 	}
 }
-/*
-function Pencil(){
-	var pointsLength = superPencilPoints.length;
-	this.pointsArray = superPencilPoints[pointsLength - 1];
-	this.centroid = [0, 0];
-	this.vertices = [0, 0];
-	this.velocity = [0, 0];
-	this.copy = true;
-	if(stroking){
-		this.stroking = true;
-	}else if(!stroking){
-		this.stroking = false;
-	}
-	var j;
-	if(pencils)centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices 
-	//if(pencils)centralize(this, pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
-}*/
 
 function Pencil(array){
 	var pointsLength = superPencilPoints.length;
 	if(superPencilPoints[0]){
 		this.pointsArray = superPencilPoints[pointsLength - 1];
 	}else{
-		this.pointsArray = array;
+		this.pointsArray = array; //the array parameter is used when loading from mongodb database 
 	}
 	this.centroid = [0, 0];
 	this.vertices = [0, 0];
@@ -2778,14 +2664,6 @@ function chooseColour(){
 	}
 }
 
-function restore(){
-	console.log('index shapeSelection: ' , shapeSelection);
-}
-
-setTimeout(function(){
-	console.log('Timeout shapeSelection: ' , shapeSelection);
-	}, 10000);
-
 wallConfig = {clearWall: false};
 	
 function clearAll(obj){
@@ -2795,7 +2673,6 @@ function clearAll(obj){
 			arrayOfShapes.splice(0, arrayOfShapes.length);
 		}
 	}
-	console.log('All Clear');
 }
 
 /** this function saves simulations to the Mongodb database **/
@@ -2836,7 +2713,7 @@ function loadShapes(sim){
 				shapeSelection[key][2][i][prop] = sim[key][2][i][prop];
 			}
 			
-			if(key == 'wall'){
+			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
 				shapeSelection[key][2][i].mass = 1.7976931348623157E+10308; //infinity
 				shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
 			}
