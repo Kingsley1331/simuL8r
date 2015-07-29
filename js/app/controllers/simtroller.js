@@ -1,13 +1,15 @@
 function SimCtrl($scope, $http){
 	$scope.simulation = shapeSelection;
+	console.log('SimCtrl: ', $scope.simulation);
 	
 	$scope.scenes = {};
 	
 	$scope.create = function(){
-		console.log($scope.simulation);
+		$scope.simulation = shapeSelection;
+		console.log('create: ', $scope.simulation);
 		$http.post('/scenes', $scope.simulation)
 		.success(function(response){
-			console.log('create ', response);
+			console.log('create response ', response);
 		});
 		$scope.getAll();
 	}
@@ -23,7 +25,9 @@ function SimCtrl($scope, $http){
 		});
 	}
 	
-	$scope.update = function(id){
+	$scope.updateScene = function(id){
+		$scope.simulation = shapeSelection;
+		console.log('updateScene: ', $scope.simulation);
 		$http.put('/scenes/' + id, $scope.simulation)
 		.success(function(response){
 			console.log('update ', response);
@@ -46,11 +50,6 @@ function SimCtrl($scope, $http){
 		$scope.getAll();
 	}
 	
-	$scope.updateScene = function(id){
-		$scope.simulation = shapeSelection;
-		$scope.update(id);
-	}
-	
 	$scope.getAll = function(){
 		$http.get('/scenes')
 		.success(function(response){
@@ -67,6 +66,7 @@ function SimCtrl($scope, $http){
 	$scope.newScene = function(){
 		clearAll(wallConfig);
 		$scope.simulation = shapeSelection;
+		console.log('newScene: ', $scope.simulation);
 	}
 	
 }

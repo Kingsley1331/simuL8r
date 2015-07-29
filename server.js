@@ -5,6 +5,7 @@ var databaseName = 'simulations';
 var app = express();
 
 app.use(express.static(__dirname));
+app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json());
 
 app.post('/scenes', function(req, res){ //server listens for post request from client	
@@ -108,6 +109,9 @@ app.get('/scenes/:id', function(req, res){
 	var id = req.params.id;
 	Scenes.findOne({_id : id}, function(err, scenes){  // this is a filter that compares 'id' in the parameter with _id in the database/********* Scenes *********/
 		console.log('update ', scenes);
+		/*Scenes.count({_id: id}, function(err, c){
+			console.log('Count is ' + c);
+		});*/
 		res.send(scenes);
 	 });
 })
