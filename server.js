@@ -19,11 +19,14 @@ app.post('/scenes', function(req, res){ //server listens for post request from c
 		curve: sim.curve,
 		wall: sim.wall
 	});
-	
 	newScene.save(function(err, newScene){
 		if(err){console.error(err)}
 		console.log(err);
 	});
+});
+
+app.post('/upload', function(req, res){
+		console.log(req.body);
 });
 
 app.put('/scenes/:id', function(req, res){

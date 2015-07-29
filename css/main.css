@@ -474,3 +474,10 @@ h2{
 	border-radius: 5px;
 	border: 1px solid black;
 }
+
+#thumbnail{
+	position:absolute;
+	left:1600px;
+	top:0px;
+	z-index:3;
+}

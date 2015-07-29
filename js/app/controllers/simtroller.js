@@ -69,4 +69,20 @@ function SimCtrl($scope, $http){
 		console.log('newScene: ', $scope.simulation);
 	}
 	
+	$scope.saveThumbnail = function(){
+		/*var dataURL = canvas.toDataURL();
+		window.open(dataURL);
+		//image.src = dataURL;
+		//image.src = 'images/thumbnails/one.jpg';*/
+		
+		 var image = canvas.toDataURL('image/png');
+		// var postData = 'canvasData=' + image;
+		postData = {canvasData: image};
+		 $http.post('/upload', postData)
+		 .success(function(response){
+			console.log('successful upload!');
+		});
+		
+	}
+	
 }
