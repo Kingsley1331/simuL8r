@@ -1,12 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var base64image = require('base64-image');
+var path = require('path');
 var databaseName = 'simulations';
+var fs = require('fs');
 var app = express();
 
 app.use(express.static(__dirname));
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json());
+
 
 app.post('/scenes', function(req, res){ //server listens for post request from client	
 	var sim = req.body;                          //the data is stored on the http request body because we're using post
@@ -20,14 +24,49 @@ app.post('/scenes', function(req, res){ //server listens for post request from c
 		wall: sim.wall
 	});
 	newScene.save(function(err, newScene){
-		if(err){console.error(err)}
-		console.log(err);
+		if(err){
+			console.error(err)
+			}
+		console.log(newScene);
+		res.send(newScene);
 	});
 });
 
-app.post('/upload', function(req, res){
-		console.log(req.body);
-});
+/*
+app.post('/thumbnailUrl', function(req, res){ //server listens for post request from client	
+	var url = req.body;                          //the data is stored on the http request body because we're using post
+	var thumbnail = new Thumbnails({
+		thumbnailUrl: 'images/thumbnails/' + url._id + '.png'
+	});
+	thumbnail.save(function(err, thumbnail){
+		if(err){
+			console.error(err)
+			}
+		console.log('thumbnail:', thumbnail);
+		res.send(thumbnail);
+	});
+});	*/
+
+app.post('/thumbnailUrl/:id', function(req, res){ //server listens for post request from client	  
+	var id = req.params.id;
+	var dataObj = {};
+	
+	dataObj[id] = req.body[id];
+
+	/*var thumbnail = new Thumbnails({
+		thumbnailUrl: 'images/thumbnails/' + url._id + '.png'
+	});*/
+	
+	var thumbnail = new Thumbnails(dataObj);
+	
+	thumbnail.save(function(err, thumbnail){
+		if(err){
+			console.error(err)
+			}
+		console.log('thumbnail:', thumbnail);
+		res.send(thumbnail);
+	});
+});	
 
 app.put('/scenes/:id', function(req, res){
 	var id = req.params.id;
@@ -92,6 +131,8 @@ app.delete('/scenes', function(req, res){
 });
 
 
+
+
 var Scenes = mongoose.model('scenes', {
 	circle: Array,
 	square: Array,
@@ -102,11 +143,24 @@ var Scenes = mongoose.model('scenes', {
 	wall: Array
 });
 
+var Thumbnails = mongoose.model('thumbnails', {
+	thumbnailUrl: String
+});
+
+
 app.get('/scenes', function(req, res){ //server listens for get request from client	
 	Scenes.find(function(err, scenes){
 		res.send(scenes);
 	});
 });
+
+app.get('/thumbnails', function(req, res){ //server listens for get request from client	
+	Thumbnails.find(function(err, thumbnails){
+		res.send(thumbnails);
+	});
+});
+
+
 
 app.get('/scenes/:id', function(req, res){
 	var id = req.params.id;
@@ -131,5 +185,41 @@ function startServer(){
 	app.listen(port);
 	console.log('listening on port:' + port);
 }
+
+/**
+An example dataString might look like this ==> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==;"
+the RegExp method used is match, match(/^data:([A-Za-z-+\/]+);base64,(.+)$/) 
+firstly it searches the for the string "data:" with ([A-Za-z-+\/]+) as a filter using ";" as a delimiter
+and then it searches for the string "base64," with (.+)$/ as a filter using "," as a delimiter
+the results are then returned as an array in the matches variable.
+**/
+
+function decodeBase64Image(dataString) {
+  var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  var response = {};
+
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], 'base64');
+  return response;
+}
+
+app.post('/upload', function(req, res){
+	var canvasData = req.body.canvasData;
+	var thumbnailUrl = req.body.id;
+	var imageBuffer = decodeBase64Image(canvasData);
+	console.log(imageBuffer);
+	fs.writeFile(thumbnailUrl, imageBuffer.data, function(err) { 
+		if(err){
+			console.log(err);
+		}else{
+			console.log('file saved');
+		}
+	});
+})
+
 
 //  cd "../../xampp/htdocs/The Project/simuL8r"

@@ -4,6 +4,7 @@
   "description": "Physics Engine",
   "main": "server.js",
   "dependencies": {
+    "base64-image": "^0.1.0",
     "body-parser": "^1.13.2",
     "express": "^4.13.1",
     "mongojs": "^1.0.2",
