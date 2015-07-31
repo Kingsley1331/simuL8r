@@ -72,6 +72,7 @@ app.put('/scenes/:id', function(req, res){
 
 app.delete('/scenes/:id', function(req, res){
 	var id = req.params.id;
+	deleteFile('images/thumbnails/' + id + '.png');
 	Scenes.remove({_id: id}, function(err) {
 		if(err){
 			console.log(err);
@@ -93,6 +94,7 @@ app.delete('/scenes', function(req, res){
 			console.log('All scenes have been removed');
 		}
 	});
+	deleteAllFiles();
 });
 
 
@@ -171,5 +173,28 @@ app.post('/upload', function(req, res){
 	});
 })
 
+
+function deleteFile(path){
+	fs.unlink(path, function(err){
+	   if(err){
+		   return console.error(err);
+	   }
+	   console.log("File deleted successfully!");
+	});
+}
+
+function deleteAllFiles() {
+	fs.readdir('images/thumbnails/', function(err, files){
+	   if(err){
+		   return console.error(err);
+	   }
+	   files.forEach(function(file){
+			console.log(file);
+			if(file != '.gitignore'){
+			   deleteFile('images/thumbnails/' + file);
+		   }
+	   });
+	});
+}
 
 //  cd "../../xampp/htdocs/The Project/simuL8r"
