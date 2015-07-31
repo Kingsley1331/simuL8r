@@ -32,41 +32,6 @@ app.post('/scenes', function(req, res){ //server listens for post request from c
 	});
 });
 
-/*
-app.post('/thumbnailUrl', function(req, res){ //server listens for post request from client	
-	var url = req.body;                          //the data is stored on the http request body because we're using post
-	var thumbnail = new Thumbnails({
-		thumbnailUrl: 'images/thumbnails/' + url._id + '.png'
-	});
-	thumbnail.save(function(err, thumbnail){
-		if(err){
-			console.error(err)
-			}
-		console.log('thumbnail:', thumbnail);
-		res.send(thumbnail);
-	});
-});	*/
-
-app.post('/thumbnailUrl/:id', function(req, res){ //server listens for post request from client	  
-	var id = req.params.id;
-	var dataObj = {};
-	
-	dataObj[id] = req.body[id];
-
-	/*var thumbnail = new Thumbnails({
-		thumbnailUrl: 'images/thumbnails/' + url._id + '.png'
-	});*/
-	
-	var thumbnail = new Thumbnails(dataObj);
-	
-	thumbnail.save(function(err, thumbnail){
-		if(err){
-			console.error(err)
-			}
-		console.log('thumbnail:', thumbnail);
-		res.send(thumbnail);
-	});
-});	
 
 app.put('/scenes/:id', function(req, res){
 	var id = req.params.id;
@@ -131,8 +96,6 @@ app.delete('/scenes', function(req, res){
 });
 
 
-
-
 var Scenes = mongoose.model('scenes', {
 	circle: Array,
 	square: Array,
@@ -143,24 +106,11 @@ var Scenes = mongoose.model('scenes', {
 	wall: Array
 });
 
-var Thumbnails = mongoose.model('thumbnails', {
-	thumbnailUrl: String
-});
-
-
 app.get('/scenes', function(req, res){ //server listens for get request from client	
 	Scenes.find(function(err, scenes){
 		res.send(scenes);
 	});
 });
-
-app.get('/thumbnails', function(req, res){ //server listens for get request from client	
-	Thumbnails.find(function(err, thumbnails){
-		res.send(thumbnails);
-	});
-});
-
-
 
 app.get('/scenes/:id', function(req, res){
 	var id = req.params.id;

@@ -4,7 +4,6 @@ function SimCtrl($scope, $http){
 	
 	$scope.scenes = {};
 	$scope.currentThumbnail = {};//current thumbnail
-	$scope.thumbnailUrls = {};
 	
 	$scope.create = function(){
 		$scope.simulation = shapeSelection;
@@ -12,43 +11,13 @@ function SimCtrl($scope, $http){
 		$http.post('/scenes', $scope.simulation)
 		.success(function(response){
 			//console.log('create response ', response);
-			$scope.currentThumbnail = {};
 			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
-			console.log('thumbnails: ', $scope.currentThumbnail);
 			var thumbnailUrl = $scope.currentThumbnail[response._id];
 			$scope.saveThumbnail(thumbnailUrl);
-			$scope.createThumbnail($scope.currentThumbnail, response._id);
 		});
 		$scope.getAll();
-		$scope.getThumbnails();
 	}
-	
-	/*$scope.createThumbnail = function(thumbnail){
-		console.log('#########################################################',thumbnail)
-		$http.post('/thumbnailUrl', thumbnail)
-		.success(function(response){
-			console.log('current thumbnails: ', response);
-		});
-	}*/
-	
-	$scope.createThumbnail = function(thumbnail, id){
-		console.log('#########################################################',thumbnail,'     ' + id)
-		$http.post('/thumbnailUrl/' + id, thumbnail)
-		.success(function(response){
-			console.log('current thumbnails: ', response);
-		});
-	}
-	
-	$scope.getThumbnails = function(){
-		$http.get('/thumbnails')		
-		.success(function(response){
-			console.log('get thumbnails ', response);
-			$scope.scenes = response;
-		});
-		
-	}
-	
-	
+
 	$scope.select = function(id){
 		$http.get('/scenes/' + id)
 		.success(function(response){
@@ -66,7 +35,11 @@ function SimCtrl($scope, $http){
 		$http.put('/scenes/' + id, $scope.simulation)
 		.success(function(response){
 			console.log('update ', response);
+			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
+			var thumbnailUrl = $scope.currentThumbnail[response._id];
+			$scope.saveThumbnail(thumbnailUrl);
 		});
+		//$scope.getAll();
 	}
 	
 	$scope.remove = function(id){
