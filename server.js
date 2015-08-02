@@ -10,7 +10,9 @@ var app = express();
 app.use(express.static(__dirname));
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json());
-
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.post('/scenes', function(req, res){ //server listens for post request from client	
 	var sim = req.body;                          //the data is stored on the http request body because we're using post

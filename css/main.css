@@ -476,8 +476,6 @@ h2{
 }
 
 #thumbnail{
-	position:absolute;
-	left:1600px;
-	top:0px;
-	z-index:3;
+	width: 75px;
+	border-radius: 5px;
 }
