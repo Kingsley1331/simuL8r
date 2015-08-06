@@ -1,4 +1,16 @@
-function SimCtrl($scope, $http){
+function SignupCtrl($scope, $http){
+	
+	$scope.username = 'Kingsley';
+	$scope.password = '12345';
+	$scope.email = 'k@a.com';
+	$scope.firstname = 'King';
+	$scope.lastname = 'Ankomah';
+	
+	
+	
+	
+	/*
+	
 	$scope.simulation = shapeSelection;
 	console.log('SimCtrl: ', $scope.simulation);
 	
@@ -75,22 +87,6 @@ function SimCtrl($scope, $http){
 		clearAll(wallConfig);
 		$scope.simulation = shapeSelection;
 		console.log('newScene: ', $scope.simulation);
-	}
-	
-	$scope.saveThumbnail = function(id){
-		var image = canvas.toDataURL('image/png');
-		postData = {
-					canvasData: image,
-					id: id
-				};
-		 $http.post('/upload', postData)
-		 .success(function(response){
-			console.log('successful upload!');
-		});
-	}
-	
-	$scope.logout = function(){
-		location.replace('/signout');
-	}
+	}*/
 	
 }

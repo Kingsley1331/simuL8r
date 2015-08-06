@@ -51,7 +51,7 @@ function decodeBase64Image(dataString) {
 
 
 
-module.exports = function(){
+module.exports = function(passport){
 
 	router.post('/scenes', function(req, res){ //server listens for post request from client	
 		var sim = req.body;                          //the data is stored on the http request body because we're using post
@@ -153,7 +153,7 @@ module.exports = function(){
 			});*/
 			res.send(scenes);
 		 });
-	})
+	});
 
 	router.post('/upload', function(req, res){
 		var canvasData = req.body.canvasData;
@@ -167,6 +167,30 @@ module.exports = function(){
 				console.log('file saved');
 			}
 		});
-	})
+	});
+	
+	
+	/* Handle Registration POST */
+	router.post('/signup', passport.authenticate('signup', {
+		successRedirect: '/',
+		failureRedirect: '/signup.html'/*,
+		failureFlash : true*/  
+	}));
+	
+	
+	/* Handle Login POST */
+	router.post('/login', passport.authenticate('login', {
+		successRedirect: '/',
+		failureRedirect: '/login.html',
+		failureFlash : true  
+	}));
+	
+/* Handle Logout */
+	router.get('/signout', function(req, res) {
+		req.logout();
+		res.redirect('/login.html');
+	});	
+	
+	
 	return router;
 }
