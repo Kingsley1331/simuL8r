@@ -8,6 +8,7 @@ module.exports = function(passport){
            passReqToCallback : true
         },
 		function(req, username, password, done) {
+			console.log('logging in');
 			// check the database to see if a user with username exists or not
 			User.findOne({ 'username' :  username },
 				function(error, user){
@@ -28,6 +29,8 @@ module.exports = function(passport){
                     }
                     // User and password both match, return user from done method
                     // which will be treated like success
+					console.log('session: ', req.session);
+					console.log('req.user: ', user);
                     return done(null, user);
 				}
 			);

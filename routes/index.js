@@ -148,9 +148,9 @@ module.exports = function(passport){
 		var id = req.params.id;
 		Scenes.findOne({_id : id}, function(err, scenes){  // this is a filter that compares 'id' in the parameter with _id in the database/********* Scenes *********/
 			console.log('update ', scenes);
-			/*Scenes.count({_id: id}, function(err, c){
+			/* Scenes.count({_id: id}, function(err, c){
 				console.log('Count is ' + c);
-			});*/
+			}); */
 			res.send(scenes);
 		 });
 	});
@@ -174,16 +174,22 @@ module.exports = function(passport){
 	router.post('/signup', passport.authenticate('signup', {
 		successRedirect: '/',
 		failureRedirect: '/signup.html'/*,
-		failureFlash : true*/  
+		failureFlash : true */  
 	}));
 	
 	
 	/* Handle Login POST */
 	router.post('/login', passport.authenticate('login', {
 		successRedirect: '/',
-		failureRedirect: '/login.html',
-		failureFlash : true  
+		failureRedirect: '/login.html'/*,
+		failureFlash : true */  
 	}));
+	
+	/* Handle Login GET */
+	router.get('/', function(req, res){
+		console.log('router req.user: ', req.user);
+		res.send({user: req.user});
+	});
 	
 /* Handle Logout */
 	router.get('/signout', function(req, res) {

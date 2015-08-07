@@ -38,10 +38,17 @@ module.exports = function(passport){
 						//save the user
 						newUser.save(function(error){
 							if(error){
-								console.log('Error in Saving user: ' + err); 
-								throw err;
+								console.log('Error in Saving user: ' + error); 
+								throw error;
 							}
 							console.log('User Registration succesful'); 
+							/*** NEW ***/
+							/*req.login(user, function(error){ 
+								if(error){
+									return next(error)
+								}
+								res.json(user);
+							});*/
 							return done(null, newUser);
 						});
 					}

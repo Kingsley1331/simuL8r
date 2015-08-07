@@ -91,6 +91,7 @@ function SimCtrl($scope, $http){
 	
 	$scope.logout = function(){
 		location.replace('/signout');
+		//$location.url('/signout'); /*** NEW ***/
 	}
 	
 }

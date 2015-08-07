@@ -4,7 +4,9 @@ var mongoose = require('mongoose');
 var base64image = require('base64-image');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var expressSession = require('express-session');
+var multer = require('multer');
 var databaseConfig = require('./database');
 var initPassport = require('./passport/init');
 
@@ -12,10 +14,12 @@ var app = express();
 var routes = require('./routes/index')(passport);
 app.use(express.static(__dirname));
 app.use(bodyParser({limit: '50mb'}));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(bodyParser.json()); // for parsing json from request body
+app.use(bodyParser.urlencoded({ // for parsing application/json
   extended: true
 }));
+/*** NEW ***/
+//app.use(multer()); // for parsing multipart/form-data
 
 //app.use('/', routes);
 
@@ -27,6 +31,7 @@ db.once('open', startServer);
 // Configuring Passport
 // TODO - Why Do we need this key ?
 app.use(expressSession({secret: 'mySecretKey'}));
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -36,9 +41,17 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+	console.log('Login in again');
+   /* var err = new Error('Not Found');
+	if(err){
+		err.status = 404;
+		next(err);
+	}*/
+	if(!req.user){
+		console.log('Login in again');
+		res.redirect('login.html')
+	}
+	next();
 });
 
 
@@ -50,5 +63,3 @@ function startServer(){
 }
 
 //  cd "../../xampp/htdocs/The Project/simuL8r"
-
-
