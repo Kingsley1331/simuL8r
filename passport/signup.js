@@ -24,7 +24,7 @@ module.exports = function(passport){
 					}else{
 						// if there is no user with that username
 						// create the user
-						var newUser = new User();	
+						var newUser = new User();
 						
 						// set the user's local credentials
 						newUser.username = username;
@@ -33,22 +33,24 @@ module.exports = function(passport){
 						newUser.firstName = req.param('firstName');
 						newUser.lastName = req.param('lastName');
 						
-						console.log('here');
-						
 						//save the user
-						newUser.save(function(error){
+						newUser.save(function(error, user2){
 							if(error){
 								console.log('Error in Saving user: ' + error); 
 								throw error;
 							}
 							console.log('User Registration succesful'); 
 							/*** NEW ***/
-							/*req.login(user, function(error){ 
+							req.login(user2, function(error){ 
+								console.log('Logged in');
+								console.log('Logged in user', user2);
 								if(error){
-									return next(error)
+									console.log('error', error);
+									return next(error);
 								}
-								res.json(user);
-							});*/
+								console.log('Logged in!!!');
+								//res.json(user2);
+							});
 							return done(null, newUser);
 						});
 					}

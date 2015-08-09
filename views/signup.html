@@ -1,0 +1,18 @@
+<h1>sign up</h1>
+		<div class="account-wall">
+			<div class='container'>
+				<div class='row'>
+					<div class='col-sm-6 col-md-4 col-md-offset-4'>
+						<form class='form-signin' enctype="multipart/form-data">
+							<input type='text' name='username' class='form-control' placeholder='Username' autofocus ng-model='user.username'/>
+							<input type='password' name='password' class='form-control nomargin' placeholder='Password' ng-model='user.password'/>
+							<input type='email' name='email' class='form-control' placeholder='Email' ng-model='user.email'/>
+							<input type='text' name='firstName' class='form-control' placeholder='First Name' ng-model='user.firstname'/>
+							<input type='text' name='lastName' class='form-control' placeholder='Last Name' ng-model='user.lastname' />
+							<button class='btn btn-lg btn-primary btn-block' type='submit' ng-click='signup(user)'> sign up </button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>

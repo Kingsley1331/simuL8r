@@ -1,4 +1,28 @@
 function SimCtrl($scope, $http){
+
+	$http.get('/loggedin').success(function(user){
+		//$rootScope.errorMessage = null;
+		// User is Authenticated
+		if(user !== '0'){
+			//$rootScope.currentUser = user;
+			//deferred.resolve();
+			return true;
+		}else{// User is Not Authenticated
+			//$rootScope.errorMessage = 'You need to log in.';
+			//deferred.reject();
+			//$location.url('/login');
+			//return false;
+			location.replace('/');
+		}
+	})
+
+
+
+
+
+
+
+
 	$scope.simulation = shapeSelection;
 	console.log('SimCtrl: ', $scope.simulation);
 	
@@ -90,8 +114,29 @@ function SimCtrl($scope, $http){
 	}
 	
 	$scope.logout = function(){
+		console.log('Simtroller logging out!!!');
 		location.replace('/signout');
 		//$location.url('/signout'); /*** NEW ***/
 	}
 	
 }
+/*
+function checkLoggedin($http){
+	//var deferred = $q.defer();
+	$http.get('/loggedin').success(function(user){
+		$rootScope.errorMessage = null;
+		// User is Authenticated
+		if(user !== '0'){
+			//$rootScope.currentUser = user;
+			//deferred.resolve();
+			return true;
+		}else{// User is Not Authenticated
+			//$rootScope.errorMessage = 'You need to log in.';
+			//deferred.reject();
+			//$location.url('/login');
+			return false;
+		}
+	});
+	
+	//return deferred.promise;
+};*/

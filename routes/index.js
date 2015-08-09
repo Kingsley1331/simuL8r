@@ -27,7 +27,6 @@ function deleteAllFiles() {
 	});
 }
 
-
 /**
 An example dataString might look like this ==> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==;"
 the RegExp method used is match, match(/^data:([A-Za-z-+\/]+);base64,(.+)$/) 
@@ -48,7 +47,6 @@ function decodeBase64Image(dataString) {
   response.data = new Buffer(matches[2], 'base64');
   return response;
 }
-
 
 
 module.exports = function(passport){
@@ -172,18 +170,35 @@ module.exports = function(passport){
 	
 	/* Handle Registration POST */
 	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/',
-		failureRedirect: '/signup.html'/*,
+		/*successRedirect: '/',
+		failureRedirect: '/signup.html',
 		failureFlash : true */  
-	}));
-	
+	}), function(req, res){
+		console.log('req.body: ', req.body);
+		console.log('req.user ', req.user);
+		res.json(req.user);
+	});
 	
 	/* Handle Login POST */
 	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/',
-		failureRedirect: '/login.html'/*,
-		failureFlash : true */  
-	}));
+		/*successRedirect: '/main.html',
+		failureRedirect: '/',
+		failureFlash : true  */
+	}), function(req, res){
+		console.log('req.body: ', req.body);
+		console.log('req.user ', req.user);
+		res.json(req.user);
+	});
+	
+	router.post('/logout', function(req, res){
+		req.logOut();
+		//res.send(200);
+		res.redirect('/');
+	});
+
+	router.get('/loggedin', function(req, res){
+		res.send(req.isAuthenticated() ? req.user : '0');
+	});
 	
 	/* Handle Login GET */
 	router.get('/', function(req, res){
@@ -194,9 +209,25 @@ module.exports = function(passport){
 /* Handle Logout */
 	router.get('/signout', function(req, res) {
 		req.logout();
-		res.redirect('/login.html');
-	});	
+		res.redirect('/');
+	});
 	
+	router.get('/simuL8r', function(req, res) {
+		if(req.isAuthenticated()){
+		
+			var filename = "./main.html";
+			res.writeHead(200, {
+				"Content-Type": "text/html"
+			});
+			fs.readFile(filename, "utf8", function(err, data) {
+				if (err) throw err;
+				res.write(data);
+				res.end();
+			});
+		}else{
+			res.redirect('/#/login');
+		}
+	});
 	
 	return router;
 }
