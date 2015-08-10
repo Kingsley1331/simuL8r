@@ -141,8 +141,15 @@ module.exports = function(passport){
 		deleteAllFiles();
 	});
 
-	router.get('/scenes', function(req, res){ //server listens for get request from client	
+	/*router.get('/scenes', function(req, res){ //server listens for get request from client
 		Scenes.find(function(err, scenes){
+			res.send(scenes);
+		});
+	});*/
+	
+	router.get('/scenes/:userID', function(req, res){ //server listens for get request from client
+		var userID = req.params.userID;
+		Scenes.find({userID : userID}, function(err, scenes){
 			res.send(scenes);
 		});
 	});

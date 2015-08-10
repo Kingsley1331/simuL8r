@@ -19,7 +19,7 @@ var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
 var shapeSelection = {
 						userID: null,
-						isPublic: null, //userID && isPublic
+						isPublic: true, //userID && isPublic
 						circle:[false, circleGen, circleArray, 0],
 						square:[false, squareGen, squareArray, 1],
 						triangle:[false, triangleGen, triangleArray, 2],
@@ -2711,9 +2711,11 @@ wallConfig = {clearWall: false};
 	
 function clearAll(obj){
 	for(e in shapeSelection){ //if(unit != 'userID' && unit != 'isPublic'){
-		if(e != 'wall' || e == 'wall' && obj.clearWall && e != 'userID' && e != 'isPublic'){
-			var arrayOfShapes = shapeSelection[e][2];
-			arrayOfShapes.splice(0, arrayOfShapes.length);
+		if(e != 'wall' || e == 'wall' && obj.clearWall){
+			if(e != 'userID' && e != 'isPublic'){
+				var arrayOfShapes = shapeSelection[e][2];
+				arrayOfShapes.splice(0, arrayOfShapes.length);
+			}
 		}
 	}
 }
@@ -2721,44 +2723,46 @@ function clearAll(obj){
 /** this function saves simulations to the Mongodb database **/
 function loadShapes(sim){
 	for(key in sim){
-		for(var i = 0; i < sim[key][2].length; i++){ //populate sim with shapes from e.g circleArray
-			
-			shapeSelection[key][2][i] = {};
-			
-			if(key == 'circle'){
-				var circle = new Circle();
-				shapeSelection[key][2][i] = circle;
-			}
-			if(key == 'square'){
-				var square = new Square();
-				shapeSelection[key][2][i] = square;
-			}
-			if(key == 'triangle'){
-				var triangle = new Triangle();
-				shapeSelection[key][2][i] = triangle;
-			}
-			if(key == 'customShape'){
-				var customShape = new CustomShape();
-				shapeSelection[key][2][i] = customShape;
-			}
-			if(key == 'pencil'){
-				var pointsArray = sim[key][2][i].pointsArray;
-				var pencil = new Pencil(pointsArray);
-				shapeSelection[key][2][i] = pencil;
-			}
-			
-			if(key == 'wall'){
-				var wall = new Walls();
-				shapeSelection[key][2][i] = wall;
-			}
-			
-			for(prop in sim[key][2][i]){ //populate the ith shape (js object) with properties
-				shapeSelection[key][2][i][prop] = sim[key][2][i][prop];
-			}
-			
-			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-				shapeSelection[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-				shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+		if(key != 'userID' && key != 'isPublic'){
+			for(var i = 0; i < sim[key][2].length; i++){ //populate sim with shapes from e.g circleArray
+				
+				shapeSelection[key][2][i] = {};
+				
+				if(key == 'circle'){
+					var circle = new Circle();
+					shapeSelection[key][2][i] = circle;
+				}
+				if(key == 'square'){
+					var square = new Square();
+					shapeSelection[key][2][i] = square;
+				}
+				if(key == 'triangle'){
+					var triangle = new Triangle();
+					shapeSelection[key][2][i] = triangle;
+				}
+				if(key == 'customShape'){
+					var customShape = new CustomShape();
+					shapeSelection[key][2][i] = customShape;
+				}
+				if(key == 'pencil'){
+					var pointsArray = sim[key][2][i].pointsArray;
+					var pencil = new Pencil(pointsArray);
+					shapeSelection[key][2][i] = pencil;
+				}
+				
+				if(key == 'wall'){
+					var wall = new Walls();
+					shapeSelection[key][2][i] = wall;
+				}
+				
+				for(prop in sim[key][2][i]){ //populate the ith shape (js object) with properties
+					shapeSelection[key][2][i][prop] = sim[key][2][i][prop];
+				}
+				
+				if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
+					shapeSelection[key][2][i].mass = 1.7976931348623157E+10308; //infinity
+					shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+				}
 			}
 		}
 	}

@@ -40,8 +40,6 @@ function SimCtrl($scope, $http){
 			$scope.simulation = response;
 			delete response._id;
 			delete response.__v;
-			delete response.userID;
-			delete response.isPublic;
 			console.log('select ', response);
 			loadShapes(response);
 		});
@@ -76,14 +74,23 @@ function SimCtrl($scope, $http){
 		$scope.getAll();
 	}
 	
-	$scope.getAll = function(){
+	/*$scope.getAll = function(){
 		$http.get('/scenes')
 		.success(function(response){
 			console.log('create ', response);
 			$scope.scenes = response;
 		});
+	}*/
+	
+	$scope.getAll = function(){
+		$http.get('/scenes/' + $scope.simulation.userID)
+		.success(function(response){
+			console.log('create ', response);
+			$scope.scenes = response;
+		});
 	}
-
+	
+	
 	$scope.retrieve = function(id){
 		clearAll(wallConfig);
 		$scope.select(id);
@@ -117,6 +124,7 @@ function SimCtrl($scope, $http){
 			// User is Authenticated
 			if(user !== '0'){
 				$scope.currentUser = user;
+				shapeSelection.userID = user._id;
 				console.log('$scope.simulation: ', $scope.simulation);
 				/*$scope.simulation.isPublic = true;
 				$scope.simulation.userID = user._id;*/
