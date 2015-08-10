@@ -114,7 +114,7 @@ module.exports = function(passport){
 	});
 
 
-	router.delete('/scenes/:id', function(req, res){
+	router.delete('/scene/:id', function(req, res){
 		var id = req.params.id;
 		deleteFile('images/thumbnails/' + id + '.png');
 		Scenes.remove({_id: id}, function(err) {
@@ -128,9 +128,10 @@ module.exports = function(passport){
 		});
 	});
 
-
-	router.delete('/scenes', function(req, res){
-		Scenes.remove({}, function(err) {
+	
+	router.delete('/scenes/:userID', function(req, res){
+		var userID = req.params.userID;
+		Scenes.remove({userID : userID}, function(err) {
 			if(err){
 				console.log(err);
 			}
@@ -138,14 +139,18 @@ module.exports = function(passport){
 				console.log('All scenes have been removed');
 			}
 		});
-		deleteAllFiles();
 	});
-
-	/*router.get('/scenes', function(req, res){ //server listens for get request from client
-		Scenes.find(function(err, scenes){
-			res.send(scenes);
+	
+	router.get('/remove/:userID', function(req, res){ //server listens for get request from client
+		var userID = req.params.userID;
+		Scenes.find({userID : userID}, function(err, scenes){
+			for(var i = 0; i < scenes.length; i++){
+			console.log('scenes: ', scenes);
+				deleteFile('images/thumbnails/' + scenes[i]._id + '.png');
+			}
 		});
-	});*/
+	});
+	
 	
 	router.get('/scenes/:userID', function(req, res){ //server listens for get request from client
 		var userID = req.params.userID;
@@ -154,7 +159,7 @@ module.exports = function(passport){
 		});
 	});
 
-	router.get('/scenes/:id', function(req, res){
+	router.get('/scene/:id', function(req, res){
 		var id = req.params.id;
 		Scenes.findOne({_id : id}, function(err, scenes){  // this is a filter that compares 'id' in the parameter with _id in the database/********* Scenes *********/
 			console.log('update ', scenes);

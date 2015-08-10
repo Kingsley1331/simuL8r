@@ -33,7 +33,7 @@ function SimCtrl($scope, $http){
 	}
 
 	$scope.select = function(id){
-		$http.get('/scenes/' + id)
+		$http.get('/scene/' + id)
 		.success(function(response){
 			//console.log('response ', response);
 			//alert(response);
@@ -59,28 +59,20 @@ function SimCtrl($scope, $http){
 	}
 	
 	$scope.remove = function(id){
-		$http.delete('/scenes/' + id)
+		$http.delete('/scene/' + id)
 		.success(function(response){
 			console.log('remove ', response);
 		});
 		$scope.getAll();
 	}
-
+	
 	$scope.removeAll = function(){
-		$http.delete('/scenes')
+		$http.delete('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
 			console.log('All scenes have been removed');
 		});
 		$scope.getAll();
 	}
-	
-	/*$scope.getAll = function(){
-		$http.get('/scenes')
-		.success(function(response){
-			console.log('create ', response);
-			$scope.scenes = response;
-		});
-	}*/
 	
 	$scope.getAll = function(){
 		$http.get('/scenes/' + $scope.simulation.userID)
@@ -89,6 +81,14 @@ function SimCtrl($scope, $http){
 			$scope.scenes = response;
 		});
 	}
+	
+	$scope.removeThumbnail = function(){
+		$http.get('/remove/' + $scope.simulation.userID)
+		.success(function(response){
+			console.log('remove ', response);
+		});
+	}
+	
 	
 	
 	$scope.retrieve = function(id){
