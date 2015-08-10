@@ -9,8 +9,8 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 		.success(function(response){
 			console.log('response: ', response);
 			$rootScope.currentUser = user;
-			//$location.url('/simuL8r');
-			$location.url('/profile');
+			location.replace('/simuL8r');
+			//$location.url('/profile');
 		});
 	}
 });

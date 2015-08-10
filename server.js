@@ -19,24 +19,8 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
-/*** NEW ***/
-//app.use(multer()); // for parsing multipart/form-data
-/*
-app.use(multer({
-  dest: './login'
-}));*/
 
-//app.use(multer({dest:'./login/'}).single('singleInputFileName')); // for parsing multipart/form-data
 app.use(multer({dest:'./login/'}).single('singleInputFileName')); // for parsing multipart/form-data
-
-/*
-app.post('/login', function (req, res) {
-  console.log('req.body: ', req.body);
-  res.json(req.body);
-});*/
-
-
-//app.use('/', routes);
 
 mongoose.connect(databaseConfig.url);
 var db = mongoose.connection;
@@ -54,26 +38,8 @@ app.use(passport.session());
 initPassport(passport);
 app.use('/', routes);
 
-// catch 404 and forward to error handler
-/*
-app.use(function(req, res, next) {
-	console.log('Login in again');
-   /* var err = new Error('Not Found');
-	if(err){
-		err.status = 404;
-		next(err);
-	}
-	if(!req.user){
-		console.log('Login in again');
-		res.redirect('login.html')
-	}
-	next();
-});*/
-
-
 function startServer(){
-	//var port = 3000;
-	var port = 8081;
+	var port = 3000;
 	app.listen(port);
 	console.log('listening on port:' + port);
 }

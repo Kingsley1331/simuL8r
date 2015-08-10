@@ -54,6 +54,8 @@ module.exports = function(passport){
 	router.post('/scenes', function(req, res){ //server listens for post request from client	
 		var sim = req.body;                          //the data is stored on the http request body because we're using post
 		var newScene = new Scenes({
+			userID: sim.userID,
+			isPublic: sim.isPublic,
 			circle: sim.circle,
 			square: sim.square,
 			triangle: sim.triangle,
@@ -77,6 +79,8 @@ module.exports = function(passport){
 		
 		var sim = req.body;
 		var newScene = new Scenes({
+			userID: sim.userID,
+			isPublic: sim.isPublic,
 			circle: sim.circle,
 			square: sim.square,
 			triangle: sim.triangle,
@@ -90,7 +94,8 @@ module.exports = function(passport){
 		  if (err){ 
 			console.log(err);
 			};
-			
+			scene.userID = newScene.userID,
+			scene.isPublic = newScene.isPublic,
 			scene.circle = newScene.circle,
 			scene.square = newScene.square,
 			scene.triangle = newScene.triangle,
@@ -214,7 +219,6 @@ module.exports = function(passport){
 	
 	router.get('/simuL8r', function(req, res) {
 		if(req.isAuthenticated()){
-		
 			var filename = "./main.html";
 			res.writeHead(200, {
 				"Content-Type": "text/html"

@@ -1,28 +1,18 @@
 function SimCtrl($scope, $http){
 
 	$http.get('/loggedin').success(function(user){
-		//$rootScope.errorMessage = null;
 		// User is Authenticated
 		if(user !== '0'){
-			//$rootScope.currentUser = user;
-			//deferred.resolve();
 			return true;
 		}else{// User is Not Authenticated
-			//$rootScope.errorMessage = 'You need to log in.';
-			//deferred.reject();
-			//$location.url('/login');
-			//return false;
 			location.replace('/');
 		}
-	})
-
-
-
-
-
-
-
-
+	});
+	
+	$scope.currentUser = {};
+	
+	
+	
 	$scope.simulation = shapeSelection;
 	console.log('SimCtrl: ', $scope.simulation);
 	
@@ -45,9 +35,13 @@ function SimCtrl($scope, $http){
 	$scope.select = function(id){
 		$http.get('/scenes/' + id)
 		.success(function(response){
+			//console.log('response ', response);
+			//alert(response);
 			$scope.simulation = response;
 			delete response._id;
 			delete response.__v;
+			delete response.userID;
+			delete response.isPublic;
 			console.log('select ', response);
 			loadShapes(response);
 		});
@@ -116,27 +110,21 @@ function SimCtrl($scope, $http){
 	$scope.logout = function(){
 		console.log('Simtroller logging out!!!');
 		location.replace('/signout');
-		//$location.url('/signout'); /*** NEW ***/
 	}
 	
-}
-/*
-function checkLoggedin($http){
-	//var deferred = $q.defer();
-	$http.get('/loggedin').success(function(user){
-		$rootScope.errorMessage = null;
-		// User is Authenticated
-		if(user !== '0'){
-			//$rootScope.currentUser = user;
-			//deferred.resolve();
-			return true;
-		}else{// User is Not Authenticated
-			//$rootScope.errorMessage = 'You need to log in.';
-			//deferred.reject();
-			//$location.url('/login');
-			return false;
-		}
-	});
+	$scope.findCurrentUser = function(){
+		$http.get('/loggedin').success(function(user){
+			// User is Authenticated
+			if(user !== '0'){
+				$scope.currentUser = user;
+				console.log('$scope.simulation: ', $scope.simulation);
+				/*$scope.simulation.isPublic = true;
+				$scope.simulation.userID = user._id;*/
+				return user;
+			}
+		});
+	}
 	
-	//return deferred.promise;
-};*/
+	$scope.findCurrentUser();
+}
+
