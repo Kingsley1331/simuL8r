@@ -77,14 +77,15 @@ function SimCtrl($scope, $http){
 	$scope.getAll = function(){
 		$http.get('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
-			console.log('create ', response);
+			console.log('getAll ', response);
 			$scope.scenes = response;
 		});
 	}
 	
-	$scope.removeThumbnail = function(){
+	$scope.removeAllScenes = function(){
 		$http.get('/remove/' + $scope.simulation.userID)
 		.success(function(response){
+			$scope.removeAll();
 			console.log('remove ', response);
 		});
 	}

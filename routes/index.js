@@ -145,9 +145,10 @@ module.exports = function(passport){
 		var userID = req.params.userID;
 		Scenes.find({userID : userID}, function(err, scenes){
 			for(var i = 0; i < scenes.length; i++){
-			console.log('scenes: ', scenes);
+				console.log('scenes: ', scenes);
 				deleteFile('images/thumbnails/' + scenes[i]._id + '.png');
 			}
+			res.send(scenes);
 		});
 	});
 	
