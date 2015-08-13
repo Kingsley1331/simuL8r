@@ -8,9 +8,22 @@
 							<input type='password' name='password' class='form-control nomargin' placeholder='Password' ng-model='user.password'/>
 							<input type='email' name='email' class='form-control' placeholder='Email' ng-model='user.email'/>
 							<input type='text' name='firstName' class='form-control' placeholder='First Name' ng-model='user.firstname'/>
-							<input type='text' name='lastName' class='form-control' placeholder='Last Name' ng-model='user.lastname' />
+							<input type='text' name='lastName' class='form-control' placeholder='Last Name' ng-model='user.lastname' /><br>
 							<button class='btn btn-lg btn-primary btn-block' type='submit' ng-click='signup(user)'> sign up </button>
 						</form>
+						<br>
+						<!--<a href='/auth/facebook' class = 'btn btn-block btn-social btn-facebook' style="padding-left:20px">
+							<i class = 'fa fa-facebook' style='position: relative'>
+								<span style="position: relative; left:35px">Sign in with Facebook</span>
+							</i>
+						</a>
+						<br>-->
+						<a href='/auth/google' class = 'btn btn-block btn-social btn-google' style="padding-left:20px">
+							<i class = 'fa fa-google-plus' style='position: relative'>
+								<span style="position: relative; left:25px">Sign in with Google</span>
+							</i>
+						</a>
+						
 					</div>
 				</div>
 			</div>
