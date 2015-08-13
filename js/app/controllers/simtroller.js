@@ -11,8 +11,6 @@ function SimCtrl($scope, $http){
 	
 	$scope.currentUser = {};
 	
-	
-	
 	$scope.simulation = shapeSelection;
 	console.log('SimCtrl: ', $scope.simulation);
 	

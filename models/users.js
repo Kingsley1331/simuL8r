@@ -23,6 +23,12 @@ module.exports = mongoose.model('User', {
 		token: String,
 		name: String,
 		email: String
+	},
+	google: {
+		id: String,
+		token: String,
+		name: String,
+		email: String
 	}
 });
 
