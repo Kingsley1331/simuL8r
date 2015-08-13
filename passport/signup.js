@@ -11,7 +11,8 @@ module.exports = function(passport){
 
 			createUser = function(){
 				// check to see if username already exist in the database
-				User.findOne({ 'username' : username }, function(error, user){
+				//User.findOne({ 'username' : username }, function(error, user){
+				User.findOne({ 'local.username' : username }, function(error, user){
 				// In case of any error, return using the done method
 					if (error){
 						console.log('Error in SignUp: ' + error);
@@ -27,11 +28,18 @@ module.exports = function(passport){
 						var newUser = new User();
 						
 						// set the user's local credentials
-						newUser.username = username;
+						/*newUser.username = username;
 						newUser.password = createHash(password);
 						newUser.email = req.param('email');
 						newUser.firstName = req.param('firstName');
-						newUser.lastName = req.param('lastName');
+						newUser.lastName = req.param('lastName');*/
+						
+						newUser.local.username = username;
+						newUser.local.password = createHash(password);
+						newUser.local.email = req.param('email');
+						newUser.local.firstName = req.param('firstName');
+						newUser.local.lastName = req.param('lastName');
+						
 						
 						//save the user
 						newUser.save(function(error, user2){
@@ -39,7 +47,7 @@ module.exports = function(passport){
 								console.log('Error in Saving user: ' + error); 
 								throw error;
 							}
-							console.log('User Registration succesful'); 
+							console.log('User Registration successful'); 
 							/*** NEW ***/
 							req.login(user2, function(error){ 
 								console.log('Logged in');

@@ -10,7 +10,8 @@ module.exports = function(passport){
 		function(req, username, password, done) {
 			console.log('logging in');
 			// check the database to see if a user with username exists or not
-			User.findOne({ 'username' :  username },
+			//User.findOne({ 'username' :  username },
+			User.findOne({ 'local.username' :  username },
 				function(error, user){
 					// In case of any error, return using the done method
 					if(error){
@@ -40,7 +41,8 @@ module.exports = function(passport){
 	);
 		
     var isValidPassword = function(user, password){
-        return bCrypt.compareSync(password, user.password);
+       //return bCrypt.compareSync(password, user.password);
+	   return bCrypt.compareSync(password, user.local.password);
     }	
 	
 }
