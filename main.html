@@ -111,6 +111,7 @@
 		<td><button ng-click='create();'>save scene</button></td>
 		<td><button ng-click='newScene();'>new scene</button></td>
 		<td><button ng-click='logout();'>logout</button></td>
+		<td><button id='browserSave'>brower save</button></td>
 	</tr>
 	<tr ng-repeat='scene in scenes'>
 		<td><img class='thumbnail' ng-src='images/thumbnails/{{scene._id}}.png' id = 'thumbnail'/></td>
@@ -181,5 +182,6 @@
 <script src='js/app/index.js'></script>
 <script src='js/app/blueprint.js'></script>
 <script type="text/javascript" data-pace-options='{ "ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>
+<script src='js/app/indexedDB.js'></script>
 </body>
 </html>

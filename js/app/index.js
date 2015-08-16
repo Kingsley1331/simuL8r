@@ -19,7 +19,7 @@ var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
 var shapeSelection = {
 						userID: null,
-						isPublic: true, //userID && isPublic
+						isPublic: true,
 						circle:[false, circleGen, circleArray, 0],
 						square:[false, squareGen, squareArray, 1],
 						triangle:[false, triangleGen, triangleArray, 2],
