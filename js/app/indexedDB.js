@@ -12,7 +12,8 @@
 	// (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
 	
   // Let us open our database
-	var DBOpenRequest = window.indexedDB.open("simulations2", 4);
+	//var DBOpenRequest = window.indexedDB.open("simulations", 4);
+	var DBOpenRequest = window.indexedDB.open("test", 4);
 	
 	// Gecko-only IndexedDB temp storage option:
 	// var request = window.indexedDB.open("toDoList", {version: 4, storage: "temporary"});
@@ -44,9 +45,7 @@
 		};
 
 		// Create an objectStore for this database
-
-		//var objectStore = db.createObjectStore("scenes", { keyPath: "shapeSelector" });
-		var objectStore = db.createObjectStore("scenes", { keyPath: "circle" });
+		var objectStore = db.createObjectStore("scenes", { keyPath: "userID" });
 
 		// define what data items the objectStore will contain
 		/*
@@ -109,8 +108,59 @@
 		console.log(objectStore.transaction);
 		console.log(objectStore.autoIncrement);
 
+						
+	/*	var shapeSelection2 = {
+								userID: shapeSelection.userID,
+								isPublic: true,
+								circle: shapeSelection.circle[2].vertices,
+								square: shapeSelection.square[2][0].vertices,
+								triangle: shapeSelection.triangle[2][0].vertices,
+								customShape: shapeSelection.customShape[2][0].vertices,
+								pencil: shapeSelection.pencil[2][0].vertices,
+								//curve: shapeSelection.curve[2][0],
+								curve: shapeSelection.triangle[2][0].vertices,
+								wall: shapeSelection.wall[2][0].vertices
+							};*/
+							
+		/*delete shapeSelection.wall[2][0].mass;
+		delete shapeSelection.wall[2][0].momentOfInertia;
+		
+		delete shapeSelection.wall[2][1].mass;
+		delete shapeSelection.wall[2][1].momentOfInertia;
+		
+		delete shapeSelection.wall[2][2].mass;
+		delete shapeSelection.wall[2][2].momentOfInertia;
+		
+		delete shapeSelection.wall[2][3].mass;
+		delete shapeSelection.wall[2][3].momentOfInertia;*/
+		
+		delete shapeSelection.wall[2][0].setOuterRadius;
+		delete shapeSelection.customShape[2][0].setOuterRadius;
+		
+		for(key in shapeSelection.customShape[2][0]){
+			if(typeof shapeSelection.customShape[2][0][key] == 'function'){
+				delete shapeSelection.customShape[2][0][key];
+			}
+		}
+		
+		var shapeSelection2 = {
+								userID: shapeSelection.userID,
+								isPublic: true,
+								circle: shapeSelection.circle[2],
+								square: shapeSelection.square[2],
+								triangle: shapeSelection.triangle[2],
+								customShape: shapeSelection.customShape[2],
+								pencil: shapeSelection.pencil[2],
+								//curve: shapeSelection.curve[2],
+								wall: shapeSelection.wall[2][0]
+							};
+							
+		
+		
 		// add our newItem object to the object store
-		var objectStoreRequest = objectStore.add(shapeSelection);        
+		shapeSelection2.userID = Math.floor(10000000000 * Math.random());
+		//console.log('userID: ', shapeSelection.userID);
+		var objectStoreRequest = objectStore.add(shapeSelection2);        
 		objectStoreRequest.onsuccess = function(event) {
 		  
 			// report the success of our new item going into the database
