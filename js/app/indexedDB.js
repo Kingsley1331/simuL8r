@@ -48,26 +48,6 @@
 		var objectStore = db.createObjectStore("scenes", { keyPath: "userID" });
 
 		// define what data items the objectStore will contain
-		/*
-		objectStore.createIndex("hours", "hours", { unique: false });
-		objectStore.createIndex("minutes", "minutes", { unique: false });
-		objectStore.createIndex("day", "day", { unique: false });
-		objectStore.createIndex("month", "month", { unique: false });
-		objectStore.createIndex("year", "year", { unique: false });
-		objectStore.createIndex("notified", "notified", { unique: false });*/
-
-
-
-		/*objectStore.createIndex(shapeSelector['userID'], shapeSelector['userID'], { unique: false });
-		objectStore.createIndex(shapeSelector['isPublic'], shapeSelector['isPublic'], { unique: false });
-		objectStore.createIndex(shapeSelector['circle'], shapeSelector['circle'], { unique: false });
-		objectStore.createIndex(shapeSelector['square'], shapeSelector['square'], { unique: false });
-		objectStore.createIndex(shapeSelector['triangle'], shapeSelector['triangle'], { unique: false });
-		objectStore.createIndex(shapeSelector['customShape'], shapeSelector['customShape'], { unique: false });
-		objectStore.createIndex(shapeSelector['pencil'], shapeSelector['pencil'], { unique: false });
-		objectStore.createIndex(shapeSelector['curve'], shapeSelector['curve'], { unique: false });
-		objectStore.createIndex(shapeSelector['wall'], shapeSelector['wall'], { unique: false });*/
-		
 		objectStore.createIndex('userID', 'userID', { unique: false });
 		objectStore.createIndex('isPublic', 'isPublic', { unique: false });
 		objectStore.createIndex('circle', 'circle', { unique: false });
@@ -85,7 +65,6 @@
 	browserSave.addEventListener('click', addData , false);
 	
 	function addData(){
-		
 		// open a read/write db transaction, ready for adding the data
 		//var transaction = db.transaction(["scenes"], "readwrite");
 		 var transaction = db.transaction(["scenes"], "readwrite");
@@ -108,64 +87,39 @@
 		console.log(objectStore.transaction);
 		console.log(objectStore.autoIncrement);
 
-						
-	/*	var shapeSelection2 = {
-								userID: shapeSelection.userID,
-								isPublic: true,
-								circle: shapeSelection.circle[2].vertices,
-								square: shapeSelection.square[2][0].vertices,
-								triangle: shapeSelection.triangle[2][0].vertices,
-								customShape: shapeSelection.customShape[2][0].vertices,
-								pencil: shapeSelection.pencil[2][0].vertices,
-								//curve: shapeSelection.curve[2][0],
-								curve: shapeSelection.triangle[2][0].vertices,
-								wall: shapeSelection.wall[2][0].vertices
-							};*/
-							
-		/*delete shapeSelection.wall[2][0].mass;
-		delete shapeSelection.wall[2][0].momentOfInertia;
 		
-		delete shapeSelection.wall[2][1].mass;
-		delete shapeSelection.wall[2][1].momentOfInertia;
+		var scene = {};
 		
-		delete shapeSelection.wall[2][2].mass;
-		delete shapeSelection.wall[2][2].momentOfInertia;
-		
-		delete shapeSelection.wall[2][3].mass;
-		delete shapeSelection.wall[2][3].momentOfInertia;*/
-		
-		delete shapeSelection.wall[2][0].setOuterRadius;
-		delete shapeSelection.customShape[2][0].setOuterRadius;
-		
-		for(key in shapeSelection.customShape[2][0]){
-			if(typeof shapeSelection.customShape[2][0][key] == 'function'){
-				delete shapeSelection.customShape[2][0][key];
+		for(key in shapeSelection){ // for each shape category
+			if(key != 'userID' && key != 'isPublic'){
+				scene[key] = [];
+				for(var i = 0; i < shapeSelection[key][2].length; i++){ // for each shape in the shape array e.g squareArray
+					scene[key][i] = {};
+					for(z in shapeSelection[key][2][i]){ // for the zth property in the ith shape
+						if(typeof shapeSelection[key][2][i][z] != 'function'){
+							scene[key][i][z] = shapeSelection[key][2][i][z]; 
+						}
+					}
+				}
 			}
 		}
-		
-		var shapeSelection2 = {
-								userID: shapeSelection.userID,
-								isPublic: true,
-								circle: shapeSelection.circle[2],
-								square: shapeSelection.square[2],
-								triangle: shapeSelection.triangle[2],
-								customShape: shapeSelection.customShape[2],
-								pencil: shapeSelection.pencil[2],
-								//curve: shapeSelection.curve[2],
-								wall: shapeSelection.wall[2][0]
-							};
-							
-		
-		
+
 		// add our newItem object to the object store
-		shapeSelection2.userID = Math.floor(10000000000 * Math.random());
-		//console.log('userID: ', shapeSelection.userID);
-		var objectStoreRequest = objectStore.add(shapeSelection2);        
+		scene.userID = Math.floor(10000000000 * Math.random());
+		var objectStoreRequest = objectStore.add(scene); 		
 		objectStoreRequest.onsuccess = function(event) {
-		  
 			// report the success of our new item going into the database
 			console.log('New scene added to database'); 
 		};
+	}
+	
+	
+	function displayData(){
+		// Open our object store and then get a cursor list of all the different data items in the IDB to iterate through
+		var objectStore = db.transaction('scenes').objectStore('scenes');
+		objectStore.openCursor().onsuccess = function(event){
+		
+		}
 	}
 	
 })();
