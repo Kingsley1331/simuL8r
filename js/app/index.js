@@ -2767,3 +2767,50 @@ function loadShapes(sim){
 		}
 	}
 }
+
+function loadShapes_idb(sim){
+	for(key in sim){
+		if(key != 'userID' && key != 'isPublic'){
+			for(var i = 0; i < sim[key].length; i++){ //populate sim with shapes from e.g circleArray
+				
+				shapeSelection[key][2][i] = {};
+				
+				if(key == 'circle'){
+					var circle = new Circle();
+					shapeSelection[key][2][i] = circle;
+				}
+				if(key == 'square'){
+					var square = new Square();
+					shapeSelection[key][2][i] = square;
+				}
+				if(key == 'triangle'){
+					var triangle = new Triangle();
+					shapeSelection[key][2][i] = triangle;
+				}
+				if(key == 'customShape'){
+					var customShape = new CustomShape();
+					shapeSelection[key][2][i] = customShape;
+				}
+				if(key == 'pencil'){
+					var pointsArray = sim[key][i].pointsArray;
+					var pencil = new Pencil(pointsArray);
+					shapeSelection[key][2][i] = pencil;
+				}
+				
+				if(key == 'wall'){
+					var wall = new Walls();
+					shapeSelection[key][2][i] = wall;
+				}
+				
+				for(prop in sim[key][i]){ //populate the ith shape (js object) with properties
+					shapeSelection[key][2][i][prop] = sim[key][i][prop];
+				}
+				
+				if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
+					shapeSelection[key][2][i].mass = 1.7976931348623157E+10308; //infinity
+					shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+				}
+			}
+		}
+	}
+}

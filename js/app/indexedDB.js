@@ -1,6 +1,6 @@
 (function() {
 	console.log('indexedDB');
-	
+	var scenes = [];
 	//var newScene = {circle: 'circle', square: 'square', triangle: 'triangle' };
 	
 	// In the following line, you should include the prefixes of implementations you want to test.
@@ -10,6 +10,19 @@
 	window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 	window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 	// (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
+	
+/*if (IDBTransaction){
+    IDBTransaction.READ_WRITE = IDBTransaction.READ_WRITE || 'readwrite';
+    IDBTransaction.READ_ONLY = IDBTransaction.READ_ONLY || 'readonly';
+}*/
+
+if (window.IDBTransaction){
+    window.IDBTransaction.READ_WRITE = window.IDBTransaction.READ_WRITE || 'readwrite';
+    window.IDBTransaction.READ_ONLY = window.IDBTransaction.READ_ONLY || 'readonly';
+}
+
+
+
 	
   // Let us open our database
 	//var DBOpenRequest = window.indexedDB.open("simulations", 4);
@@ -64,6 +77,13 @@
 	var browserSave = document.getElementById('browserSave');
 	browserSave.addEventListener('click', addData , false);
 	
+	var webData = document.getElementById('webData');
+	webData.addEventListener('click', displayData , false);
+	
+	var deleteData = document.getElementById('deleteData');
+	webData.addEventListener('click', deleteData , false);
+	
+	
 	function addData(){
 		// open a read/write db transaction, ready for adding the data
 		//var transaction = db.transaction(["scenes"], "readwrite");
@@ -87,7 +107,6 @@
 		console.log(objectStore.transaction);
 		console.log(objectStore.autoIncrement);
 
-		
 		var scene = {};
 		
 		for(key in shapeSelection){ // for each shape category
@@ -112,14 +131,46 @@
 			console.log('New scene added to database'); 
 		};
 	}
-	
-	
-	function displayData(){
-		// Open our object store and then get a cursor list of all the different data items in the IDB to iterate through
-		var objectStore = db.transaction('scenes').objectStore('scenes');
-		objectStore.openCursor().onsuccess = function(event){
 		
+
+	function displayData(){
+		var request = indexedDB.open('test');
+		request.onsuccess = function(e){
+			idb = e.target.result;
+			var transaction = idb.transaction('scenes', IDBTransaction.READ_ONLY);
+			var objectStore = transaction.objectStore('scenes');
+			objectStore.openCursor().onsuccess = function(event){
+				var cursor = event.target.result;
+				if (cursor){
+					console.log('Cursor data', cursor.value);
+					scenes.push(cursor.value);
+					cursor.continue();
+				}else{
+					console.log('All entries displayed.');
+				}
+				console.log('scenes: ', scenes);
+				loadShapes_idb(scenes[0]);
+			};
 		}
+	}
+	
+
+	function deleteData(){
+		var request = indexedDB.open('test');
+		request.onsuccess = function(e){
+			var idb = e.target.result;
+			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
+			var request = objectStore.delete('464019891');
+		 
+			request.onsuccess = function(ev){
+				console.log(ev);
+			};
+		 
+			request.onerror = function(ev){
+				console.log('Error occured', ev.srcElement.error.message);
+			};
+		}
+		
 	}
 	
 })();
