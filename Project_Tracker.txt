@@ -37,3 +37,29 @@
 6. Sliding when resting on a surface
 
 	- Prevent sliding by making repulsion perpendicular to the colliding side
+	
+	
+/*************************************** indexedDB **************************************/
+
+7. Thumbnails
+
+	(a) Use the canvas canvas.toDataURL function to generate thumbnails for browser-only scenes
+	(b) store the dataUrls at the top level in the database
+	
+	
+8. Refreshing
+
+	- some properties such as velocity are not being refreshed when scenes are reloaded, instead they appear to be retained
+	
+
+9. Deleting and Updating
+
+	- the deletion and updating of scenes does not fully take effect until after the page is reloaded, this is probably due to the fact that the 'scenes' array (initialised in the displayData function) is not in sync with the database
+	
+
+10. MongoDB scenes
+
+	when getting multiple scenes from MongoDB the browser grinds to a halt as it gets overloaded with too much data, this problem can be solved by transferring the data to indexedDB and freeing up the browser.
+
+
+	

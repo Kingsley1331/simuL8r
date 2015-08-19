@@ -2098,6 +2098,8 @@ function draw(){
 		// so it can be saved as an image
 		//document.getElementById('canvasImg').src = dataURL;
 		image.src = dataURL;
+		//console.log(dataURL);
+		window.location.replace(dataURL);
 	}
 }
 
@@ -2769,6 +2771,7 @@ function loadShapes(sim){
 }
 
 function loadShapes_idb(sim){
+console.log('loading!!!');
 	for(key in sim){
 		if(key != 'userID' && key != 'isPublic'){
 			for(var i = 0; i < sim[key].length; i++){ //populate sim with shapes from e.g circleArray

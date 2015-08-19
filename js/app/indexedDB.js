@@ -1,6 +1,7 @@
 (function() {
 	console.log('indexedDB');
 	var scenes = [];
+	var display = true;
 	var sceneTable = document.getElementById('sceneTable');
 	
 	//var newScene = {circle: 'circle', square: 'square', triangle: 'triangle' };
@@ -82,8 +83,8 @@ if (window.IDBTransaction){
 	var webData = document.getElementById('webData');
 	webData.addEventListener('click', displayData , false);
 	
-	/*var removeData = document.getElementById('deleteData');
-	removeData.addEventListener('click', deleteData , false);*/
+	var removeAllScenes = document.getElementById('removeAllScenes');
+	removeAllScenes.addEventListener('click', removeAll , false);
 	
 	
 	function addData(){
@@ -118,7 +119,10 @@ if (window.IDBTransaction){
 		var objectStoreRequest = objectStore.add(scene); 		
 		objectStoreRequest.onsuccess = function(event) {
 			// report the success of our new item going into the database
-			console.log('New scene added to database'); 
+			console.log('New scene added to database');
+			
+			appendTable(null, scene.userID, scene);
+			
 		};
 	}
 		
@@ -141,44 +145,51 @@ if (window.IDBTransaction){
 	}		
 		
 	function displayData(){
-		console.log('sceneTable.children.length', sceneTable.children.length);
-		
-		for(var i = 2; i < sceneTable.children.length; i++){
-		//for(var i = 0; i < sceneTable.childNodes.length; i++){	
-			//sceneTable.children[i].innerHTML = '';
-			sceneTable.removeChild(sceneTable.childNodes[i]);
-		}
+		if(display){
+			console.log('sceneTable.children.length', sceneTable.children.length);
+			console.log('sceneTable.childNodes.length', sceneTable.childNodes.length);
+			for(var i = 3; i < sceneTable.children.length; i++){
+			//for(var i = 0; i < sceneTable.childNodes.length; i++){	
+				//sceneTable.children[i].innerHTML = '';
+				sceneTable.removeChild(sceneTable.childNodes[i]);
+			}
 
-		
-		scenes = [];
-		var request = indexedDB.open('test');
-		request.onsuccess = function(e){
-			var idb = e.target.result;
-			var transaction = idb.transaction('scenes', IDBTransaction.READ_ONLY);
-			var objectStore = transaction.objectStore('scenes');
-			objectStore.openCursor().onsuccess = function(event){
-				var cursor = event.target.result;
-				if (cursor){
-					console.log('Cursor data', cursor.value);
-					console.log('event: ', event);
-					scenes.push(cursor.value);
-					cursor.continue();
-				}else{
-					for(var i = 0; i < scenes.length; i++){
-						appendTable(i);
-					}
-					//console.log('sceneTable.children.length', sceneTable.children.length);
-					console.log('All entries displayed.');
-					console.log('scenes: ', scenes);	
-				}
-
-			};
 			
+			scenes = [];
+			var request = indexedDB.open('test');
+			request.onsuccess = function(e){
+				var idb = e.target.result;
+				var transaction = idb.transaction('scenes', IDBTransaction.READ_ONLY);
+				var objectStore = transaction.objectStore('scenes');
+				objectStore.openCursor().onsuccess = function(event){
+					var cursor = event.target.result;
+					if (cursor){
+						console.log('Cursor data', cursor.value);
+						console.log('event: ', event);
+						scenes.push(cursor.value);
+						cursor.continue();
+					}else{
+						for(var i = 0; i < scenes.length; i++){
+							appendTable(i);
+						}
+						//console.log('sceneTable.children.length', sceneTable.children.length);
+						console.log('All entries displayed.');
+						console.log('scenes: ', scenes);	
+					}
+
+				};
+			}
+			display = false;
 		}
 	}
 	
-	function appendTable(i){
-		var userID = scenes[i].userID;
+	function appendTable(i, id, scene){
+		if(i !== null){
+			var userID = scenes[i].userID;
+		}else if(i === null){
+			var userID = id;
+		}
+		
 		var tr = document.createElement('tr');
 		var displayData = document.createElement('td');
 		var button = document.createElement('button');
@@ -200,10 +211,15 @@ if (window.IDBTransaction){
 		//DeleteAllButton.setAttribute('class', 'browser');
 		
 		
-		button.addEventListener('click', function(){
-			clearAll(wallConfig);
-			loadShapes_idb(scenes[i]);
-		} , false);
+			button.addEventListener('click', function(){
+				clearAll(wallConfig);
+				if(i !== null){
+					loadShapes_idb(scenes[i]);
+				}else if(i === null){
+					loadShapes_idb(scene);
+				}
+			} , false);
+		
 		
 		deleteButton.addEventListener('click', function(){
 			deleteData(userID);
@@ -271,7 +287,7 @@ if (window.IDBTransaction){
 	}
 	
 	//function editRecord(key, newValue){
-	function editRecord(key){	
+	function editRecord(key){
 		var request = indexedDB.open('test');
 		
 		var scene = {};
@@ -312,6 +328,12 @@ if (window.IDBTransaction){
 				console.log('Error occured', ev.srcElement.error.message);
 			};
 		};
+	}
+	
+	function removeAll(){
+		var request = indexedDB.deleteDatabase('test');
+		request.onsuccess = function() { console.log('drop succeeded') };
+		request.onerror = function() { console.log('drop failed') };
 	}
 	
 })();
