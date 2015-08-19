@@ -1,6 +1,8 @@
 (function() {
 	console.log('indexedDB');
 	var scenes = [];
+	var sceneTable = document.getElementById('sceneTable');
+	
 	//var newScene = {circle: 'circle', square: 'square', triangle: 'triangle' };
 	
 	// In the following line, you should include the prefixes of implementations you want to test.
@@ -80,8 +82,8 @@ if (window.IDBTransaction){
 	var webData = document.getElementById('webData');
 	webData.addEventListener('click', displayData , false);
 	
-	var removeData = document.getElementById('deleteData');
-	removeData.addEventListener('click', deleteData , false);
+	/*var removeData = document.getElementById('deleteData');
+	removeData.addEventListener('click', deleteData , false);*/
 	
 	
 	function addData(){
@@ -109,6 +111,19 @@ if (window.IDBTransaction){
 
 		var scene = {};
 		
+		loadDatabase(scene);
+
+		// add our newItem object to the object store
+		scene.userID = Math.floor(10000000000 * Math.random());
+		var objectStoreRequest = objectStore.add(scene); 		
+		objectStoreRequest.onsuccess = function(event) {
+			// report the success of our new item going into the database
+			console.log('New scene added to database'); 
+		};
+	}
+		
+
+	function loadDatabase(scene){
 		for(key in shapeSelection){ // for each shape category
 			if(key != 'userID' && key != 'isPublic'){
 				scene[key] = [];
@@ -122,18 +137,11 @@ if (window.IDBTransaction){
 				}
 			}
 		}
-
-		// add our newItem object to the object store
-		scene.userID = Math.floor(10000000000 * Math.random());
-		var objectStoreRequest = objectStore.add(scene); 		
-		objectStoreRequest.onsuccess = function(event) {
-			// report the success of our new item going into the database
-			console.log('New scene added to database'); 
-		};
-	}
+		return scene;
+	}		
 		
-
 	function displayData(){
+		scenes = [];
 		var request = indexedDB.open('test');
 		request.onsuccess = function(e){
 			var idb = e.target.result;
@@ -147,16 +155,88 @@ if (window.IDBTransaction){
 					scenes.push(cursor.value);
 					cursor.continue();
 				}else{
+					for(var i = 0; i < scenes.length; i++){
+						appendTable(i);
+					}
 					console.log('All entries displayed.');
+					console.log('scenes: ', scenes);	
 				}
-				console.log('scenes: ', scenes);
-				loadShapes_idb(scenes[0]);
+
 			};
+			
 		}
 	}
 	
+	function appendTable(i){
+		var userID = scenes[i].userID;
+		var tr = document.createElement('tr');
+		var displayData = document.createElement('td');
+		var button = document.createElement('button');
+		var deleteButton = document.createElement('button');
+		var updateButton = document.createElement('button');
+		//var DeleteAllButton = document.createElement('button');
+		
+		button.setAttribute('id', userID);
+		button.setAttribute('class', 'browser');
+		button.innerHTML = userID;
+		
+		deleteButton.innerHTML = 'delete';
+		deleteButton.setAttribute('class', 'browser');
+		
+		updateButton.innerHTML = 'update';
+		updateButton.setAttribute('class', 'browser');
+		
+		//DeleteAllButton.innerHTML = 'delete';
+		//DeleteAllButton.setAttribute('class', 'browser');
+		
+		
+		button.addEventListener('click', function(){
+			loadShapes_idb(scenes[i]);
+		} , false);
+		
+		deleteButton.addEventListener('click', function(){
+			deleteData(userID);
+		} , false);
+		
+		updateButton.addEventListener('click', function(){
+			editRecord(userID);
+		} , false);
+		
+		displayData.appendChild(button);
+	
+		//create empty cells and append them to the row
+		var td1 = document.createElement('td');
+		var td2 = document.createElement('td');
+		var td3 = document.createElement('td');
+		var td4 = document.createElement('td');
+		var td5 = document.createElement('td');
+		var td6 = document.createElement('td');
+		var deleteScene = document.createElement('td');
+		var update = document.createElement('td');
+		//var removeAllScenes = document.createElement('td');
+		
+		deleteScene.appendChild(deleteButton);
+		update.appendChild(updateButton);
+		//removeAllScenes.appendChild(DeleteAllButton);
+		
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+		tr.appendChild(td3);
+		tr.appendChild(td4);
+		tr.appendChild(td5);
+		tr.appendChild(td6);	
+		
+		var td6 = document.createElement('td');
+		
+		tr.appendChild(displayData);
+		tr.appendChild(deleteScene);
+		tr.appendChild(update);
+		//tr.appendChild(removeAllScenes);
+		sceneTable.appendChild(tr);
+	}
 
-	function deleteData(){
+
+	function deleteData(id){
 		console.log('one');
 		var request = indexedDB.open('test');
 		request.onsuccess = function(e){
@@ -164,7 +244,8 @@ if (window.IDBTransaction){
 			var idb = e.target.result;
 			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
 			console.log('objectStore: ', objectStore);
-			var request = objectStore.delete(4968626473);
+			//var request = objectStore.delete(6128202404);
+			var request = objectStore.delete(id);
 			//var request = objectStore.delete('keyPath');
 		 
 			request.onsuccess = function(ev){
@@ -178,13 +259,48 @@ if (window.IDBTransaction){
 		
 	}
 	
-	/*function deleteData(){
-		// open a database transaction and delete the task, finding it by the name we retrieved above
-		var transaction = db.transaction(["scenes"], "readwrite");
-		var request = transaction.objectStore("scenes").delete(6674164664);
-		transaction.oncomplete = function() {
-			console.log('successfull deletion');
-		}
-	}*/
+	//function editRecord(key, newValue){
+	function editRecord(key){	
+		var request = indexedDB.open('test');
+		
+		var scene = {};
+		scene = loadDatabase(scene);
+		
+		console.log('loadDatabase: ', scene);
+		
+		request.onsuccess = function(e){
+			var idb = e.target.result;
+			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
+			var request = objectStore.get(key);
+	 
+			request.onsuccess = function(ev){
+				var data = ev.target.result;
+				//var editDivEl = document.querySelector('#editRecordDiv');
+	 
+				if (data === undefined){
+					console.log('Key doesnt exist or has been previouslyremoved');
+					return;
+				}
+	 
+				scene.userID = key;
+				data = scene;
+				var result = objectStore.put(data);
+				console.log('data: ', data);
+				result.onsuccess = function(ev){
+					var sceneName = ev.target.result;
+					console.log('Updated scene: ', ev.target);
+					console.log('Successfully edited key ' + sceneName);
+				};
+	 
+				result.onerror = function(ev){
+					console.log('Error occured', ev.srcElement.error.message);
+				};
+			};
+	 
+			request.onerror = function(ev){
+				console.log('Error occured', ev.srcElement.error.message);
+			};
+		};
+	}
 	
 })();

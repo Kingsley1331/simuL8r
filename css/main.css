@@ -466,16 +466,22 @@ h2{
 #sceneTable{
 	/*color: white;*/
 	position:absolute;
-	left:1100px;
+	left:1060px;
 	top:0px;
 	z-index:3;
 	background-color:lightblue;
 	padding: 10px;
 	border-radius: 5px;
 	border: 1px solid black;
+	
 }
 
 #thumbnail{
 	width: 75px;
 	border-radius: 5px;
+}
+
+.browser{
+	background-color: green;
+	color: white;
 }

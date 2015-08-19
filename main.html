@@ -111,9 +111,11 @@
 		<td><button ng-click='create();'>save scene</button></td>
 		<td><button ng-click='newScene();'>new scene</button></td>
 		<td><button ng-click='logout();'>logout</button></td>
-		<td><button id='browserSave'>brower save</button></td>
-		<td><button id='webData'>display data</button></td>
-		<td><button id='deleteData'>delete data</button></td>
+		<td><button id='browserSave' class='browser'>save</button></td>
+		<td><button id='webData' class='browser'>display</button></td>
+		<td><button id='deleteData' class='browser'>delete</button></td>
+		<td><button id='updateScene' class='browser'>update</button></td>
+		<td><button id='removeAllScenes' class='browser'>remove all</button></td>
 	</tr>
 	<tr ng-repeat='scene in scenes'>
 		<td><img class='thumbnail' ng-src='images/thumbnails/{{scene._id}}.png' id = 'thumbnail'/></td>
