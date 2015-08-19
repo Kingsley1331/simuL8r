@@ -141,6 +141,15 @@ if (window.IDBTransaction){
 	}		
 		
 	function displayData(){
+		console.log('sceneTable.children.length', sceneTable.children.length);
+		
+		for(var i = 2; i < sceneTable.children.length; i++){
+		//for(var i = 0; i < sceneTable.childNodes.length; i++){	
+			//sceneTable.children[i].innerHTML = '';
+			sceneTable.removeChild(sceneTable.childNodes[i]);
+		}
+
+		
 		scenes = [];
 		var request = indexedDB.open('test');
 		request.onsuccess = function(e){
@@ -158,6 +167,7 @@ if (window.IDBTransaction){
 					for(var i = 0; i < scenes.length; i++){
 						appendTable(i);
 					}
+					//console.log('sceneTable.children.length', sceneTable.children.length);
 					console.log('All entries displayed.');
 					console.log('scenes: ', scenes);	
 				}
@@ -191,6 +201,7 @@ if (window.IDBTransaction){
 		
 		
 		button.addEventListener('click', function(){
+			clearAll(wallConfig);
 			loadShapes_idb(scenes[i]);
 		} , false);
 		
