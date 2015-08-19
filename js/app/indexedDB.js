@@ -80,8 +80,8 @@ if (window.IDBTransaction){
 	var webData = document.getElementById('webData');
 	webData.addEventListener('click', displayData , false);
 	
-	var deleteData = document.getElementById('deleteData');
-	webData.addEventListener('click', deleteData , false);
+	var removeData = document.getElementById('deleteData');
+	removeData.addEventListener('click', deleteData , false);
 	
 	
 	function addData(){
@@ -136,13 +136,14 @@ if (window.IDBTransaction){
 	function displayData(){
 		var request = indexedDB.open('test');
 		request.onsuccess = function(e){
-			idb = e.target.result;
+			var idb = e.target.result;
 			var transaction = idb.transaction('scenes', IDBTransaction.READ_ONLY);
 			var objectStore = transaction.objectStore('scenes');
 			objectStore.openCursor().onsuccess = function(event){
 				var cursor = event.target.result;
 				if (cursor){
 					console.log('Cursor data', cursor.value);
+					console.log('event: ', event);
 					scenes.push(cursor.value);
 					cursor.continue();
 				}else{
@@ -156,14 +157,18 @@ if (window.IDBTransaction){
 	
 
 	function deleteData(){
+		console.log('one');
 		var request = indexedDB.open('test');
 		request.onsuccess = function(e){
+			console.log('two');
 			var idb = e.target.result;
 			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
-			var request = objectStore.delete('464019891');
+			console.log('objectStore: ', objectStore);
+			var request = objectStore.delete(4968626473);
+			//var request = objectStore.delete('keyPath');
 		 
 			request.onsuccess = function(ev){
-				console.log(ev);
+				console.log('three-->', ev);
 			};
 		 
 			request.onerror = function(ev){
@@ -172,5 +177,14 @@ if (window.IDBTransaction){
 		}
 		
 	}
+	
+	/*function deleteData(){
+		// open a database transaction and delete the task, finding it by the name we retrieved above
+		var transaction = db.transaction(["scenes"], "readwrite");
+		var request = transaction.objectStore("scenes").delete(6674164664);
+		transaction.oncomplete = function() {
+			console.log('successfull deletion');
+		}
+	}*/
 	
 })();
