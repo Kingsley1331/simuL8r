@@ -1,5 +1,3 @@
-var simApp = angular.module('simApp');
-
 simApp.controller('SimCtrl', function($scope, $http){
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
@@ -126,6 +124,8 @@ simApp.controller('SimCtrl', function($scope, $http){
 				$scope.currentUser = user;
 				shapeSelection.userID = user._id;
 				console.log('$scope.simulation: ', $scope.simulation);
+				console.log('$scope.currentUser: ', $scope.currentUser);
+				console.log('user: ', user);
 				/*$scope.simulation.isPublic = true;
 				$scope.simulation.userID = user._id;*/
 				return user;
