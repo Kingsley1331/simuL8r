@@ -1,5 +1,6 @@
-function SimCtrl($scope, $http){
+var simApp = angular.module('simApp');
 
+simApp.controller('SimCtrl', function($scope, $http){
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
 		if(user !== '0'){
@@ -133,5 +134,5 @@ function SimCtrl($scope, $http){
 	}
 	
 	$scope.findCurrentUser();
-}
 
+});

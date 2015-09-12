@@ -1,20 +1,11 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app='simApp'>
 
 <head>
 
 <!--<link type="text/css" rel="stylesheet" href="css/bootstrap.css"></link>-->
 <link type="text/css" rel="stylesheet" href="css/main.css"></link>
 <link type="text/css" rel="stylesheet" href="css/PACE_Center_Atom.css"></link>
-<script type="text/javascript" src="js/lib/jquery.js"></script>
-<script type="text/javascript" src="js/lib/angular.min_v1.2.15.js"></script>
-<script type="text/javascript" src="js/lib/angular-route.js"></script>
-<script type="text/javascript" src="js/lib/pace.min.js"></script>
-
-<script>
-
-
-</script>
 
 <title> simuL8r </title>
 
@@ -183,9 +174,14 @@
 		<button id='bpApply' onclick='selectAll=true; reset=false; displayData();'>select all</button>
 </div>
 <!--</div>-->
-<script src='js/app/index.js'></script>
-<script src='js/app/blueprint.js'></script>
+<script type="text/javascript" src="js/lib/jquery.js"></script>
+<script type="text/javascript" src="js/lib/angular.min_v1.3.15.js"></script>
+<script type="text/javascript" src="js/app/simApp.js"></script>
+<script type="text/javascript" src="js/lib/angular-route.js"></script>
+<script type="text/javascript" src="js/lib/pace.min.js"></script>
+<script type="text/javascript" src='js/app/index.js'></script>
+<script type="text/javascript" src='js/app/blueprint.js'></script>
 <script type="text/javascript" data-pace-options='{ "ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>
-<script src='js/app/indexedDB.js'></script>
+<script type="text/javascript" src='js/app/indexedDB.js'></script>
 </body>
 </html>
