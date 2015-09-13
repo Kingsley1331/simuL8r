@@ -173,6 +173,12 @@
 		<button id='bpreset' onclick='reset=true; selectAll=false; displayData();'>reset</button>
 		<button id='bpApply' onclick='selectAll=true; reset=false; displayData();'>select all</button>
 </div>
+
+<form id="uploadForm" enctype="multipart/form-data" action="/uploadProfile" method="post">
+	<input type="file" name="profilePic"/>
+	<input type="submit" value="Upload Image" name="submit">
+</form>
+
 <!--</div>-->
 <script type="text/javascript" src="js/lib/jquery.js"></script>
 <script type="text/javascript" src="js/lib/angular.min_v1.3.15.js"></script>

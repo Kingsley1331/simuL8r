@@ -185,6 +185,26 @@ module.exports = function(passport){
 		});
 	});
 	
+	/* Handle profile picture upload POST */
+	/*router.post('/uploadProfile', function(req, res){
+		var filePath = '/images/profiles';
+		var imgData = req.file;
+		fs.writeFile(filePath, imgData, function(err) { 
+			if(err){
+				console.log('Error Mitteilung: ' + err);
+			}else{
+				console.log('file saved');
+			}
+		});
+	});*/
+	/*
+	router.post('/uploadProfile',function(req,res){
+	  if(done==true){
+		console.log(req.files);
+		res.end("File uploaded.");
+	  }
+	});*/
+	
 	
 	/* Handle Registration POST */
 	router.post('/signup', passport.authenticate('signup', {
