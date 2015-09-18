@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Scenes = require('./../models/scenes');
 var fs = require('fs');
-
+var busboy = require('connect-busboy');
 
 function deleteFile(path){
 	fs.unlink(path, function(err){
@@ -185,37 +185,34 @@ module.exports = function(passport){
 		});
 	});
 	
-	/* Handle profile picture upload POST */
-	/*router.post('/uploadProfile', function(req, res){
-		var filePath = '/images/profiles';
-		var imgData = req.file;
-		fs.writeFile(filePath, imgData, function(err) { 
-			if(err){
-				console.log('Error Mitteilung: ' + err);
-			}else{
-				console.log('file saved');
-			}
+	router.post('/uploadProfile', function(req, res){
+		var path = '/images/profiles/',
+			filename = '';
+		// Upload file
+		req.busboy.on('file', function(field, file, name){
+			filename = name;
+			file.pipe(fs.createWriteStream(path + name)); // Save to path 
 		});
-	});*/
-	/*
-	router.post('/uploadProfile',function(req,res){
-	  if(done==true){
-		console.log(req.files);
-		res.end("File uploaded.");
-	  }
-	});*/
-	
+		// Send result back
+		req.busboy.on('finish', function(field){
+			res.json({
+				status: 'ok',
+				file: filename
+			});
+		});
+	});
 	
 	/* Handle Registration POST */
 	router.post('/signup', passport.authenticate('signup', {
-		/*successRedirect: '/',
-		failureRedirect: '/signup.html',
-		failureFlash : true */  
+		//successRedirect: '/',
+		//failureRedirect: '/signup.html',
+		//failureFlash : true 
 	}), function(req, res){
 		console.log('req.body: ', req.body);
 		console.log('req.user ', req.user);
 		res.json(req.user);
 	});
+	
 	
 	/* Handle Login POST */
 	router.post('/login', passport.authenticate('login', {

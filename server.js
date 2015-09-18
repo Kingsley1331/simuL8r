@@ -10,11 +10,12 @@ var multer = require('multer');
 var fs = require('fs');
 var databaseConfig = require('./database');
 var initPassport = require('./passport/init');
-var done = false;
+var busboy = require('connect-busboy');
 
 var app = express();
 var routes = require('./routes/index')(passport);
 //app.use(express.static(__dirname + 'login.html'));
+app.use(busboy({ immediate: true }));
 app.use(express.static(__dirname));
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.json()); // for parsing application/json
@@ -22,59 +23,8 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
   extended: true
 }));
 
-//app.use(multer({dest: './login/'}).single('singleInputFileName')); // for parsing multipart/form-data
-
-/*
-app.use(multer({dest: './images/profiles/',
-	rename: function (fieldname, filename){
-		return filename + Date.now();
-	}
-}).single('singleInputFileName'));*/
-/*
-var type = multer({ dest: './images/profiles/',
-	 rename: function (fieldname, filename) {
-		return filename+Date.now();
-	},
-	onFileUploadStart: function (file) {
-	  console.log(file.originalname + ' is starting ...')
-	},
-	onFileUploadComplete: function (file) {
-	  console.log(file.fieldname + ' uploaded to  ' + file.path)
-	  done=true;
-	}
-}).single('profilePic');*/
-
-
-var type = multer({ dest: './images/profiles/'}).single('profilePic');
-
 app.get('/',function(req,res){
       res.sendfile("main.html");
-});
-/*
-app.post('/uploadProfile',function(req,res){
-  if(done==true){
-	console.log(req.files);
-	res.end("File uploaded.");
-  }
-});*/
-
-app.post('/uploadProfile', type, function (req,res) {
-
-  /** When using the "single"
-      data come in "req.file" regardless of the attribute "name". **/
-  var tmp_path = req.file.path;
-
-  /** The original name of the uploaded file
-      stored in the variable "originalname". **/
-  var target_path = 'images/profiles/' + req.file.originalname;
-
-  /** A better way to copy the uploaded file. **/
-  var src = fs.createReadStream(tmp_path);
-  var dest = fs.createWriteStream(target_path);
-  src.pipe(dest);
- /* src.on('end', function() { res.render('complete'); });
-  src.on('error', function(err) { res.render('error'); });*/
-
 });
 
 app.use(function (err, req, res, next) {
@@ -87,6 +37,26 @@ var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', startServer);
 
+
+
+app.post('/uploadProfile', function(req, res){
+    var path = './images/profiles/',
+        filename = '';
+    // Upload file
+    req.busboy.on('file', function(field, file, name){
+        filename = name;
+        file.pipe(fs.createWriteStream(path + name)); // Save to path 
+    });
+    // Send result back
+    req.busboy.on('finish', function(field){
+        res.json({
+            status: 'ok',
+            file: filename
+        });
+    });
+});
+
+
 // Configuring Passport
 // TODO - Why Do we need this key ?
 app.use(expressSession({secret: 'mySecretKey'}));
@@ -97,6 +67,7 @@ app.use(passport.session());
 // Initialize Passport
 initPassport(passport);
 app.use('/', routes);
+
 
 function startServer(){
 	var port = 3000;

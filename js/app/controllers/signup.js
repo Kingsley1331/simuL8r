@@ -6,6 +6,7 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.user.email = 'k@a3.com';
 	$scope.user.firstname = 'King';
 	$scope.user.lastname = 'Ankomah';
+	$scope.user.profilePic = 'profilePic'; 
 	
 	$scope.signup = function(user){
 		console.log(user);
