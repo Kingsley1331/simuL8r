@@ -1,2 +1,3 @@
-images/thumbnails
+images/thumbnails/ *
+images/profiles/ *
 node_modules
