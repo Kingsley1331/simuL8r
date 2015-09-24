@@ -37,25 +37,26 @@ var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', startServer);
 
-
-
 app.post('/uploadProfile', function(req, res){
-    var path = './images/profiles/',
-        filename = '';
-    // Upload file
-    req.busboy.on('file', function(field, file, name){
-        filename = name;
-        file.pipe(fs.createWriteStream(path + name)); // Save to path 
-    });
-    // Send result back
+	var path = './images/profiles/',
+		filename = '';
+	// Upload file
+	req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {	
+		req.busboy.on('file', function(field, file, name, encoding, mimetype){
+			var pos = mimetype.indexOf('/');
+			mimetype = '.' + mimetype.slice(pos + 1);
+			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 	
+		});	
+	});		
+    // Listen for 'finish' event and redirect to the main app
     req.busboy.on('finish', function(field){
-        res.json({
-            status: 'ok',
-            file: filename
-        });
+		res.redirect('/simuL8r');
+        //res.json({ 
+           // status: 'ok',
+           // file: filename
+       // });
     });
 });
-
 
 // Configuring Passport
 // TODO - Why Do we need this key ?
