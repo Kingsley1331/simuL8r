@@ -1,1 +1,18 @@
 <h1>Welcome to simuL8r</h1>
+
+<button ng-click='showAllUsers()'>show all users</button>
+
+<table style="width:25%">
+	<tr>
+		<th>username</th>
+		<th>email</th>
+		<th>select</th>
+		<th>delete</th>
+	</tr>
+	<tr ng-repeat="user in users">
+		<td>{{user.google.name || user.local.username}}</td>
+		<td>{{user.google.email || user.local.email}}</td>
+		<td><button>select</button></td>
+		<td><button>delete</button></td>
+	</tr>
+</table>

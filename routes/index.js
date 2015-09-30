@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Scenes = require('./../models/scenes');
+var Users = require('./../models/users');
 var fs = require('fs');
 var busboy = require('connect-busboy');
 
@@ -50,7 +51,14 @@ function decodeBase64Image(dataString) {
 
 
 module.exports = function(passport){
-
+	
+	router.get('/users', function(req, res){ //server listens for get request from client
+		//var userID = req.params.userID;
+		Users.find({}, function(err, users){
+			res.send(users);
+		});
+	});
+	
 	router.post('/scenes', function(req, res){ //server listens for post request from client	
 		var sim = req.body;                          //the data is stored on the http request body because we're using post
 		var newScene = new Scenes({

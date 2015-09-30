@@ -4,6 +4,7 @@ app.config(function($routeProvider){
 	$routeProvider
 	.when('/home', {
 		templateUrl: 'views/home.html',
+		controller: 'HomeCtrl',
 		resolve: {
 			loginCheck: checkLoggedin
 		}

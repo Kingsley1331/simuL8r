@@ -2772,6 +2772,7 @@ function loadShapes(sim){
 
 function loadShapes_idb(sim){
 console.log('loading!!!');
+//clearAll(wallConfig);
 	for(key in sim){
 		if(key != 'userID' && key != 'isPublic'){
 			for(var i = 0; i < sim[key].length; i++){ //populate sim with shapes from e.g circleArray

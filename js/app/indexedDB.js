@@ -128,6 +128,7 @@ if (window.IDBTransaction){
 		
 
 	function loadDatabase(scene){
+		clearAll(wallConfig);
 		for(key in shapeSelection){ // for each shape category
 			if(key != 'userID' && key != 'isPublic'){
 				scene[key] = [];
