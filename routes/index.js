@@ -59,6 +59,19 @@ module.exports = function(passport){
 		});
 	});
 	
+	router.delete('/user/:id', function(req, res){
+		var id = req.params.id;
+		Users.remove({_id: id}, function(err){
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log('user ' + id + ' has just been deleted');
+				res.send(id);
+			}
+		});
+	});	
+	
 	router.post('/scenes', function(req, res){ //server listens for post request from client	
 		var sim = req.body;                          //the data is stored on the http request body because we're using post
 		var newScene = new Scenes({
@@ -283,7 +296,7 @@ module.exports = function(passport){
 	// access was granted, the user will be logged in.  Otherwise,
 	// authentication has failed.
 	router.get('/auth/facebook/callback',
-	  passport.authenticate('facebook', { successRedirect: '/simuL8r',
+	  passport.authenticate('facebook', { successRedirect: '/#/home',
 										  failureRedirect: '/login' }));
 	
 	/***** GOOGLE *****/
@@ -297,7 +310,7 @@ module.exports = function(passport){
 	// the process by verifying the assertion.  If valid, the user will be
 	// logged in.  Otherwise, authentication has failed.
 	router.get('/auth/google/callback',
-	  passport.authenticate('google', { successRedirect: '/simuL8r',
+	  passport.authenticate('google', { successRedirect: '/#/home',
 										failureRedirect: '/login' }));
 	
 	

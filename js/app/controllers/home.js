@@ -11,5 +11,13 @@ app.controller('HomeCtrl', function($scope, $http){
 		})
 	}
 
-
+	$scope.remove = function(id){
+		console.log('User id: ',id);
+		$http.delete('/user/' + id)
+		.success(function(response){
+			console.log('delete ', response);
+			$scope.showAllUsers();
+		});
+	}
+	
 });
