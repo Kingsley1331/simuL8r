@@ -39,7 +39,7 @@ module.exports = function(passport){
 						newUser.local.email = req.param('email');
 						newUser.local.firstName = req.param('firstName');
 						newUser.local.lastName = req.param('lastName');
-						
+						newUser.local.profilePic = req.param('profilePic');
 						
 						//save the user
 						newUser.save(function(error, user2){

@@ -11,7 +11,7 @@ var fs = require('fs');
 var databaseConfig = require('./database');
 var initPassport = require('./passport/init');
 var busboy = require('connect-busboy');
-
+var User = require('./models/users');
 var app = express();
 var routes = require('./routes/index')(passport);
 //app.use(express.static(__dirname + 'login.html'));
@@ -45,7 +45,21 @@ app.post('/uploadProfile', function(req, res){
 		req.busboy.on('file', function(field, file, name, encoding, mimetype){
 			var pos = mimetype.indexOf('/');
 			mimetype = '.' + mimetype.slice(pos + 1);
-			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 	
+			console.log('key: ', key, 'value: ', value);
+			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
+				User.findById(value, function(err, user){// value is the user id that was passed into the form
+				if (err){ 
+					console.log('Error#############',err);
+				}
+				user.local.profilePic = 'images/profiles/' + value + mimetype;
+				
+				user.save(function(err) {
+				if (err){
+					console.log(err);
+				};
+					//res.send(user);
+				});
+			});
 		});	
 	});		
     // Listen for 'finish' event and redirect to the main app

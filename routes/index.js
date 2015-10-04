@@ -111,7 +111,7 @@ module.exports = function(passport){
 			wall: sim.wall
 		});
 		
-		Scenes.findById(id, function(err, scene) {
+		Scenes.findById(id, function(err, scene){
 		  if (err){ 
 			console.log(err);
 			};

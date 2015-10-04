@@ -7,13 +7,15 @@
 		<th>email</th>
 		<th>profile pic</th>
 		<th>select</th>
+		<th>update</th>
 		<th>delete</th>
 	</tr>
 	<tr ng-repeat="user in users">
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
-		<td><img src=''></img></td>
+		<td><img width='75' ng-src='{{user.local.profilePic}}'/></td>
 		<td><button type="button" class="btn btn-info">select</button></td>
+		<td><button type="button" class="btn btn-success">update</button></td>
 		<td><button type="button" class="btn btn-danger" ng-click="remove(user._id)">delete</button></td>
 	</tr>
 </table>
