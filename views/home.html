@@ -1,7 +1,7 @@
 <h1>Welcome to simuL8r {{currentUser.local.username || currentUser.google.name}}</h1>
-<button type="button" class="btn btn-primary" ng-click='showAllUsers()'>show all users</button>
+<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show all users</span><span ng-show='showUsers'>hide users</span></button><br></br>
 
-<table style="width:25%">
+<table style="width:25%" ng-show='showUsers'>
 	<tr>
 		<th>username</th>
 		<th>email</th>
@@ -14,8 +14,14 @@
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
 		<td><img width='75' ng-src='{{user.local.profilePic}}'/></td>
-		<td><button type="button" class="btn btn-info">select</button></td>
+		<td><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>
 		<td><button type="button" class="btn btn-success">update</button></td>
 		<td><button type="button" class="btn btn-danger" ng-click="remove(user._id)">delete</button></td>
 	</tr>
 </table>
+
+<div id='selected_user' ng-show='showUser'>
+	<span style='font-weight:bold; font-size: 1.8em;'>{{selectedUser[0].local.username}}</span><br>
+	<img width='200' ng-src='{{selectedUser[0].local.profilePic}}'/><br>
+	Email: {{selectedUser[0].local.email}}
+</div>

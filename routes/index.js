@@ -268,6 +268,14 @@ module.exports = function(passport){
 		res.redirect('/');
 	});
 	
+/* Selected user */
+	router.get('/user/:userID', function(req, res) {
+		var userID = req.params.userID;
+		Users.find({_id : userID}, function(err, user){
+			res.send(user);
+		});
+	});
+	
 	router.get('/simuL8r', function(req, res) {
 		if(req.isAuthenticated()){
 			var filename = "./main.html";
@@ -312,10 +320,6 @@ module.exports = function(passport){
 	router.get('/auth/google/callback',
 	  passport.authenticate('google', { successRedirect: '/#/home',
 										failureRedirect: '/login' }));
-	
-	
-	
-
-	
+		
 	return router;
 }

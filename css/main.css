@@ -466,8 +466,8 @@ h2{
 #sceneTable{
 	/*color: white;*/
 	position:absolute;
-	left:1060px;
-	top:0px;
+	left:0px;
+	top:50px;
 	z-index:3;
 	background-color:lightblue;
 	padding: 10px;
@@ -489,4 +489,10 @@ h2{
 #uploadForm{
 	position: absolute;
 	top: 200px;
+}
+
+#selected_user{
+	position: absolute;
+	left: 0px;
+	top: 200px;	
 }
