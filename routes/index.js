@@ -61,16 +61,44 @@ module.exports = function(passport){
 	
 	router.delete('/user/:id', function(req, res){
 		var id = req.params.id;
-		Users.remove({_id: id}, function(err){
+		
+		Scenes.remove({userID : id}, function(err) {
 			if(err){
 				console.log(err);
 			}
 			else{
-				console.log('user ' + id + ' has just been deleted');
-				res.send(id);
+				console.log('All scenes have been removed from user ' + id);
 			}
+		});	
+		
+		Users.find({_id: id}, function(err, user){
+		console.log('!user[0].google.name ', !user[0].google.name);
+		console.log('user[0].google.name ', user[0].google.name);
+			if(!user[0].google.name){
+				deleteFile(user[0].local.profilePic);
+			}
+			Users.remove({_id: id}, function(err){
+				if(err){
+					console.log(err);
+				}
+				else{
+					console.log('user ' + id + ' has just been deleted');
+					res.send(id);
+				}
+			});
 		});
-	});	
+	});		
+	
+
+		/*Scenes.remove({userID : userID}, function(err) {
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log('All scenes have been removed');
+			}
+		});*/
+
 	
 	router.post('/scenes', function(req, res){ //server listens for post request from client	
 		var sim = req.body;                          //the data is stored on the http request body because we're using post
