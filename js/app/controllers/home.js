@@ -6,18 +6,45 @@ app.controller('HomeCtrl', function($scope, $http){
 	$scope.users = {};
 	$scope.selectedUser = {};
 	
+	$scope.showScenes = false;
+	$scope.showScene = false;
+	$scope.scenes = {};
+	$scope.selectedScene = {};
+	$scope.userNames = {};	
+	
+	$scope.getUsers = function(){
+		$http.get('/users').success(function(users){
+		console.log('users: ', users);
+		$scope.users = users;
+			for(var i = 0; i < users.length; i++){
+				if(users[i].local){
+					$scope.userNames[users[i]._id] = users[i].local.username;
+				}
+				if(users[i].google){
+					$scope.userNames[users[i]._id] = users[i].google.name;
+				}
+			}
+		});
+	}
+	
 	$scope.showAllUsers = function(deletingUser){
 		console.log('getting users');
-		$http.get('/users').success(function(users){
-			console.log('users: ', users);
-			$scope.users = users;
-		});
+		$scope.getUsers();
 		if(deletingUser){
 			$scope.showUsers = !$scope.showUsers;
 		}
 		$scope.showUser = false;	
 	}
 
+	$scope.showAllScenes = function(){
+		$scope.getUsers();
+		$http.get('/scenes')
+		.success(function(response){
+			console.log('getAllScenes ', response);
+			$scope.scenes = response;
+		});
+		$scope.showScenes = !$scope.showScenes;		
+	}	
 	
 	$scope.remove = function(id){
 		var deleteUser = confirm('Are you sure you want to delete this user');

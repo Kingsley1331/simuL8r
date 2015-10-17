@@ -1,7 +1,7 @@
 <h1>Welcome to simuL8r {{currentUser.local.username || currentUser.google.name}}</h1>
 <button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show all users</span><span ng-show='showUsers'>hide users</span></button><br></br>
 
-<table style="width:25%" ng-show='showUsers'>
+<table id="users" style="width:25%" ng-show='showUsers'>
 	<tr>
 		<th>username</th>
 		<th>email</th>
@@ -17,6 +17,22 @@
 		<td><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>
 		<td><button type="button" class="btn btn-success">update</button></td>
 		<td><button type="button" class="btn btn-danger" ng-click="remove(user._id)">delete</button></td>
+	</tr>
+</table>
+
+<button id="scenesButton" type="button" class="btn btn-primary" ng-click='showAllScenes()'><span ng-show='!showScenes'>show all scenes</span><span ng-show='showScenes'>hide scenes</span></button><br></br>
+<table id="scenes" style="width:25%" ng-show='showScenes'>
+	<tr>
+		<th>username</th>
+		<th>name</th>
+		<th>thumbnail</th>
+		<th>select</th>
+	</tr>
+	<tr ng-repeat="scene in scenes">
+		<td>{{userNames[scene.userID]}}</td>
+		<td>{{}}</td>
+		<td><img width='75' ng-src='images/thumbnails/{{scene._id}}.png'/></td>
+		<td><button type="button" class="btn btn-info" ng-click=''>select</button></td>
 	</tr>
 </table>
 

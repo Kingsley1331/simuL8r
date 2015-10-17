@@ -70,7 +70,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 		});
 		$scope.getAll();
 	}
-	
+		
 	$scope.getAll = function(){
 		$http.get('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
@@ -86,7 +86,6 @@ simApp.controller('SimCtrl', function($scope, $http){
 			console.log('remove ', response);
 		});
 	}
-	
 	
 	
 	$scope.retrieve = function(id){
