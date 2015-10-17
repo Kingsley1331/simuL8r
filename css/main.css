@@ -514,3 +514,8 @@ h2{
 	left: 700px;
 	top: 130px;
 }
+
+.navbar-right{
+	position: absolute;
+	right: 20px;
+}

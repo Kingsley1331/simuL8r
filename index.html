@@ -6,10 +6,12 @@
 		<link type="text/css" rel="stylesheet" href="css/main.css"></link>
 		<link type="text/css" rel="stylesheet" href="css/bootstrap-social.css"></link>
 		<link type="text/css" rel="stylesheet" href="css/font-awesome/css/font-awesome.css"></link>
+		<script src="js/lib/jquery.js"></script>
+		<script src="js/lib/bootstrap.min.js"></script>		
 		<title>Login</title>
 	</head>
 	<body ng-app='simuL8r'>
-		<nav ng-controller='NavCtrl'>
+		<!--<nav ng-controller='NavCtrl' nav class="navbar navbar-default">
 			<a href='#home'>home</a> |
 			<span ng-show={{'!currentUser'}}>
 				<a href='#login'>login</a> |
@@ -20,8 +22,29 @@
 				<a href='#logout' ng-click='logout()'>logout</a> |
 			</span>
 			<a href='simuL8r'>simuL8r</a>
-		</nav>
-		{{currentUser}}
+		</nav>-->
+		
+		<nav ng-controller='NavCtrl' class="navbar navbar-inverse">
+			<div>
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand"><span style='font-weight: bold; font-size: 1.5em;'>simuL8r</span></a>
+					</div>
+					<ul class="nav navbar-nav">
+						<li ng-if='loggedin'><a href='#home'><i class="fa fa-home"></i> home</a></li>
+						<li ng-if='loggedin'><a href='#profile'><i class="fa fa-user"></i> profile</a></li>
+						<li ng-if='loggedin'><a href='simuL8r'><i class="fa fa-steam-square"></i> make a scene!</a></li>
+					<ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li ng-if='!loggedin'><a href='#signup'><i class="fa fa-user"></i> sign up</a></li>
+						<li ng-if='!loggedin'><a href='#login'><i class="fa fa-sign-in"></i> login</a></li>
+						<li ng-if='loggedin'><a href='#logout' ng-click='logout()'><i class="fa fa-sign-out"></i> logout</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>		
+		
+		<!--{{currentUser}}-->
 		<div ng-view></div>
 		<script type="text/javascript" src="js/lib/jquery.js"></script>
 		<script type="text/javascript" src="js/lib/angular.min_v1.3.15.js"></script>

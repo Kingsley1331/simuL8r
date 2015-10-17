@@ -1,6 +1,6 @@
-app.controller('HomeCtrl', function($scope, $http){
+app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	console.log('HomeCtrl');
-	
+	$rootScope.loggedin = true;
 	$scope.showUsers = false;
 	$scope.showUser = false;
 	$scope.users = {};
