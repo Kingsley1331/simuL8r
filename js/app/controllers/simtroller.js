@@ -35,6 +35,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 			//console.log('response ', response);
 			//alert(response);
 			$scope.simulation = response;
+			console.log('id ', id);//5623da04562dc2301b1a1e74
 			delete response._id;
 			delete response.__v;
 			console.log('select ', response);
@@ -131,6 +132,15 @@ simApp.controller('SimCtrl', function($scope, $http){
 			}
 		});
 	}
+	
+	console.log('getQueryVariable: ', getQueryVariable('id'));
+	
+	$scope.loadSelectedScene = function(){
+		id = getQueryVariable('id');
+		$scope.select(id);
+	}
+	
+	$scope.loadSelectedScene();
 	
 	$scope.findCurrentUser();
 

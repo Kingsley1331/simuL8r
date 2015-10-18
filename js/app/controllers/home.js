@@ -7,8 +7,9 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.selectedUser = {};
 	
 	$scope.showScenes = false;
-	$scope.showScene = false;
+	$scope.showSelectedUserScenes = false;
 	$scope.scenes = {};
+	$scope.selectedUserScenes = {};
 	$scope.selectedScene = {};
 	$scope.userNames = {};	
 	
@@ -28,6 +29,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	}
 	
 	$scope.showAllUsers = function(deletingUser){
+		$scope.showSelectedUserScenes = false;
 		console.log('getting users');
 		$scope.getUsers();
 		if(deletingUser){
@@ -60,6 +62,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	}
 
 	$scope.selectUser = function(id){
+		showSelectedUserScenes = false;
 		$http.get('/user/' + id)
 		.success(function(response){
 			//console.log('selected user', response);
@@ -74,5 +77,19 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 			$scope.showUser = true;			 
 			console.log('$scope.selectedUser: ', $scope.selectedUser);
 		});
+	}
+	
+	$scope.getSelectUserScenes = function(id){
+		//$scope.selectedUserScenes = {};
+		$http.get('/scenes/' + id)
+		.success(function(response){
+			console.log('getSelectUserScenes ', response);
+			$scope.selectedUserScenes = response;
+		});
+		$scope.showSelectedUserScenes = !$scope.showSelectedUserScenes;
+	}	
+	
+	$scope.getSelectedScene = function(id){
+		location.replace('/simuL8r?id=' + id);		
 	}
 });

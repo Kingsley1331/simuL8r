@@ -1,6 +1,5 @@
-<h1>Welcome to simuL8r {{currentUser.local.username || currentUser.google.name}}</h1>
-<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show all users</span><span ng-show='showUsers'>hide users</span></button><br></br>
-
+<h1>Welcome {{currentUser.local.username || currentUser.google.name}}</h1>
+<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show users</span><span ng-show='showUsers'>hide users</span></button><br></br>
 <table id="users" style="width:25%" ng-show='showUsers'>
 	<tr>
 		<th>username</th>
@@ -20,7 +19,7 @@
 	</tr>
 </table>
 
-<button id="scenesButton" type="button" class="btn btn-primary" ng-click='showAllScenes()'><span ng-show='!showScenes'>show all scenes</span><span ng-show='showScenes'>hide scenes</span></button><br></br>
+<button id="scenesButton" type="button" class="btn btn-primary" ng-click='showAllScenes()'><span ng-show='!showScenes'>show scenes</span><span ng-show='showScenes'>hide scenes</span></button><br></br>
 <table id="scenes" style="width:25%" ng-show='showScenes'>
 	<tr>
 		<th>username</th>
@@ -31,13 +30,24 @@
 	<tr ng-repeat="scene in scenes">
 		<td>{{userNames[scene.userID]}}</td>
 		<td>{{}}</td>
-		<td><img width='75' ng-src='images/thumbnails/{{scene._id}}.png'/></td>
+		<td ng-click='getSelectedScene(scene._id)' ><img width='75' ng-src='images/thumbnails/{{scene._id}}.png'/></td>
 		<td><button type="button" class="btn btn-info" ng-click=''>select</button></td>
 	</tr>
 </table>
 
 <div id='selected_user' ng-show='showUser'>
-	<span style='font-weight:bold; font-size: 1.8em;'>{{selectedUser[0].local.username}}</span><br>
+	<span style='font-weight:bold; font-size: 1.8em;'>{{selectedUser[0].local.username || selectedUser[0].google.name}}</span><br>
 	<img width='200' ng-src='{{selectedUser[0].local.profilePic}}'/><br>
 	Email: {{selectedUser[0].local.email}}
+<button id="selectedUserScenesButton" type="button" class="btn btn-primary" ng-click="getSelectUserScenes(selectedUser[0]._id)"><span ng-show='!showSelectedUserScenes'>see {{selectedUser[0].local.username || selectedUser[0].google.name}}'s scenes</span><span ng-show='showSelectedUserScenes'>hide scenes</span></button><br></br>
+<table id="selectedUserTable" style="width:25%" ng-show='showSelectedUserScenes'>
+	<tr>
+		<th>name</th>
+		<th>thumbnail</th>
+	</tr>
+	<tr ng-repeat="scene in selectedUserScenes">
+		<td>{{scene.name}}</td>
+		<td ng-click='getSelectedScene(scene._id)'><img width='75' ng-src='images/thumbnails/{{scene._id}}.png'/></td>
+	</tr>
+</table>
 </div>

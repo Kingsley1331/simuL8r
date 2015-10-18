@@ -519,3 +519,13 @@ h2{
 	position: absolute;
 	right: 20px;
 }
+#selectedUserScenesButton{
+	position: relative;
+	top: 50px;
+	left: -120px;
+}
+
+#selectedUserTable{
+	position: relative;
+	top: 50px;
+}
