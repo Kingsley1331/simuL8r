@@ -1,4 +1,4 @@
-<h1>Welcome {{currentUser.local.username || currentUser.google.name}}</h1>
+<h1>Welcome {{currentUser.local.username || currentUser.google.name}} <img id='profilePic' width='150' ng-src='{{currentUser.local.profilePic}}'/></h1>
 <button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show users</span><span ng-show='showUsers'>hide users</span></button><br></br>
 <table id="users" style="width:25%" ng-show='showUsers'>
 	<tr>
