@@ -1,6 +1,7 @@
 body {
 	margin: 0px;
 	padding: 0px;
+	background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar { display: none; }
@@ -466,9 +467,9 @@ h2{
 #sceneTable{
 	/*color: white;*/
 	position:absolute;
-	left:0px;
-	top:50px;
-	z-index:3;
+	left: 0px;
+	top: 150px;
+	z-index: 3;
 	background-color:lightblue;
 	padding: 10px;
 	border-radius: 5px;
@@ -495,6 +496,7 @@ h2{
 	position: absolute;
 	left: 0px;
 	top: 200px;	
+	margin-top: 50px;
 }
 
 #scenes{
@@ -531,5 +533,18 @@ h2{
 }
 
 #profilePic{
-	border-radius: 10px
+	border-radius: ;
+}
+
+#container{
+	overflow: scroll;
+}
+
+#profileUser{
+	position: relative;
+	left: 25px;
+}
+
+#profilePagePic{
+	border-radius: 50px;
 }
