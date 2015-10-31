@@ -87,7 +87,7 @@ if (window.IDBTransaction){
 	removeAllScenes.addEventListener('click', removeAll , false);
 	
 	
-	function addData(){
+	function addData(){		
 		// open a read/write db transaction, ready for adding the data
 		//var transaction = db.transaction(["scenes"], "readwrite");
 		 var transaction = db.transaction(["scenes"], "readwrite");
@@ -113,7 +113,7 @@ if (window.IDBTransaction){
 		var scene = {};
 		
 		loadDatabase(scene);
-
+		console.log('checking scene: ', scene);
 		// add our newItem object to the object store
 		scene.userID = Math.floor(10000000000 * Math.random());
 		var objectStoreRequest = objectStore.add(scene); 		
@@ -128,7 +128,6 @@ if (window.IDBTransaction){
 		
 
 	function loadDatabase(scene){
-		clearAll(wallConfig);
 		for(key in shapeSelection){ // for each shape category
 			if(key != 'userID' && key != 'isPublic'){
 				scene[key] = [];
