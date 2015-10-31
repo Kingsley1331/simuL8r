@@ -3,6 +3,7 @@
 	<img width='300' ng-src='{{currentUser.local.profilePic}}'id='profilePagePic'/><br>
 	Email: {{currentUser.local.email}}
 <button id="selectedUserScenesButton" type="button" class="btn btn-primary" ng-click="getUserScenes(currentUser._id)"><span ng-show='!showUserScenes'>show scenes</span><span ng-show='showUserScenes'>hide scenes</span></button><br></br>
+<button id='deleteButton' type="button" class="btn btn-danger" ng-click="remove(currentUser._id)">delete</button>
 <table id="selectedUserTable" style="width:25%" ng-show='showUserScenes'>
 	<tr>
 		<th>name</th>

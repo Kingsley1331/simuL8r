@@ -211,11 +211,11 @@ module.exports = function(passport){
 	});
 
 	router.get('/scenes', function(req, res){ //server listens for get request from client
-		var userID = req.params.userID;
+		//var userID = req.params.userID;
 		Scenes.find({}, function(err, scenes){
 			res.send(scenes);
 		});
-	});	
+	});
 	
 	router.get('/scene/:id', function(req, res){
 		var id = req.params.id;

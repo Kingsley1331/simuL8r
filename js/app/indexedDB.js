@@ -153,9 +153,7 @@ if (window.IDBTransaction){
 			//for(var i = 0; i < sceneTable.childNodes.length; i++){	
 				//sceneTable.children[i].innerHTML = '';
 				sceneTable.removeChild(sceneTable.childNodes[i]);
-			}
-
-			
+			}			
 			scenes = [];
 			var request = indexedDB.open('test');
 			request.onsuccess = function(e){
@@ -267,24 +265,26 @@ if (window.IDBTransaction){
 	function deleteData(id){
 		console.log('one');
 		var request = indexedDB.open('test');
-		request.onsuccess = function(e){
-			console.log('two');
-			var idb = e.target.result;
-			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
-			console.log('objectStore: ', objectStore);
-			//var request = objectStore.delete(6128202404);
-			var request = objectStore.delete(id);
-			//var request = objectStore.delete('keyPath');
-		 
-			request.onsuccess = function(ev){
-				console.log('three-->', ev);
-			};
-		 
-			request.onerror = function(ev){
-				console.log('Error occured', ev.srcElement.error.message);
-			};
+		var deleteScene = confirm('Are you sure you want to delete this scene?');
+		if(deleteScene){
+			request.onsuccess = function(e){
+				console.log('two');
+				var idb = e.target.result;
+				var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
+				console.log('objectStore: ', objectStore);
+				//var request = objectStore.delete(6128202404);
+				var request = objectStore.delete(id);
+				//var request = objectStore.delete('keyPath');
+			 
+				request.onsuccess = function(ev){
+					console.log('three-->', ev);
+				};
+			 
+				request.onerror = function(ev){
+					console.log('Error occured', ev.srcElement.error.message);
+				};
+			}
 		}
-		
 	}
 	
 	//function editRecord(key, newValue){
@@ -332,9 +332,12 @@ if (window.IDBTransaction){
 	}
 	
 	function removeAll(){
-		var request = indexedDB.deleteDatabase('test');
-		request.onsuccess = function() { console.log('drop succeeded') };
-		request.onerror = function() { console.log('drop failed') };
+		var deleteScene = confirm('Are you sure you want to delete all scenes?');
+		if(deleteScene){
+			var request = indexedDB.deleteDatabase('test');
+			request.onsuccess = function() { console.log('drop succeeded') };
+			request.onerror = function() { console.log('drop failed') };
+		}
 	}
 	
 })();

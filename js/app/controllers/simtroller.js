@@ -57,11 +57,14 @@ simApp.controller('SimCtrl', function($scope, $http){
 	}
 	
 	$scope.remove = function(id){
-		$http.delete('/scene/' + id)
-		.success(function(response){
-			console.log('remove ', response);
-		});
-		$scope.getAll();
+		var deleteScene = confirm('Are you sure you want to delete this scene?');
+		if (deleteScene){
+			$http.delete('/scene/' + id)
+			.success(function(response){
+				console.log('remove ', response);
+			});
+			$scope.getAll();
+		}
 	}
 	
 	$scope.removeAll = function(){
@@ -73,6 +76,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 	}
 		
 	$scope.getAll = function(){
+		$scope.simulation = shapeSelection;
 		$http.get('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
 			console.log('getAll ', response);
@@ -81,11 +85,14 @@ simApp.controller('SimCtrl', function($scope, $http){
 	}
 	
 	$scope.removeAllScenes = function(){
-		$http.get('/remove/' + $scope.simulation.userID)
-		.success(function(response){
-			$scope.removeAll();
-			console.log('remove ', response);
-		});
+		var deleteAllScenes = confirm('Are you sure you want to delete all scenes?');
+		if(deleteAllScenes){
+			$http.get('/remove/' + $scope.simulation.userID)
+			.success(function(response){
+				$scope.removeAll();
+				console.log('remove ', response);
+			});
+		}
 	}
 	
 	

@@ -548,3 +548,8 @@ h2{
 #profilePagePic{
 	border-radius: 50px;
 }
+
+#deleteButton{
+	position: relative;
+	left: 150px;
+}

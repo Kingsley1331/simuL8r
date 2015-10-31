@@ -9,7 +9,7 @@
 		<th>update</th>
 		<th>delete</th>
 	</tr>
-	<tr ng-repeat="user in users">
+	<tr ng-repeat="user in users" ng-if='user.google.name != currentUser.google.name || user.local.username != currentUser.local.username'>
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
 		<td><img width='75' ng-src='{{user.local.profilePic}}'/></td>
