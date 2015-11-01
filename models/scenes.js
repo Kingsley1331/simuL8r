@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 module.exports = mongoose.model('scenes', {
+	name: String,
 	userID: String,
 	isPublic: Boolean,
 	circle: Array,

@@ -17,8 +17,15 @@ simApp.controller('SimCtrl', function($scope, $http){
 	$scope.currentThumbnail = {};//current thumbnail
 	
 	$scope.create = function(){
+		var name = prompt('please choose a name for this scene', 'untitled');
+		
+		if(name !== ''){
+			shapeSelection.name = name;
+		}
+		
 		$scope.simulation = shapeSelection;
 		console.log('create: ', $scope.simulation);
+
 		$http.post('/scenes', $scope.simulation)
 		.success(function(response){
 			//console.log('create response ', response);
@@ -39,21 +46,29 @@ simApp.controller('SimCtrl', function($scope, $http){
 			delete response._id;
 			delete response.__v;
 			console.log('select ', response);
+			shapeSelection.name = response.name;
 			loadShapes(response);
 		});
 	}
 	
 	$scope.updateScene = function(id){
+		//console.log('shapeSelection.name+++++++++++++++++++++++++++++++++++++++++++++++++++++++++', shapeSelection.name)
+		var name = prompt("add or update this scene's name", shapeSelection.name);			
+		if(!shapeSelection.name){
+			shapeSelection.name = 'untitled';
+		}
+		shapeSelection.name = name;	
 		$scope.simulation = shapeSelection;
-		console.log('updateScene: ', $scope.simulation);
-		$http.put('/scenes/' + id, $scope.simulation)
-		.success(function(response){
-			console.log('update ', response);
-			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
-			var thumbnailUrl = $scope.currentThumbnail[response._id];
-			$scope.saveThumbnail(thumbnailUrl);
-		});
-		//$scope.getAll();
+		console.log('updateScene: ', $scope.simulation);			
+				$http.put('/scenes/' + id, $scope.simulation)
+				.success(function(response){
+					console.log('update ', response);
+					$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
+					var thumbnailUrl = $scope.currentThumbnail[response._id];
+					$scope.saveThumbnail(thumbnailUrl);
+					$scope.getAll();
+				});
+
 	}
 	
 	$scope.remove = function(id){
@@ -142,6 +157,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 	
 	console.log('getQueryVariable: ', getQueryVariable('id'));
 	
+	// load scenes from id value in querystring
 	$scope.loadSelectedScene = function(){
 		id = getQueryVariable('id');
 		$scope.select(id);

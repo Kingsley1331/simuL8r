@@ -103,6 +103,7 @@ module.exports = function(passport){
 	router.post('/scenes', function(req, res){ //server listens for post request from client	
 		var sim = req.body;                          //the data is stored on the http request body because we're using post
 		var newScene = new Scenes({
+			name: sim.name,
 			userID: sim.userID,
 			isPublic: sim.isPublic,
 			circle: sim.circle,
@@ -128,6 +129,7 @@ module.exports = function(passport){
 		
 		var sim = req.body;
 		var newScene = new Scenes({
+			name: sim.name,
 			userID: sim.userID,
 			isPublic: sim.isPublic,
 			circle: sim.circle,
@@ -143,6 +145,7 @@ module.exports = function(passport){
 		  if (err){ 
 			console.log(err);
 			};
+			scene.name = newScene.name,
 			scene.userID = newScene.userID,
 			scene.isPublic = newScene.isPublic,
 			scene.circle = newScene.circle,

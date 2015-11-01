@@ -532,6 +532,10 @@ h2{
 	top: 50px;
 }
 
+#selectedUserTable td{
+	width: 1000px;
+}
+
 #profilePic{
 	border-radius: ;
 }

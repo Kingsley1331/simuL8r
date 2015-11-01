@@ -18,6 +18,7 @@ var dragging = false;var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || 
 var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
 var shapeSelection = {
+						name: 'untitled',
 						userID: null,
 						isPublic: true,
 						circle:[false, circleGen, circleArray, 0],
@@ -449,7 +450,7 @@ function animate(){
 function locate(){
 	onObject = false; // is onOject necessary now that select exists
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 			if(shapeSelection[key][2][i].selected){
 				onObject = true;
@@ -544,7 +545,7 @@ function selectPencilStroke(){
 
 function drag(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic') {
+		if(key != 'userID' && key != 'isPublic' && key != 'name') {
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(shapeSelection[key][2][i].selected && !dragging && !onReshape && !onSlider && !shapeSelection[key][2][i].expand && !shapeSelection[key][2][i].v_expand && !shapeSelection[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
 					offcenter[0] = shapeSelection[key][2][i].X - mousePos.x;
@@ -564,7 +565,7 @@ function drag(){
 function selected(){
 	select = false;
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				shapeSelection[key][2][i].selected = false; 
 				
@@ -587,7 +588,7 @@ function selected(){
 
 function drop(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic') {
+		if(key != 'userID' && key != 'isPublic' && key != 'name') {
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				dragging = false;
 				shapeSelection[key][2][i].dragging = false;
@@ -601,7 +602,7 @@ function drop(){
 
 function eraser(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(shapeSelection[key][2][i].selected && deletion){
 					shapeSelection[key][2].splice(i,1);
@@ -615,13 +616,13 @@ function eraser(){
 
 function reSizer(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic') {
+		if(key != 'userID' && key != 'isPublic' && key != 'name') {
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(shapeSelection[key][2][i].selected && reSize){
 				/** make sure that only one object at time can be resized **/
 				shapeSelection[key][2][i].expandBox = true;
 				for(keys in shapeSelection){
-					if(keys != 'userID' && keys != 'isPublic'){
+					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
 						for(var j = 0; j < shapeSelection[keys][2].length; j++){
 							if(key != keys){
 								shapeSelection[keys][2][j].expandBox = false;}
@@ -683,7 +684,7 @@ function reSizer(){
 
 function stopResize(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic') {
+		if(key != 'userID' && key != 'isPublic' && key != 'name') {
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				expand = false;
 				//if(shapeSelection[key][2][i].v_expand || shapeSelection[key][2][i].h_expand){shapeSelection[key][2][i].stretchRadius = shapeSelection[key][2][i].radius;}
@@ -738,7 +739,7 @@ function rotateListSwitch(key, vertices, i){
 
 function rotater(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(shapeSelection[key][2][i].selected && rotate){
 					shapeSelection[key][2][i].referencer();
@@ -752,7 +753,7 @@ function rotater(){
 				
 				// makes sure that only one object at time can be rotated 
 				for(keys in shapeSelection){
-					if(keys != 'userID' && keys != 'isPublic'){
+					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
 						for(var j = 0; j < shapeSelection[keys][2].length; j++){
 							if(key != keys){
 								shapeSelection[keys][2][j].rotationLine = false;
@@ -778,7 +779,7 @@ function rotater(){
 	
 function referencer(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(distance(shapeSelection[key][2][i].slider[0] - mousePos.x, shapeSelection[key][2][i].slider[1] - mousePos.y) <= 100000){
 					shapeSelection[key][2][i].referencer();
@@ -792,7 +793,7 @@ function referencer(){
 function reShaper(){
 	if(reShape){
 		for(key in shapeSelection){
-			if(key != 'userID' && key != 'isPublic'){
+			if(key != 'userID' && key != 'isPublic' && key != 'name'){
 				for(var i = 0; i < shapeSelection[key][2].length; i++){
 					for(var j = 0; j < shapeSelection[key][2][i].vertices.length; j++){
 						shapeSelection[key][2][i].vertices[j][2] = false;
@@ -812,7 +813,7 @@ function reShaper(){
 
 function offReshaper(){
 	for(key in shapeSelection){ //Very inefficient! this part of the code gets called 7 times on mouseup
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 				var centralDifference = [0,0];
 				for(var i = 0; i < shapeSelection[key][2].length; i++){
 				/** this section calculates the coordinates of the centroid **/
@@ -863,7 +864,7 @@ function offReshaper(){
 
 function copyShape(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(copy && copying && shapeSelection[key][2][i].selected){
 					copying = false;
@@ -905,7 +906,7 @@ function copyShape(){
 
 function physTest(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(physics && dragging && shapeSelection[key][2][i].selected){
 					shapeSelection[key][2][i].angularVelocity = 0;
@@ -917,7 +918,7 @@ function physTest(){
 
 function physMove(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(physics && dragging && shapeSelection[key][2][i].selected){
 					physicsObject.throwArray.push([mousePos.x, mousePos.y]);
@@ -956,7 +957,7 @@ function physMove(){
 
 function clearPhysMove(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(physics && shapeSelection[key][2][i].selected){
 					physicsObject.throwArray = [];
@@ -971,12 +972,12 @@ function clearPhysMove(){
 function collisionDetector(){
 if(physics)
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				shapeSelection[key][2][i].preCollision = false;
 				//shapeSelection[key][2][i].collision = false;
 				for(unit in shapeSelection){
-					if(unit != 'userID' && unit != 'isPublic'){
+					if(unit != 'userID' && unit != 'isPublic' && unit != 'name'){
 						for(var j = 0; j < shapeSelection[unit][2].length; j++){
 							if(!(i == j && key == unit)){
 								if(distance(shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X, shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y) < shapeSelection[key][2][i].setOuterRadius() + shapeSelection[unit][2][j].setOuterRadius() ||
@@ -1511,7 +1512,7 @@ function closestPoint(point, array){
 
 function animator(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection[key][2].length; i++){
 				if(physics){
 					shapeSelection[key][2][i].X += shapeSelection[key][2][i].velocity[0];
@@ -2674,7 +2675,7 @@ function leave(shapes, shape){
 
 function shapeSelect(){
 	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			if(shapeSelection[key][0]){
 				return [shapeSelection[key][1](), shapeSelection[key][2]];
 			}
@@ -2714,7 +2715,7 @@ wallConfig = {clearWall: false};
 function clearAll(obj){
 	for(e in shapeSelection){ //if(unit != 'userID' && unit != 'isPublic'){
 		if(e != 'wall' || e == 'wall' && obj.clearWall){
-			if(e != 'userID' && e != 'isPublic'){
+			if(e != 'userID' && e != 'isPublic' && e != 'name'){
 				var arrayOfShapes = shapeSelection[e][2];
 				arrayOfShapes.splice(0, arrayOfShapes.length);
 			}
@@ -2725,7 +2726,7 @@ function clearAll(obj){
 /** this function saves simulations to the Mongodb database **/
 function loadShapes(sim){
 	for(key in sim){
-		if(key != 'userID' && key != 'isPublic'){
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < sim[key][2].length; i++){ //populate sim with shapes from e.g circleArray
 				
 				shapeSelection[key][2][i] = {};
@@ -2772,11 +2773,9 @@ function loadShapes(sim){
 
 function loadShapes_idb(sim){
 console.log('loading!!!');
-//clearAll(wallConfig);
 	for(key in sim){
-		if(key != 'userID' && key != 'isPublic'){
-			for(var i = 0; i < sim[key].length; i++){ //populate sim with shapes from e.g circleArray
-				
+		if(key != 'userID' && key != 'isPublic' && key != 'name'){
+			for(var i = 0; i < sim[key].length; i++){ //populate sim with shapes from e.g circleArray			
 				shapeSelection[key][2][i] = {};
 				
 				if(key == 'circle'){
@@ -2815,6 +2814,9 @@ console.log('loading!!!');
 					shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
 				}
 			}
+		}else if(key == 'name'){
+			shapeSelection[key] = sim[key];
 		}
 	}
+	return shapeSelection;
 }

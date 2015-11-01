@@ -110,6 +110,7 @@
 		<td><button id='removeAllScenes' class='browser'>remove all</button></td>
 	</tr>
 	<tr ng-repeat='scene in scenes'>
+		<td>{{scene.name}}</td>
 		<td><img class='thumbnail' ng-src='images/thumbnails/{{scene._id}}.png' id = 'thumbnail'/></td>
 		<td><button ng-click='retrieve(scene._id);'>load</button></td>
 		<td><button ng-click='updateScene(scene._id);'>update</button></td>

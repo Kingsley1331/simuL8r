@@ -29,7 +29,7 @@
 	</tr>
 	<tr ng-repeat="scene in scenes">
 		<td>{{userNames[scene.userID]}}</td>
-		<td>{{}}</td>
+		<td>{{scene.name}}</td>
 		<td ng-click='getSelectedScene(scene._id)' ><img width='75' ng-src='images/thumbnails/{{scene._id}}.png'/></td>
 		<td><button type="button" class="btn btn-info" ng-click=''>select</button></td>
 	</tr>

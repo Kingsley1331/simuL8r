@@ -53,7 +53,7 @@ if (window.IDBTransaction){
 	// Either one has not been created before, or a new version number has been submitted via the
 	// window.indexedDB.open line above
 	//it is only implemented in recent browsers
-	DBOpenRequest.onupgradeneeded = function(event) { 
+	DBOpenRequest.onupgradeneeded = function(event){ 
 		var db = event.target.result;
 
 		db.onerror = function(event) {
@@ -64,6 +64,7 @@ if (window.IDBTransaction){
 		var objectStore = db.createObjectStore("scenes", { keyPath: "userID" });
 
 		// define what data items the objectStore will contain
+		objectStore.createIndex('name', 'name', { unique: false });		
 		objectStore.createIndex('userID', 'userID', { unique: false });
 		objectStore.createIndex('isPublic', 'isPublic', { unique: false });
 		objectStore.createIndex('circle', 'circle', { unique: false });
@@ -104,32 +105,30 @@ if (window.IDBTransaction){
 		
 		// call an object store that's already been added to the database
 		var objectStore = transaction.objectStore("scenes");
-		console.log(objectStore.indexNames);
+		/*console.log(objectStore.indexNames);
 		console.log(objectStore.keyPath);
 		console.log(objectStore.name);
 		console.log(objectStore.transaction);
-		console.log(objectStore.autoIncrement);
+		console.log(objectStore.autoIncrement);*/
 
 		var scene = {};
 		
 		loadDatabase(scene);
-		console.log('checking scene: ', scene);
 		// add our newItem object to the object store
 		scene.userID = Math.floor(10000000000 * Math.random());
+		var name = prompt('please choose a name for this scene', 'untitled');
+		scene.name = name
 		var objectStoreRequest = objectStore.add(scene); 		
 		objectStoreRequest.onsuccess = function(event) {
 			// report the success of our new item going into the database
-			console.log('New scene added to database');
-			
-			appendTable(null, scene.userID, scene);
-			
+			console.log('New scene added to database');		
+			appendTable(null, scene.userID, scene);			
 		};
 	}
 		
-
-	function loadDatabase(scene){
+	function loadDatabase(scene){		
 		for(key in shapeSelection){ // for each shape category
-			if(key != 'userID' && key != 'isPublic'){
+			if(key != 'userID' && key != 'isPublic' && key != 'name'){
 				scene[key] = [];
 				for(var i = 0; i < shapeSelection[key][2].length; i++){ // for each shape in the shape array e.g squareArray
 					scene[key][i] = {};
@@ -141,6 +140,7 @@ if (window.IDBTransaction){
 				}
 			}
 		}
+		//scene.name = shapeSelection.name;
 		return scene;
 	}		
 		
@@ -174,7 +174,6 @@ if (window.IDBTransaction){
 						console.log('All entries displayed.');
 						console.log('scenes: ', scenes);	
 					}
-
 				};
 			}
 			display = false;
@@ -182,6 +181,7 @@ if (window.IDBTransaction){
 	}
 	
 	function appendTable(i, id, scene){
+		//console.trace()
 		if(i !== null){
 			var userID = scenes[i].userID;
 		}else if(i === null){
@@ -209,14 +209,14 @@ if (window.IDBTransaction){
 		//DeleteAllButton.setAttribute('class', 'browser');
 		
 		
-			button.addEventListener('click', function(){
-				clearAll(wallConfig);
-				if(i !== null){
-					loadShapes_idb(scenes[i]);
-				}else if(i === null){
-					loadShapes_idb(scene);
-				}
-			} , false);
+		button.addEventListener('click', function(){
+			clearAll(wallConfig);
+			if(i !== null){
+				currentScene = loadShapes_idb(scenes[i]);
+			}else if(i === null){
+				currentScene = loadShapes_idb(scene);				
+			}
+		} , false);
 		
 		
 		deleteButton.addEventListener('click', function(){
@@ -242,7 +242,14 @@ if (window.IDBTransaction){
 		
 		deleteScene.appendChild(deleteButton);
 		update.appendChild(updateButton);
-		//removeAllScenes.appendChild(DeleteAllButton);
+		
+		if(i !== null){
+			var name = document.createTextNode(scenes[i].name);	
+		}else if(i === null){
+			var name = document.createTextNode(scene.name);	
+		}	
+		
+		td6.appendChild(name);
 		
 		tr.appendChild(td1);
 		tr.appendChild(td2);
@@ -251,7 +258,7 @@ if (window.IDBTransaction){
 		tr.appendChild(td5);
 		tr.appendChild(td6);	
 		
-		var td6 = document.createElement('td');
+		//var td6 = document.createElement('td');
 		
 		tr.appendChild(displayData);
 		tr.appendChild(deleteScene);
@@ -262,12 +269,10 @@ if (window.IDBTransaction){
 
 
 	function deleteData(id){
-		console.log('one');
 		var request = indexedDB.open('test');
 		var deleteScene = confirm('Are you sure you want to delete this scene?');
 		if(deleteScene){
 			request.onsuccess = function(e){
-				console.log('two');
 				var idb = e.target.result;
 				var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
 				console.log('objectStore: ', objectStore);
@@ -292,8 +297,10 @@ if (window.IDBTransaction){
 		
 		var scene = {};
 		scene = loadDatabase(scene);
-		
-		console.log('loadDatabase: ', scene);
+		//alert(scene.name);
+		//var name = prompt("add or update this scene's name", scene.name);
+		//scene.name = name;
+		//console.log('loadDatabase: ', scene);
 		
 		request.onsuccess = function(e){
 			var idb = e.target.result;
@@ -304,13 +311,19 @@ if (window.IDBTransaction){
 				var data = ev.target.result;
 				//var editDivEl = document.querySelector('#editRecordDiv');
 	 
-				if (data === undefined){
+				if(data === undefined){
 					console.log('Key doesnt exist or has been previouslyremoved');
 					return;
 				}
 	 
 				scene.userID = key;
 				data = scene;
+				
+				//var name = prompt("add or update this scene's name", 'scene name');
+				console.log('shapeSelection: ', currentScene, currentScene.name);
+				var name = prompt("add or update this scene's name", currentScene.name);				
+				data.name = name;
+				
 				var result = objectStore.put(data);
 				console.log('data: ', data);
 				result.onsuccess = function(ev){
