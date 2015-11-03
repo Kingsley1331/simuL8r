@@ -23,11 +23,11 @@
 
 <div class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector();}else{shapeSelector(); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></div>
 
-<div class = 'shapes' id = 'circle' onmouseover = "hover(circle);" onmouseout = "leave(circles, circle);" onclick = " if(circles){shapeSelector();}else{shapeSelector();  circles = true; shapeSelection.circle[0] = true;} gradient(circle);"><img class = 'icons' src = 'images/shapes/circle.png'></img></div>
+<div class = 'shapes' id = 'circle' onmouseover = "hover(circle);" onmouseout = "leave(circles, circle);" onclick = " if(circles){shapeSelector();}else{shapeSelector();  circles = true; shapeSelection.shapes.circle[0] = true;} gradient(circle);"><img class = 'icons' src = 'images/shapes/circle.png'></img></div>
 
-<div class = 'shapes' id = 'square' onmouseover = "hover(square);" onmouseout = "leave(squares, square);" onclick = "if(squares){shapeSelector();}else{shapeSelector(); squares = true; shapeSelection.square[0] = true;} gradient(square);"><img class = 'icons' src = 'images/shapes/square.png'></img></div>
+<div class = 'shapes' id = 'square' onmouseover = "hover(square);" onmouseout = "leave(squares, square);" onclick = "if(squares){shapeSelector();}else{shapeSelector(); squares = true; shapeSelection.shapes.square[0] = true;} gradient(square);"><img class = 'icons' src = 'images/shapes/square.png'></img></div>
 
-<div class = 'shapes' id = 'triangle' onmouseover = "hover(triangle);" onmouseout = "leave(triangles, triangle);" onclick = "if(triangles){shapeSelector();}else{shapeSelector(); triangles = true; shapeSelection.triangle[0] = true;} gradient(triangle);"><img class = 'icons' src = 'images/shapes/triangle.png'></img></div>
+<div class = 'shapes' id = 'triangle' onmouseover = "hover(triangle);" onmouseout = "leave(triangles, triangle);" onclick = "if(triangles){shapeSelector();}else{shapeSelector(); triangles = true; shapeSelection.shapes.triangle[0] = true;} gradient(triangle);"><img class = 'icons' src = 'images/shapes/triangle.png'></img></div>
 
 <div class = 'shapes' id = 'customShape' onmouseover = "hover(customShape);" onmouseout = "leave(shapes, customShape);" onclick = "if(shapes){shapeSelector();}else{shapeSelector(); shapes = true;} gradient(customShape);"><img class = 'icons' src = 'images/shapes/custom.png'></img></div>
 	<!--<ul id = 'curveList'>
@@ -81,7 +81,7 @@
 </div>
 </div>
 
-<div class = 'shapes' id = 'pencil_id' onmouseover = "hover(pencil_id); "onmouseout = "leave(pencils, pencil_id);" onclick = " if(pencils){shapeSelector();}else{shapeSelector(); pencilStyle(); pencils = true; shapeSelection.pencil[0] = true;} gradient(pencil_id); pencilCursor();"><img class = 'icons' src = 'images/pencil.png'></img></div>
+<div class = 'shapes' id = 'pencil_id' onmouseover = "hover(pencil_id); "onmouseout = "leave(pencils, pencil_id);" onclick = " if(pencils){shapeSelector();}else{shapeSelector(); pencilStyle(); pencils = true; shapeSelection.shapes.pencil[0] = true;} gradient(pencil_id); pencilCursor();"><img class = 'icons' src = 'images/pencil.png'></img></div>
 	<ul id = 'pencilList'>
 		<li id='shapes' class='item'>Shapes</li>
 		<li id='strokes' class='item'>Strokes</li>

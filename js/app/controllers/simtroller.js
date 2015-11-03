@@ -28,7 +28,8 @@ simApp.controller('SimCtrl', function($scope, $http){
 
 		$http.post('/scenes', $scope.simulation)
 		.success(function(response){
-			//console.log('create response ', response);
+			//console.log('create_response: ', response);
+			console.log(response);			
 			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
 			var thumbnailUrl = $scope.currentThumbnail[response._id];
 			$scope.saveThumbnail(thumbnailUrl);

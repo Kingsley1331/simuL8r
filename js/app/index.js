@@ -17,18 +17,22 @@ var onObject = false;
 var dragging = false;var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || "grabbing" || 'move';
 var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
+
 var shapeSelection = {
 						name: 'untitled',
 						userID: null,
 						isPublic: true,
-						circle:[false, circleGen, circleArray, 0],
-						square:[false, squareGen, squareArray, 1],
-						triangle:[false, triangleGen, triangleArray, 2],
-						customShape:[false, customShapeGen, customShapeArray, 3],
-						pencil:[true, pencilGen, pencilArray, 4],
-						curve:[false, curveGen, curveArray, 5],
-						wall:[false, wallGen, wallArray, 6]
-					};
+						shapes: {
+							circle:[false, circleGen, circleArray, 0],
+							square:[false, squareGen, squareArray, 1],
+							triangle:[false, triangleGen, triangleArray, 2],
+							customShape:[false, customShapeGen, customShapeArray, 3],
+							pencil:[true, pencilGen, pencilArray, 4],
+							curve:[false, curveGen, curveArray, 5],
+							wall:[false, wallGen, wallArray, 6]
+						}
+					};					
+					
 var pencilPointsArray = [];
 var superPencilPoints = [];
 var triangle;
@@ -449,25 +453,24 @@ function animate(){
 
 function locate(){
 	onObject = false; // is onOject necessary now that select exists
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-			if(shapeSelection[key][2][i].selected){
-				onObject = true;
-			if(!dragging){
-				if(!pencils){
-					canvas.style.cursor = cursor_drag;
-					}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+		if(shapeSelection.shapes[key][2][i].selected){
+			onObject = true;
+		if(!dragging){
+			if(!pencils){
+				canvas.style.cursor = cursor_drag;
 				}
 			}
-			}if(onObject == false){
-				if(!pencils){
-					canvas.style.cursor = "auto";
-				}
+		}
+		}if(onObject == false){
+			if(!pencils){
+				canvas.style.cursor = "auto";
 			}
 		}
 	}
 }
+
 function mouseMove(){
 	canvas.addEventListener('mousemove', function(evt){
 	mousePos = getMousePos(canvas, evt);
@@ -485,7 +488,7 @@ function mouseMove(){
 function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
 	mouse_down = true;
-	if(shapeSelection.curve.curveArray){ console.log(shapeSelection.curve.curveArray.length);}
+	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
 	rotater();
 	reSizer();
@@ -544,19 +547,17 @@ function selectPencilStroke(){
 }
 
 function drag(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name') {
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(shapeSelection[key][2][i].selected && !dragging && !onReshape && !onSlider && !shapeSelection[key][2][i].expand && !shapeSelection[key][2][i].v_expand && !shapeSelection[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
-					offcenter[0] = shapeSelection[key][2][i].X - mousePos.x;
-					offcenter[1] = shapeSelection[key][2][i].Y - mousePos.y;
-					dragging = true;
-					shapeSelection[key][2][i].dragging = true;
-					shapeSelection[key][2][i].onObject = true;
-					shapeSelection[key][2][i].locateTouchPoint();
-					shapeSelection[key][2][i].velocity = [0, 0];
-					if(!pencils) {canvas.style.cursor = cursor_grab;}
-				}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(shapeSelection.shapes[key][2][i].selected && !dragging && !onReshape && !onSlider && !shapeSelection.shapes[key][2][i].expand && !shapeSelection.shapes[key][2][i].v_expand && !shapeSelection.shapes[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
+				offcenter[0] = shapeSelection.shapes[key][2][i].X - mousePos.x;
+				offcenter[1] = shapeSelection.shapes[key][2][i].Y - mousePos.y;
+				dragging = true;
+				shapeSelection.shapes[key][2][i].dragging = true;
+				shapeSelection.shapes[key][2][i].onObject = true;
+				shapeSelection.shapes[key][2][i].locateTouchPoint();
+				shapeSelection.shapes[key][2][i].velocity = [0, 0];
+				if(!pencils) {canvas.style.cursor = cursor_grab;}
 			}
 		}
 	}
@@ -564,22 +565,20 @@ function drag(){
 
 function selected(){
 	select = false;
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				shapeSelection[key][2][i].selected = false; 
-				
-				bufferCtx.beginPath();
-				bufferCtx.moveTo(shapeSelection[key][2][i].vertices[0][0] + shapeSelection[key][2][i].X, shapeSelection[key][2][i].vertices[0][1] + shapeSelection[key][2][i].Y);
-				
-				for(var j = 0; j < shapeSelection[key][2][i].vertices.length; j++){
-					bufferCtx.lineTo(shapeSelection[key][2][i].vertices[j][0] + shapeSelection[key][2][i].X, shapeSelection[key][2][i].vertices[j][1] + shapeSelection[key][2][i].Y);
-				}
-				if(bufferCtx.isPointInPath(mousePos.x, mousePos.y) && !select){
-					if(distance(shapeSelection[key][2][i].slider[0] - mousePos.x, shapeSelection[key][2][i].slider[1] - mousePos.y) >= 10){
-						shapeSelection[key][2][i].selected = true;
-						select = true;
-					}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			shapeSelection.shapes[key][2][i].selected = false; 
+			
+			bufferCtx.beginPath();
+			bufferCtx.moveTo(shapeSelection.shapes[key][2][i].vertices[0][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[0][1] + shapeSelection.shapes[key][2][i].Y);
+			
+			for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){
+				bufferCtx.lineTo(shapeSelection.shapes[key][2][i].vertices[j][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[j][1] + shapeSelection.shapes[key][2][i].Y);
+			}
+			if(bufferCtx.isPointInPath(mousePos.x, mousePos.y) && !select){
+				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) >= 10){
+					shapeSelection.shapes[key][2][i].selected = true;
+					select = true;
 				}
 			}
 		}
@@ -587,27 +586,23 @@ function selected(){
 }
 
 function drop(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name') {
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				dragging = false;
-				shapeSelection[key][2][i].dragging = false;
-				shapeSelection[key][2][i].onObject = false; 
-				if(!pencils) canvas.style.cursor = cursor_drag; 
-			}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			dragging = false;
+			shapeSelection.shapes[key][2][i].dragging = false;
+			shapeSelection.shapes[key][2][i].onObject = false; 
+			if(!pencils) canvas.style.cursor = cursor_drag; 
 		}
 	}
 }
 
 
 function eraser(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(shapeSelection[key][2][i].selected && deletion){
-					shapeSelection[key][2].splice(i,1);
-					//canvas.style.cursor = cursor_grab;
-				}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(shapeSelection.shapes[key][2][i].selected && deletion){
+				shapeSelection.shapes[key][2].splice(i,1);
+				//canvas.style.cursor = cursor_grab;
 			}
 		}
 	}
@@ -615,87 +610,83 @@ function eraser(){
 
 
 function reSizer(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name') {
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(shapeSelection[key][2][i].selected && reSize){
-				/** make sure that only one object at time can be resized **/
-				shapeSelection[key][2][i].expandBox = true;
-				for(keys in shapeSelection){
-					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
-						for(var j = 0; j < shapeSelection[keys][2].length; j++){
-							if(key != keys){
-								shapeSelection[keys][2][j].expandBox = false;}
-							else {
-								if(j != i){
-									shapeSelection[keys][2][j].expandBox = false;
-								}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(shapeSelection.shapes[key][2][i].selected && reSize){
+			/** make sure that only one object at time can be resized **/
+			shapeSelection.shapes[key][2][i].expandBox = true;
+			for(keys in shapeSelection.shapes){
+				if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
+					for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
+						if(key != keys){
+							shapeSelection.shapes[keys][2][j].expandBox = false;}
+						else {
+							if(j != i){
+								shapeSelection.shapes[keys][2][j].expandBox = false;
 							}
 						}
 					}
 				}
-			} 
-					// detects if cursor is over any of the small expansion boxes at the corners
-								/** top-left **/
-					if((distance(shapeSelection[key][2][i].X - shapeSelection[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection[key][2][i].Y - shapeSelection[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
-								/** bottom-right **/
-						distance(shapeSelection[key][2][i].X + shapeSelection[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection[key][2][i].Y + shapeSelection[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2 ||
-								/** top-right **/
-						distance(shapeSelection[key][2][i].X + shapeSelection[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection[key][2][i].Y - shapeSelection[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
-								/** bottom-left **/
-						distance(shapeSelection[key][2][i].X - shapeSelection[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection[key][2][i].Y + shapeSelection[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2
-					
-					)&& shapeSelection[key][2][i].expandBox){
-						shapeSelection[key][2][i].expand = true;
-						if(!pencils) canvas.style.cursor = cursor_grab;
+			}
+		} 
+				// detects if cursor is over any of the small expansion boxes at the corners
+							/** top-left **/
+				if((distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
+							/** bottom-right **/
+					distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2 ||
+							/** top-right **/
+					distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
+							/** bottom-left **/
+					distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2
+				
+				)&& shapeSelection.shapes[key][2][i].expandBox){
+					shapeSelection.shapes[key][2][i].expand = true;
+					if(!pencils) canvas.style.cursor = cursor_grab;
+				}
+				
+				
+				// detects if cursor is over any of the small expansion boxes at the right and left handsides
+							/** left **/
+				if((distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - mousePos.y) <= smallBox/2 ||
+							/** right **/
+					distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - mousePos.y) <= smallBox/2
+				
+				) && shapeSelection.shapes[key][2][i].expandBox){
+				if(key == 'customShape' || 'Square' || 'Triangle'/* temporary condition*/){
+					shapeSelection.shapes[key][2][i].h_expand = true;
 					}
-					
-					
-					// detects if cursor is over any of the small expansion boxes at the right and left handsides
-								/** left **/
-					if((distance(shapeSelection[key][2][i].X - shapeSelection[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection[key][2][i].Y - mousePos.y) <= smallBox/2 ||
-								/** right **/
-						distance(shapeSelection[key][2][i].X + shapeSelection[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection[key][2][i].Y - mousePos.y) <= smallBox/2
-					
-					) && shapeSelection[key][2][i].expandBox){
-					if(key == 'customShape' || 'Square' || 'Triangle'/* temporary condition*/){
-						shapeSelection[key][2][i].h_expand = true;
-						}
-						if(!pencils) canvas.style.cursor = cursor_grab;
+					if(!pencils) canvas.style.cursor = cursor_grab;
+				}
+				
+				
+				// detects if cursor is over any of the small expansion boxes at the top and bottom sides
+							/** top **/
+				if((distance(shapeSelection.shapes[key][2][i].X - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
+							/** bottom **/
+					distance(shapeSelection.shapes[key][2][i].X - mousePos.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2
+		
+				)&& shapeSelection.shapes[key][2][i].expandBox){
+				if(key == 'customShape' || 'Square' || 'Triangle'/* temporary condition*/){
+					shapeSelection.shapes[key][2][i].v_expand = true;
 					}
-					
-					
-					// detects if cursor is over any of the small expansion boxes at the top and bottom sides
-								/** top **/
-					if((distance(shapeSelection[key][2][i].X - mousePos.x, shapeSelection[key][2][i].Y - shapeSelection[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
-								/** bottom **/
-						distance(shapeSelection[key][2][i].X - mousePos.x, shapeSelection[key][2][i].Y + shapeSelection[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2
-			
-					)&& shapeSelection[key][2][i].expandBox){
-					if(key == 'customShape' || 'Square' || 'Triangle'/* temporary condition*/){
-						shapeSelection[key][2][i].v_expand = true;
-						}
-						if(!pencils) canvas.style.cursor = cursor_grab;
-					}
+					if(!pencils) canvas.style.cursor = cursor_grab;
 				}
 			}
 		}	
 	}
 
 function stopResize(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name') {
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				expand = false;
-				//if(shapeSelection[key][2][i].v_expand || shapeSelection[key][2][i].h_expand){shapeSelection[key][2][i].stretchRadius = shapeSelection[key][2][i].radius;}
-				if(shapeSelection[key][2][i].expand || shapeSelection[key][2][i].v_expand || shapeSelection[key][2][i].h_expand){
-					shapeSelection[key][2][i].stretchRadius = shapeSelection[key][2][i].radius;
-					shapeSelection[key][2][i].calculateMass(shapeSelection[key][2][i].vertices, shapeSelection[key][2][i].boundingRectangle.width, shapeSelection[key][2][i].boundingRectangle.height, resolution);
-				}
-				shapeSelection[key][2][i].expand = false;
-				shapeSelection[key][2][i].v_expand = false; 
-				shapeSelection[key][2][i].h_expand = false; 
-				}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			expand = false;
+			//if(shapeSelection.shapes[key][2][i].v_expand || shapeSelection.shapes[key][2][i].h_expand){shapeSelection.shapes[key][2][i].stretchRadius = shapeSelection.shapes[key][2][i].radius;}
+			if(shapeSelection.shapes[key][2][i].expand || shapeSelection.shapes[key][2][i].v_expand || shapeSelection.shapes[key][2][i].h_expand){
+				shapeSelection.shapes[key][2][i].stretchRadius = shapeSelection.shapes[key][2][i].radius;
+				shapeSelection.shapes[key][2][i].calculateMass(shapeSelection.shapes[key][2][i].vertices, shapeSelection.shapes[key][2][i].boundingRectangle.width, shapeSelection.shapes[key][2][i].boundingRectangle.height, resolution);
+			}
+			shapeSelection.shapes[key][2][i].expand = false;
+			shapeSelection.shapes[key][2][i].v_expand = false; 
+			shapeSelection.shapes[key][2][i].h_expand = false; 
 			}
 		}
 	}
@@ -723,67 +714,62 @@ function pointStart(){
 function rotateListSwitch(key, vertices, i){
 	switch(true){
 		case reversingX:
-			shapeSelection[key][2][i].reverseX(vertices)
+			shapeSelection.shapes[key][2][i].reverseX(vertices)
 		break;
 		case reversingY:
-			shapeSelection[key][2][i].reverseY(vertices)
+			shapeSelection.shapes[key][2][i].reverseY(vertices)
 		break;
 		case rotating90:
-			shapeSelection[key][2][i].rotate90(vertices)
+			shapeSelection.shapes[key][2][i].rotate90(vertices)
 		break;
 		case rotating180:
-			shapeSelection[key][2][i].rotate180(vertices)
+			shapeSelection.shapes[key][2][i].rotate180(vertices)
 		break;
 	}
 }
 
 function rotater(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(shapeSelection[key][2][i].selected && rotate){
-					shapeSelection[key][2][i].referencer();
-					var vertices = shapeSelection[key][2][i].vertices;
-					rotateListSwitch(key, vertices, i);
-					if(!shapeSelection[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
-						sliderPosition = shapeSelection[key][2][i].sliderPosition; 
-					}
-				
-				shapeSelection[key][2][i].rotationLine = true;
-				
-				// makes sure that only one object at time can be rotated 
-				for(keys in shapeSelection){
-					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
-						for(var j = 0; j < shapeSelection[keys][2].length; j++){
-							if(key != keys){
-								shapeSelection[keys][2][j].rotationLine = false;
-							}
-							else{
-								if(j != i){
-									shapeSelection[keys][2][j].rotationLine = false;
-								}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(shapeSelection.shapes[key][2][i].selected && rotate){
+				shapeSelection.shapes[key][2][i].referencer();
+				var vertices = shapeSelection.shapes[key][2][i].vertices;
+				rotateListSwitch(key, vertices, i);
+				if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
+					sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition; 
+				}
+			
+			shapeSelection.shapes[key][2][i].rotationLine = true;
+			
+			// makes sure that only one object at time can be rotated 
+			for(keys in shapeSelection.shapes){
+				if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
+					for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
+						if(key != keys){
+							shapeSelection.shapes[keys][2][j].rotationLine = false;
+						}
+						else{
+							if(j != i){
+								shapeSelection.shapes[keys][2][j].rotationLine = false;
 							}
 						}
 					}
 				}
-					} // detects if cursor is hovering over slider
-					if(distance(shapeSelection[key][2][i].slider[0] - mousePos.x, shapeSelection[key][2][i].slider[1] - mousePos.y) <= 10){
-						onSlider = true;
-					}
+			}
+				} // detects if cursor is hovering over slider
+				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) <= 10){
+					onSlider = true;
 				}
 			}
 		}
 	}
 
-	
-	
+		
 function referencer(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(distance(shapeSelection[key][2][i].slider[0] - mousePos.x, shapeSelection[key][2][i].slider[1] - mousePos.y) <= 100000){
-					shapeSelection[key][2][i].referencer();
-				}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) <= 100000){
+				shapeSelection.shapes[key][2][i].referencer();
 			}
 		}
 	}
@@ -792,17 +778,15 @@ function referencer(){
 /** this function detects whether or not a user has clicked on a vertex **/
 function reShaper(){
 	if(reShape){
-		for(key in shapeSelection){
-			if(key != 'userID' && key != 'isPublic' && key != 'name'){
-				for(var i = 0; i < shapeSelection[key][2].length; i++){
-					for(var j = 0; j < shapeSelection[key][2][i].vertices.length; j++){
-						shapeSelection[key][2][i].vertices[j][2] = false;
-						var Xpoint = shapeSelection[key][2][i].vertices[j][0] + shapeSelection[key][2][i].X;
-						var Ypoint = shapeSelection[key][2][i].vertices[j][1] + shapeSelection[key][2][i].Y;
-						if(distance(Xpoint - mousePos.x, Ypoint - mousePos.y)< 5){
-							shapeSelection[key][2][i].vertices[j][2] = true;
-							currentlyReshaping = key;
-						}
+		for(key in shapeSelection.shapes){
+			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+				for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){
+					shapeSelection.shapes[key][2][i].vertices[j][2] = false;
+					var Xpoint = shapeSelection.shapes[key][2][i].vertices[j][0] + shapeSelection.shapes[key][2][i].X;
+					var Ypoint = shapeSelection.shapes[key][2][i].vertices[j][1] + shapeSelection.shapes[key][2][i].Y;
+					if(distance(Xpoint - mousePos.x, Ypoint - mousePos.y)< 5){
+						shapeSelection.shapes[key][2][i].vertices[j][2] = true;
+						currentlyReshaping = key;
 					}
 				}
 			}
@@ -812,142 +796,134 @@ function reShaper(){
 
 
 function offReshaper(){
-	for(key in shapeSelection){ //Very inefficient! this part of the code gets called 7 times on mouseup
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-				var centralDifference = [0,0];
-				for(var i = 0; i < shapeSelection[key][2].length; i++){
-				/** this section calculates the coordinates of the centroid **/
-				shapeSelection[key][2][i].centroid = [0,0]; 
-				for(var k = 0; k < shapeSelection[key][2][i].pointsArray.length - 1; k++){
-					//if(k == 0){continue;}else{
-					shapeSelection[key][2][i].centroid[0] += shapeSelection[key][2][i].X + shapeSelection[key][2][i].vertices[k][0];
-					shapeSelection[key][2][i].centroid[1] += shapeSelection[key][2][i].Y + shapeSelection[key][2][i].vertices[k][1];
-					//}
-				}
-				shapeSelection[key][2][i].centroid[0] /= (shapeSelection[key][2][i].pointsArray.length - 1);
-				shapeSelection[key][2][i].centroid[1] /= (shapeSelection[key][2][i].pointsArray.length - 1);
-			
-				// the code below calculates the difference between the centroid and the current position of the center (X,Y)
-				centralDifference[0] = shapeSelection[key][2][i].centroid[0] - shapeSelection[key][2][i].X;
-				centralDifference[1] = shapeSelection[key][2][i].centroid[1] - shapeSelection[key][2][i].Y;
-			
-				var rotDifference_x = 0;
-				var rotDifference_y = 0;
-				
-				var Difference_x = centralDifference[0];
-				var Difference_y = centralDifference[1];
-					
-				// this difference is subtracted from the vertices so that they do not move when the X,Y values are eventually updated (by setting them equal to the centroid)
-				for(var m = 0; m < shapeSelection[key][2][i].pointsArray.length; m++){
-					shapeSelection[key][2][i].vertices[m][0] -= Difference_x;
-					shapeSelection[key][2][i].vertices[m][1] -= Difference_y;
-				}
-				
-				/** the shape's X and Y properties are set equal to the centroid **/ 
-				//the vertices remain in the same position because the difference has been subtracted from them
-				shapeSelection[key][2][i].X = shapeSelection[key][2][i].centroid[0];
-				shapeSelection[key][2][i].Y = shapeSelection[key][2][i].centroid[1];
-			
-				for(var j = 0; j < shapeSelection[key][2][i].vertices.length; j++){
-					shapeSelection[key][2][i].vertices[j][2] = false;
-					}
-					shapeSelection[key][2][i].referencer();
-					shapeSelection[key][2][i].findOuterRadius();
-					if(currentlyReshaping == key){
-						shapeSelection[key][2][i].calculateMass(shapeSelection[key][2][i].vertices, shapeSelection[key][2][i].boundingRectangle.width, shapeSelection[key][2][i].boundingRectangle.height, resolution);
-					}
-				}
+	for(key in shapeSelection.shapes){ //Very inefficient! this part of the code gets called 7 times on mouseup
+		var centralDifference = [0,0];
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+		/** this section calculates the coordinates of the centroid **/
+		shapeSelection.shapes[key][2][i].centroid = [0,0]; 
+		for(var k = 0; k < shapeSelection.shapes[key][2][i].pointsArray.length - 1; k++){
+			//if(k == 0){continue;}else{
+			shapeSelection.shapes[key][2][i].centroid[0] += shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0];
+			shapeSelection.shapes[key][2][i].centroid[1] += shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1];
 			//}
 		}
+		shapeSelection.shapes[key][2][i].centroid[0] /= (shapeSelection.shapes[key][2][i].pointsArray.length - 1);
+		shapeSelection.shapes[key][2][i].centroid[1] /= (shapeSelection.shapes[key][2][i].pointsArray.length - 1);
+	
+		// the code below calculates the difference between the centroid and the current position of the center (X,Y)
+		centralDifference[0] = shapeSelection.shapes[key][2][i].centroid[0] - shapeSelection.shapes[key][2][i].X;
+		centralDifference[1] = shapeSelection.shapes[key][2][i].centroid[1] - shapeSelection.shapes[key][2][i].Y;
+	
+		var rotDifference_x = 0;
+		var rotDifference_y = 0;
+		
+		var Difference_x = centralDifference[0];
+		var Difference_y = centralDifference[1];
+			
+		// this difference is subtracted from the vertices so that they do not move when the X,Y values are eventually updated (by setting them equal to the centroid)
+		for(var m = 0; m < shapeSelection.shapes[key][2][i].pointsArray.length; m++){
+			shapeSelection.shapes[key][2][i].vertices[m][0] -= Difference_x;
+			shapeSelection.shapes[key][2][i].vertices[m][1] -= Difference_y;
+		}
+		
+		/** the shape's X and Y properties are set equal to the centroid **/ 
+		//the vertices remain in the same position because the difference has been subtracted from them
+		shapeSelection.shapes[key][2][i].X = shapeSelection.shapes[key][2][i].centroid[0];
+		shapeSelection.shapes[key][2][i].Y = shapeSelection.shapes[key][2][i].centroid[1];
+	
+		for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){
+			shapeSelection.shapes[key][2][i].vertices[j][2] = false;
+			}
+			shapeSelection.shapes[key][2][i].referencer();
+			shapeSelection.shapes[key][2][i].findOuterRadius();
+			if(currentlyReshaping == key){
+				shapeSelection.shapes[key][2][i].calculateMass(shapeSelection.shapes[key][2][i].vertices, shapeSelection.shapes[key][2][i].boundingRectangle.width, shapeSelection.shapes[key][2][i].boundingRectangle.height, resolution);
+			}
+		}
+	//}
 	}
 }
 
 function copyShape(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(copy && copying && shapeSelection[key][2][i].selected){
-					copying = false;
-					var newShape = {}; // newshape is initialised and all its properties are copied to it from the original shape
-					for(var e in shapeSelection[key][2][i]){
-						newShape[e] = shapeSelection[key][2][i][e];
-					}
-					newShape.rotationLine = false;
-					newShape.expandBox = false;
-					
-					//if(key !== 'circle'){
-						newShape.vertices = [];
-						newShape.referenceVertices = [];
-						for(var j = 0; j < shapeSelection[key][2][i].vertices.length; j++){ // this loops ensures that referenceVertices and vertices arrays of the new shape are not simply referencing the original 
-							newShape.vertices[j] = shapeSelection[key][2][i].vertices[j];
-							newShape.referenceVertices[j] = shapeSelection[key][2][i].referenceVertices[j];
-						}
-						
-						for(var n = 0; n < shapeSelection[key][2][i].pointsArray.length; n++){ //pointsArray must be reset for each copy otherwise it would be fixed for all the descendants of a copied shape
-							newShape.pointsArray[n] = [[],[]];
-							newShape.pointsArray[n][0] = shapeSelection[key][2][i].X + shapeSelection[key][2][i].vertices[n][0];
-							newShape.pointsArray[n][1] = shapeSelection[key][2][i].Y + shapeSelection[key][2][i].vertices[n][1];
-						}
-						
-						newShape.X = 0; // newShape's X and Y coordinates are set to zero so that the centralize function can work properly
-						newShape.Y = 0;
-						
-						var k;
-						centralize(newShape, newShape.pointsArray, k);
-					//}
-						newShape.X = mousePos.x + 5; //places the new copy near where the cursor is
-						newShape.Y = mousePos.y + 5;
-						if(!copying){shapeSelection[key][2].push(newShape);}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(copy && copying && shapeSelection.shapes[key][2][i].selected){
+				copying = false;
+				var newShape = {}; // newshape is initialised and all its properties are copied to it from the original shape
+				for(var e in shapeSelection.shapes[key][2][i]){
+					newShape[e] = shapeSelection.shapes[key][2][i][e];
 				}
+				newShape.rotationLine = false;
+				newShape.expandBox = false;
+				
+				//if(key !== 'circle'){
+					newShape.vertices = [];
+					newShape.referenceVertices = [];
+					for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){ // this loops ensures that referenceVertices and vertices arrays of the new shape are not simply referencing the original 
+						newShape.vertices[j] = shapeSelection.shapes[key][2][i].vertices[j];
+						newShape.referenceVertices[j] = shapeSelection.shapes[key][2][i].referenceVertices[j];
+					}
+					
+					for(var n = 0; n < shapeSelection.shapes[key][2][i].pointsArray.length; n++){ //pointsArray must be reset for each copy otherwise it would be fixed for all the descendants of a copied shape
+						newShape.pointsArray[n] = [[],[]];
+						newShape.pointsArray[n][0] = shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[n][0];
+						newShape.pointsArray[n][1] = shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[n][1];
+					}
+					
+					newShape.X = 0; // newShape's X and Y coordinates are set to zero so that the centralize function can work properly
+					newShape.Y = 0;
+					
+					var k;
+					centralize(newShape, newShape.pointsArray, k);
+				//}
+					newShape.X = mousePos.x + 5; //places the new copy near where the cursor is
+					newShape.Y = mousePos.y + 5;
+					if(!copying){shapeSelection.shapes[key][2].push(newShape);}
 			}
 		}
 	}
 }
 
 function physTest(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(physics && dragging && shapeSelection[key][2][i].selected){
-					shapeSelection[key][2][i].angularVelocity = 0;
-				}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(physics && dragging && shapeSelection.shapes[key][2][i].selected){
+				shapeSelection.shapes[key][2][i].angularVelocity = 0;
 			}
 		}
 	}
 }
 
 function physMove(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(physics && dragging && shapeSelection[key][2][i].selected){
-					physicsObject.throwArray.push([mousePos.x, mousePos.y]);
-					var arrayLength = physicsObject.throwArray.length - 1;
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(physics && dragging && shapeSelection.shapes[key][2][i].selected){
+				physicsObject.throwArray.push([mousePos.x, mousePos.y]);
+				var arrayLength = physicsObject.throwArray.length - 1;
+				
+				if(physicsObject.throwArray.length > 3){
+					var velocity_x = (physicsObject.throwArray[arrayLength][0] - physicsObject.throwArray[arrayLength - 1][0]
+					+ physicsObject.throwArray[arrayLength - 1][0] - physicsObject.throwArray[arrayLength - 2][0]
+					+ physicsObject.throwArray[arrayLength - 2][0] - physicsObject.throwArray[arrayLength - 3][0])/3;
 					
-					if(physicsObject.throwArray.length > 3){
-						var velocity_x = (physicsObject.throwArray[arrayLength][0] - physicsObject.throwArray[arrayLength - 1][0]
-						+ physicsObject.throwArray[arrayLength - 1][0] - physicsObject.throwArray[arrayLength - 2][0]
-						+ physicsObject.throwArray[arrayLength - 2][0] - physicsObject.throwArray[arrayLength - 3][0])/3;
-						
-						var velocity_y = (physicsObject.throwArray[arrayLength][1] - physicsObject.throwArray[arrayLength - 1][1]
-						+ physicsObject.throwArray[arrayLength - 1][1] - physicsObject.throwArray[arrayLength - 2][1]
-						+ physicsObject.throwArray[arrayLength - 2][1] - physicsObject.throwArray[arrayLength - 3][1])/3;
-						
-						shapeSelection[key][2][i].velocity[0] = velocity_x;
-						shapeSelection[key][2][i].velocity[1] = velocity_y;
+					var velocity_y = (physicsObject.throwArray[arrayLength][1] - physicsObject.throwArray[arrayLength - 1][1]
+					+ physicsObject.throwArray[arrayLength - 1][1] - physicsObject.throwArray[arrayLength - 2][1]
+					+ physicsObject.throwArray[arrayLength - 2][1] - physicsObject.throwArray[arrayLength - 3][1])/3;
+					
+					shapeSelection.shapes[key][2][i].velocity[0] = velocity_x;
+					shapeSelection.shapes[key][2][i].velocity[1] = velocity_y;
 
-						var TouchDistance_x = shapeSelection[key][2][i].touchPoints[0] - shapeSelection[key][2][i].X;
-						var TouchDistance_y = shapeSelection[key][2][i].touchPoints[1] - shapeSelection[key][2][i].Y;
-						
-						var TouchDistance = [TouchDistance_x, TouchDistance_y]; 
-						var gradient = TouchDistance_y/TouchDistance_x;
-						var perpendicularVector = [-TouchDistance_x/gradient, -TouchDistance_y/gradient];
-						var forceMagnitude = distance(velocity_x, velocity_y);
-						
-						var angle = angleCalc(perpendicularVector[0], perpendicularVector[1], velocity_x, velocity_y);
-						angularVelocity = forceMagnitude * Math.cos(angle);				
-						//shapeSelection[key][2][i].angularVelocity = angularVelocity/150;
-					}
+					var TouchDistance_x = shapeSelection.shapes[key][2][i].touchPoints[0] - shapeSelection.shapes[key][2][i].X;
+					var TouchDistance_y = shapeSelection.shapes[key][2][i].touchPoints[1] - shapeSelection.shapes[key][2][i].Y;
+					
+					var TouchDistance = [TouchDistance_x, TouchDistance_y]; 
+					var gradient = TouchDistance_y/TouchDistance_x;
+					var perpendicularVector = [-TouchDistance_x/gradient, -TouchDistance_y/gradient];
+					var forceMagnitude = distance(velocity_x, velocity_y);
+					
+					var angle = angleCalc(perpendicularVector[0], perpendicularVector[1], velocity_x, velocity_y);
+					angularVelocity = forceMagnitude * Math.cos(angle);				
+					//shapeSelection.shapes[key][2][i].angularVelocity = angularVelocity/150;
 				}
 			}
 		}
@@ -956,13 +932,11 @@ function physMove(){
 
 
 function clearPhysMove(){
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				if(physics && shapeSelection[key][2][i].selected){
-					physicsObject.throwArray = [];
-					//shapeSelection[key][2][i].angularVelocity = 0;
-				}
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			if(physics && shapeSelection.shapes[key][2][i].selected){
+				physicsObject.throwArray = [];
+				//shapeSelection.shapes[key][2][i].angularVelocity = 0;
 			}
 		}
 	}
@@ -971,343 +945,339 @@ function clearPhysMove(){
 
 function collisionDetector(){
 if(physics)
-	for(key in shapeSelection){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
-				shapeSelection[key][2][i].preCollision = false;
-				//shapeSelection[key][2][i].collision = false;
-				for(unit in shapeSelection){
-					if(unit != 'userID' && unit != 'isPublic' && unit != 'name'){
-						for(var j = 0; j < shapeSelection[unit][2].length; j++){
-							if(!(i == j && key == unit)){
-								if(distance(shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X, shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y) < shapeSelection[key][2][i].setOuterRadius() + shapeSelection[unit][2][j].setOuterRadius() ||
-									unit == 'wall' && j == 0 && shapeSelection[key][2][i].X < shapeSelection[key][2][i].setOuterRadius() ||
-									unit == 'wall' && j == 1 && shapeSelection[key][2][i].X + shapeSelection[key][2][i].setOuterRadius() > canvas.width ||
-									unit == 'wall' && j == 2 && shapeSelection[key][2][i].Y + shapeSelection[key][2][i].setOuterRadius() > canvas.height ||
-									unit == 'wall' && j == 3 && shapeSelection[key][2][i].Y < shapeSelection[key][2][i].setOuterRadius() + 50){
-									
-									shapeSelection[key][2][i].preCollision = true;
+	for(key in shapeSelection.shapes){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			shapeSelection.shapes[key][2][i].preCollision = false;
+			//shapeSelection.shapes[key][2][i].collision = false;
+			for(unit in shapeSelection.shapes){
+				for(var j = 0; j < shapeSelection.shapes[unit][2].length; j++){
+					if(!(i == j && key == unit)){
+						if(distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y) < shapeSelection.shapes[key][2][i].setOuterRadius() + shapeSelection.shapes[unit][2][j].setOuterRadius() ||
+							unit == 'wall' && j == 0 && shapeSelection.shapes[key][2][i].X < shapeSelection.shapes[key][2][i].setOuterRadius() ||
+							unit == 'wall' && j == 1 && shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.width ||
+							unit == 'wall' && j == 2 && shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.height ||
+							unit == 'wall' && j == 3 && shapeSelection.shapes[key][2][i].Y < shapeSelection.shapes[key][2][i].setOuterRadius() + 50){
+							
+							shapeSelection.shapes[key][2][i].preCollision = true;
 
-										for(var k = 0; k < shapeSelection[key][2][i].vertices.length; k++){ // check each vertex of shape A to see if it's in shape B
-											bufferCtx.beginPath();
-											bufferCtx.moveTo(shapeSelection[unit][2][j].vertices[0][0] + shapeSelection[unit][2][j].X, shapeSelection[unit][2][j].vertices[0][1] + shapeSelection[unit][2][j].Y);
-											for(var m = 0; m < shapeSelection[unit][2][j].vertices.length; m++){ // check shape B
-												bufferCtx.lineTo(shapeSelection[unit][2][j].vertices[m][0] + shapeSelection[unit][2][j].X, shapeSelection[unit][2][j].vertices[m][1] + shapeSelection[unit][2][j].Y);
-											}
-											if(bufferCtx.isPointInPath(shapeSelection[key][2][i].vertices[k][0] + shapeSelection[key][2][i].X, shapeSelection[key][2][i].vertices[k][1] + shapeSelection[key][2][i].Y)){
-												
-												shapeSelection[key][2][i].contactList[0] = shapeSelection[unit][2][j].id;
-												//shapeSelection[unit][2][j].contactList[0] = shapeSelection[key][2][i].id;
-												
-												if(shapeSelection[key][2][i].vertices[k][3].collision === false){
-												/*****************************************Body A ***************************************************/
-												//finding collision points on A
-												var massA = shapeSelection[key][2][i].mass;
-												var momentOfInertiaA = shapeSelection[key][2][i].momentOfInertia;
-												
-												shapeSelection[key][2][i].collisionPoint.x = shapeSelection[key][2][i].vertices[k][0];
-												shapeSelection[key][2][i].collisionPoint.y = shapeSelection[key][2][i].vertices[k][1];
-												
-												collisionPointA_x = shapeSelection[key][2][i].collisionPoint.x;
-												collisionPointA_y = shapeSelection[key][2][i].collisionPoint.y;
-												
-												//calculate the velocity vector of the collision point for shape A relative to the center of mass
-												var rotA = rotater2(0, 0, shapeSelection[key][2][i].collisionPoint.x, shapeSelection[key][2][i].collisionPoint.y, shapeSelection[key][2][i].angularVelocity);
-												
-												//calculate the actual velocity vector of the collision point for shape shapeSelection[key][2][i]
-												shapeSelection[key][2][i].collisionPoint.velocity[0] = shapeSelection[key][2][i].velocity[0] + rotA[0];
-												shapeSelection[key][2][i].collisionPoint.velocity[1] = shapeSelection[key][2][i].velocity[1] + rotA[1];
-												
-												var colPointVelA_x = shapeSelection[key][2][i].collisionPoint.velocity[0];
-												var colPointVelA_y = shapeSelection[key][2][i].collisionPoint.velocity[1];
-												
-												
-												/***************************************** Body B ***************************************************/
-												
-												//finding collision points on B
-												
-												var massB = shapeSelection[unit][2][j].mass;
-												var momentOfInertiaB = shapeSelection[unit][2][j].momentOfInertia;
-																							  
-												shapeSelection[unit][2][j].collisionPoint.x = collisionPointA_x + shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X;
-												shapeSelection[unit][2][j].collisionPoint.y = collisionPointA_y + shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y;
-												
-												var collisionPointB_x = shapeSelection[unit][2][j].collisionPoint.x;
-												var collisionPointB_y = shapeSelection[unit][2][j].collisionPoint.y;
-												
-												//calculate the velocity vector of the collision point for shape B relative to the center of mass
-												var rotB = rotater2(0, 0, shapeSelection[unit][2][j].collisionPoint.x, shapeSelection[unit][2][j].collisionPoint.y, shapeSelection[unit][2][j].angularVelocity);
-												
-												//calculate the actual velocity vector of the collision point for shape shapeSelection[unit][2][j]
-												shapeSelection[unit][2][j].collisionPoint.velocity[0] = shapeSelection[unit][2][j].velocity[0] + rotB[0];
-												shapeSelection[unit][2][j].collisionPoint.velocity[1] = shapeSelection[unit][2][j].velocity[1] + rotB[1];
-												
-												var colPointVelB_x = shapeSelection[unit][2][j].collisionPoint.velocity[0];
-												var colPointVelB_y = shapeSelection[unit][2][j].collisionPoint.velocity[1];
-												
-												/******************************************* calculating the impulse *******************************************/
-												
-												//the difference in the velocities of the collision points
-												var colVelocityAB_x = colPointVelA_x - colPointVelB_x;
-												var colVelocityAB_y = colPointVelA_y - colPointVelB_y;
-												
-												var velocityAB_x = shapeSelection[key][2][i].velocity[0] - shapeSelection[unit][2][j].velocity[0];
-												var velocityAB_y = shapeSelection[key][2][i].velocity[1] - shapeSelection[unit][2][j].velocity[1] ;
-												
-												var rot_x = rotA[0];
-												var rot_y = rotA[1];
-
-												collision_Data = collisionData([collisionPointA_x + shapeSelection[key][2][i].X, collisionPointA_y + shapeSelection[key][2][i].Y], [colVelocityAB_x, colVelocityAB_y], shapeSelection[key][2][i].vertices, [shapeSelection[key][2][i].X, shapeSelection[key][2][i].Y], shapeSelection[unit][2][j].vertices, [shapeSelection[unit][2][j].X, shapeSelection[unit][2][j].Y], [rot_x, rot_y]);
-												
-												//magnitude of vector relVelocityAB
-												MagColVelocityAB = distance(colVelocityAB_x, colVelocityAB_y);
-												
-												var MagVelocityA = distance(colPointVelA_x, colPointVelA_y);
-												var MagVelocityB = distance(colPointVelB_x, colPointVelB_y);
-												
-												normalVector_x = collision_Data.unitNormal[0];
-												normalVector_y = collision_Data.unitNormal[1];
-												
-												
-												//angle between normal vector and relative velocities vector
-												var phi = angleCalc(normalVector_x, normalVector_y, colVelocityAB_x, colVelocityAB_y);
-
-												var dotColVelocityABNormal = colVelocityAB_x * normalVector_x + colVelocityAB_y * normalVector_y;
-												
-												//cross product of the collision point and normal vector
-												crossVelocityANormal = collisionPointA_x * normalVector_y - collisionPointA_y * normalVector_x;
-												crossVelocityBNormal = collisionPointB_x * normalVector_y - collisionPointB_y * normalVector_x;									
-												
-												//finding the impulse
-												
-												var impulse = -(1 + restitution) * dotColVelocityABNormal/(1/massA + 1/massB + crossVelocityANormal * crossVelocityANormal/momentOfInertiaA + crossVelocityBNormal * crossVelocityBNormal/momentOfInertiaB);
-												
-												velocityChangeA_x = impulse * normalVector_x/massA;
-												velocityChangeA_y = impulse * normalVector_y/massA;
-												
-												velocityChangeB_x = -impulse * normalVector_x/massB;
-												velocityChangeB_y = -impulse * normalVector_y/massB;
-												
-												angularVelocityChangeA = impulse * crossVelocityANormal/momentOfInertiaA;
-												angularVelocityChangeB = -impulse * crossVelocityBNormal/momentOfInertiaB;
-
-													shapeSelection[key][2][i].velocity[0] += velocityChangeA_x;
-													shapeSelection[key][2][i].velocity[1] += velocityChangeA_y;
-													
-													shapeSelection[unit][2][j].velocity[0] += velocityChangeB_x;
-													shapeSelection[unit][2][j].velocity[1] += velocityChangeB_y;
-													
-													shapeSelection[key][2][i].angularVelocity += angularVelocityChangeA;
-													shapeSelection[unit][2][j].angularVelocity += angularVelocityChangeB;
-													
-												//Friction: subtract a percentage of the velocity
-												shapeSelection[key][2][i].velocity[0] -= velocityAB_x/20;
-												shapeSelection[key][2][i].velocity[1] -= velocityAB_y/20;
-												
-												//Freeze object if its been slowed below a certain velocity due to friction
-												var MagVelocityAB = distance(velocityAB_x, velocityAB_y);
-												
-												//minFrictionVelocity
-												if(MagVelocityAB < 0.05){
-													shapeSelection[key][2][i].velocity[0] = 0;
-													shapeSelection[key][2][i].velocity[1] = 0;
-												}
-
-												//move shapes apart immediately after collision to prevent them from sticking
-												var factor = 2;
-												shapeSelection[key][2][i].X += velocityChangeA_x * factor;
-												shapeSelection[key][2][i].Y += velocityChangeA_y * factor;
-												
-												shapeSelection[unit][2][j].X += velocityChangeB_x * factor;
-												shapeSelection[unit][2][j].Y += velocityChangeB_y * factor;
-
-												collisionCounter++;
-												shapeSelection[key][2][i].vertices[k][3] = {collision: true};
-												
-												shapeSelection[unit][2][j].X
-												startPoint = collision_Data.collision_Data.sideOnB.first;
-												endPoint = collision_Data.collision_Data.sideOnB.second;
-
+								for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){ // check each vertex of shape A to see if it's in shape B
+									bufferCtx.beginPath();
+									bufferCtx.moveTo(shapeSelection.shapes[unit][2][j].vertices[0][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[0][1] + shapeSelection.shapes[unit][2][j].Y);
+									for(var m = 0; m < shapeSelection.shapes[unit][2][j].vertices.length; m++){ // check shape B
+										bufferCtx.lineTo(shapeSelection.shapes[unit][2][j].vertices[m][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[m][1] + shapeSelection.shapes[unit][2][j].Y);
 									}
-											if(key != 'wall'){
+									if(bufferCtx.isPointInPath(shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y)){
+										
+										shapeSelection.shapes[key][2][i].contactList[0] = shapeSelection.shapes[unit][2][j].id;
+										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
+										
+										if(shapeSelection.shapes[key][2][i].vertices[k][3].collision === false){
+										/*****************************************Body A ***************************************************/
+										//finding collision points on A
+										var massA = shapeSelection.shapes[key][2][i].mass;
+										var momentOfInertiaA = shapeSelection.shapes[key][2][i].momentOfInertia;
+										
+										shapeSelection.shapes[key][2][i].collisionPoint.x = shapeSelection.shapes[key][2][i].vertices[k][0];
+										shapeSelection.shapes[key][2][i].collisionPoint.y = shapeSelection.shapes[key][2][i].vertices[k][1];
+										
+										collisionPointA_x = shapeSelection.shapes[key][2][i].collisionPoint.x;
+										collisionPointA_y = shapeSelection.shapes[key][2][i].collisionPoint.y;
+										
+										//calculate the velocity vector of the collision point for shape A relative to the center of mass
+										var rotA = rotater2(0, 0, shapeSelection.shapes[key][2][i].collisionPoint.x, shapeSelection.shapes[key][2][i].collisionPoint.y, shapeSelection.shapes[key][2][i].angularVelocity);
+										
+										//calculate the actual velocity vector of the collision point for shape shapeSelection.shapes[key][2][i]
+										shapeSelection.shapes[key][2][i].collisionPoint.velocity[0] = shapeSelection.shapes[key][2][i].velocity[0] + rotA[0];
+										shapeSelection.shapes[key][2][i].collisionPoint.velocity[1] = shapeSelection.shapes[key][2][i].velocity[1] + rotA[1];
+										
+										var colPointVelA_x = shapeSelection.shapes[key][2][i].collisionPoint.velocity[0];
+										var colPointVelA_y = shapeSelection.shapes[key][2][i].collisionPoint.velocity[1];
+										
+										
+										/***************************************** Body B ***************************************************/
+										
+										//finding collision points on B
+										
+										var massB = shapeSelection.shapes[unit][2][j].mass;
+										var momentOfInertiaB = shapeSelection.shapes[unit][2][j].momentOfInertia;
+																					  
+										shapeSelection.shapes[unit][2][j].collisionPoint.x = collisionPointA_x + shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X;
+										shapeSelection.shapes[unit][2][j].collisionPoint.y = collisionPointA_y + shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y;
+										
+										var collisionPointB_x = shapeSelection.shapes[unit][2][j].collisionPoint.x;
+										var collisionPointB_y = shapeSelection.shapes[unit][2][j].collisionPoint.y;
+										
+										//calculate the velocity vector of the collision point for shape B relative to the center of mass
+										var rotB = rotater2(0, 0, shapeSelection.shapes[unit][2][j].collisionPoint.x, shapeSelection.shapes[unit][2][j].collisionPoint.y, shapeSelection.shapes[unit][2][j].angularVelocity);
+										
+										//calculate the actual velocity vector of the collision point for shape shapeSelection.shapes[unit][2][j]
+										shapeSelection.shapes[unit][2][j].collisionPoint.velocity[0] = shapeSelection.shapes[unit][2][j].velocity[0] + rotB[0];
+										shapeSelection.shapes[unit][2][j].collisionPoint.velocity[1] = shapeSelection.shapes[unit][2][j].velocity[1] + rotB[1];
+										
+										var colPointVelB_x = shapeSelection.shapes[unit][2][j].collisionPoint.velocity[0];
+										var colPointVelB_y = shapeSelection.shapes[unit][2][j].collisionPoint.velocity[1];
+										
+										/******************************************* calculating the impulse *******************************************/
+										
+										//the difference in the velocities of the collision points
+										var colVelocityAB_x = colPointVelA_x - colPointVelB_x;
+										var colVelocityAB_y = colPointVelA_y - colPointVelB_y;
+										
+										var velocityAB_x = shapeSelection.shapes[key][2][i].velocity[0] - shapeSelection.shapes[unit][2][j].velocity[0];
+										var velocityAB_y = shapeSelection.shapes[key][2][i].velocity[1] - shapeSelection.shapes[unit][2][j].velocity[1] ;
+										
+										var rot_x = rotA[0];
+										var rot_y = rotA[1];
 
-												var repulsiveFactor = MagColVelocityAB * 100;
-												
-												/*if((MagColVelocityAB < 0.01 || MagVelocityA < 0.01 || MagVelocityB < 0.01) && unit != 'wall'){
-													repulsiveFactor = 1;
-												}*/
-												if(MagColVelocityAB < 0.01 && unit != 'wall'){
-													repulsiveFactor = 1;
-												}
-												//var ABdistance = distance(shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X, shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y) * repulsiveFactor*1;
-												var ABdistance = distance(shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X, shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y);
-												
-												/*if(ABdistance < 1){
-													ABdistance = 10;
-												}*/
-												
-												var ABdistanceVector = [shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X, shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y];
-												//var magABdistanceVector = distance(shapeSelection[key][2][i].X - shapeSelection[unit][2][j].X, shapeSelection[key][2][i].Y - shapeSelection[unit][2][j].Y) * repulsiveFactor;
-												//var magABdistanceVector = ABdistance * repulsiveFactor;
-												
-												var penDepth = distance(collisionPointA_x + shapeSelection[key][2][i].X - collision_Data.collision_Data.x, collisionPointA_y + shapeSelection[key][2][i].Y - collision_Data.collision_Data.y);
+										collision_Data = collisionData([collisionPointA_x + shapeSelection.shapes[key][2][i].X, collisionPointA_y + shapeSelection.shapes[key][2][i].Y], [colVelocityAB_x, colVelocityAB_y], shapeSelection.shapes[key][2][i].vertices, [shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].Y], shapeSelection.shapes[unit][2][j].vertices, [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y], [rot_x, rot_y]);
+										
+										//magnitude of vector relVelocityAB
+										MagColVelocityAB = distance(colVelocityAB_x, colVelocityAB_y);
+										
+										var MagVelocityA = distance(colPointVelA_x, colPointVelA_y);
+										var MagVelocityB = distance(colPointVelB_x, colPointVelB_y);
+										
+										normalVector_x = collision_Data.unitNormal[0];
+										normalVector_y = collision_Data.unitNormal[1];
+										
+										
+										//angle between normal vector and relative velocities vector
+										var phi = angleCalc(normalVector_x, normalVector_y, colVelocityAB_x, colVelocityAB_y);
 
-												repulsion = [ABdistanceVector[0]/ABdistance, ABdistanceVector[1]/ABdistance];
+										var dotColVelocityABNormal = colVelocityAB_x * normalVector_x + colVelocityAB_y * normalVector_y;
+										
+										//cross product of the collision point and normal vector
+										crossVelocityANormal = collisionPointA_x * normalVector_y - collisionPointA_y * normalVector_x;
+										crossVelocityBNormal = collisionPointB_x * normalVector_y - collisionPointB_y * normalVector_x;									
+										
+										//finding the impulse
+										
+										var impulse = -(1 + restitution) * dotColVelocityABNormal/(1/massA + 1/massB + crossVelocityANormal * crossVelocityANormal/momentOfInertiaA + crossVelocityBNormal * crossVelocityBNormal/momentOfInertiaB);
+										
+										velocityChangeA_x = impulse * normalVector_x/massA;
+										velocityChangeA_y = impulse * normalVector_y/massA;
+										
+										velocityChangeB_x = -impulse * normalVector_x/massB;
+										velocityChangeB_y = -impulse * normalVector_y/massB;
+										
+										angularVelocityChangeA = impulse * crossVelocityANormal/momentOfInertiaA;
+										angularVelocityChangeB = -impulse * crossVelocityBNormal/momentOfInertiaB;
 
-												var maxDepth = 0.15;
-												if(penDepth > maxDepth){
-													penDepth = maxDepth;
-												}
-												
-												//if(unit != 'wall'){
-													/*console.log('############################################################################################################  repulsion', repulsion);
-													console.log('############################################################################################################  repulsion Magnitude', distance(repulsion[0], repulsion[1]));
-													console.log('############################################################################################################  repulsiveFactor', repulsiveFactor);
-													console.log('############################################################################################################  ABdistance', ABdistance);
-													console.log('############################################################################################################  MagColVelocityAB', MagColVelocityAB);
-													console.log('############################################################################################################  penDepth', penDepth);
-													console.log('############################################################################################################  velocity of A', shapeSelection[key][2][i].velocity);
-													console.log('############################################################################################################  collision_Data.x', collision_Data.collision_Data.x);*/
-												//}
+											shapeSelection.shapes[key][2][i].velocity[0] += velocityChangeA_x;
+											shapeSelection.shapes[key][2][i].velocity[1] += velocityChangeA_y;
+											
+											shapeSelection.shapes[unit][2][j].velocity[0] += velocityChangeB_x;
+											shapeSelection.shapes[unit][2][j].velocity[1] += velocityChangeB_y;
+											
+											shapeSelection.shapes[key][2][i].angularVelocity += angularVelocityChangeA;
+											shapeSelection.shapes[unit][2][j].angularVelocity += angularVelocityChangeB;
+											
+										//Friction: subtract a percentage of the velocity
+										shapeSelection.shapes[key][2][i].velocity[0] -= velocityAB_x/20;
+										shapeSelection.shapes[key][2][i].velocity[1] -= velocityAB_y/20;
+										
+										//Freeze object if its been slowed below a certain velocity due to friction
+										var MagVelocityAB = distance(velocityAB_x, velocityAB_y);
+										
+										//minFrictionVelocity
+										if(MagVelocityAB < 0.05){
+											shapeSelection.shapes[key][2][i].velocity[0] = 0;
+											shapeSelection.shapes[key][2][i].velocity[1] = 0;
+										}
 
-												
-												/***************************** Getting the objects to rest on each other ****************************/
-												
-												if(penDepth <= 0.01 && key != 'wall'){
-													shapeSelection[key][2][i].velocity[0] = 0; //Ideally relative velocity should be used here instead of absolute velocity
-													shapeSelection[key][2][i].velocity[1] = 0;
-												}else{
-													shapeSelection[key][2][i].gravity = true;
-												}
-												
-												var perpPointX = collisionPointA_x + shapeSelection[key][2][i].X;
-												var perpPointY = collisionPointA_y + shapeSelection[key][2][i].Y;
-												
-												/***  Colliding Side ***/
-												var gradient = collision_Data.collision_Data.gradient;
-												sidePointX = collision_Data.collision_Data.x;
-												sidePointY = collision_Data.collision_Data.y;
-												colVelocity = collision_Data.collision_Data.velocity
-												
-												shapeA = [];
-												shapeB = [];
-												
-													for(var s = 0; s < shapeSelection[key][2][i].vertices.length; s++){
-														shapeA[s] = [];
-														shapeA[s][0] = shapeSelection[key][2][i].vertices[s][0]; 
-														shapeA[s][1] = shapeSelection[key][2][i].vertices[s][1]; 
-													}
-													for(var s = 0; s < shapeSelection[unit][2][j].vertices.length; s++){	
-														shapeB[s] = [];
-														shapeB[s][0] = shapeSelection[unit][2][j].vertices[s][0]; 
-														shapeB[s][1] = shapeSelection[unit][2][j].vertices[s][1]; 
-													}
-													
-												shapeACenter = collision_Data.collision_Data.shapeACenter;
-												shapeBCenter = collision_Data.collision_Data.shapeBCenter;
-												
-												var sideC = sidePointY - gradient * sidePointX;
-												
-												/*** The perpendicular line that connects the colliding side and the colliding vertex ***/
-												var perpGradient = collision_Data.unitNormal[1]/collision_Data.unitNormal[0];
-												var perpC = perpPointY - perpGradient * perpPointX;
-												
-												var intersectionPointX = (perpC - sideC)/(gradient - perpGradient);
-												var intersectionPointY = gradient * intersectionPointX + sideC;
+										//move shapes apart immediately after collision to prevent them from sticking
+										var factor = 2;
+										shapeSelection.shapes[key][2][i].X += velocityChangeA_x * factor;
+										shapeSelection.shapes[key][2][i].Y += velocityChangeA_y * factor;
+										
+										shapeSelection.shapes[unit][2][j].X += velocityChangeB_x * factor;
+										shapeSelection.shapes[unit][2][j].Y += velocityChangeB_y * factor;
 
-												if(Math.abs(gradient) >= 100){ // if the gradient is very steep use swap the roles of x and y axis in the calculation to get more accurate values for x and y at the point of intersection
-													
-													/***  Colliding Side ***/
-													var swappedGradient = 1 / gradient;
-													var swappedSideC = sidePointX - swappedGradient * sidePointY;
-													
-													/*** The perpendicular line ***/
-													var swappedPerpGradient = 1 / perpGradient;
-													var swappedPerpC = perpPointX - swappedPerpGradient * perpPointY;
-													
-													intersectionPointY = (swappedPerpC - swappedSideC)/(swappedGradient - swappedPerpGradient);
-													intersectionPointX = swappedGradient * intersectionPointY + swappedSideC;
-													
-												}
-												/** edgeDistance: perpendicular distance between colliding vertex and the colliding side **/
-												var edgeDistance = distance(perpPointX - intersectionPointX, perpPointY - intersectionPointY); //possibly replace perpPoint with colliding vertex
-												
-												
-												/** check to see where repulsion would move the colliding vertex relative to shape B **/
-												var onPath = false;
-												var checkPoint = [];
-												checkPoint[0] =  perpPointX + repulsion[0] * penDepth; //multiply repulsion by 2
-												checkPoint[1] =  perpPointY + repulsion[1] * penDepth; //multiply repulsion by 2
+										collisionCounter++;
+										shapeSelection.shapes[key][2][i].vertices[k][3] = {collision: true};
+										
+										shapeSelection.shapes[unit][2][j].X
+										startPoint = collision_Data.collision_Data.sideOnB.first;
+										endPoint = collision_Data.collision_Data.sideOnB.second;
 
-												
-												var checkPointDistance = distance(checkPoint[0] - intersectionPointX, checkPoint[1] - intersectionPointY);
-												
-															/**** Check to see if repulsion is moving shape A in the right direction ****/
-												
-												bufferCtx.beginPath();
-												bufferCtx.moveTo(shapeSelection[unit][2][j].vertices[0][0] + shapeSelection[unit][2][j].X, shapeSelection[unit][2][j].vertices[0][1] + shapeSelection[unit][2][j].Y);
-												for(var m = 0; m < shapeSelection[unit][2][j].vertices.length; m++){ // check shape B
-													bufferCtx.lineTo(shapeSelection[unit][2][j].vertices[m][0] + shapeSelection[unit][2][j].X, shapeSelection[unit][2][j].vertices[m][1] + shapeSelection[unit][2][j].Y);
-												}
-												if(bufferCtx.isPointInPath(checkPoint[0], checkPoint[1])){
-													onPath = true;
-												}
-												
-		//console.log('##########################################################################################edgeDistance', edgeDistance, checkPointDistance, pointOnB);
-												if(onPath == true && checkPointDistance > edgeDistance){
-													//penDepth *= -1;
-												}
+							}
+									if(key != 'wall'){
 
-												
-												if(key != 'wall'){ // this condition is probably redundant
-													if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
-														shapeSelection[key][2][i].X += repulsion[0] * penDepth;
-													}
-													shapeSelection[key][2][i].Y += repulsion[1] * penDepth;
-												}
-												
-												
-												if(penDepth <= 0.01 && unit != 'wall'){
-													shapeSelection[unit][2][j].velocity[0] = 0; // Ideally relative velocity should be used here instead of absolute velocity
-													shapeSelection[unit][2][j].velocity[1] = 0;
-												}else{
-													shapeSelection[unit][2][j].gravity = true;
-												}
-												
-												if(unit != 'wall'){
-													if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
-														shapeSelection[unit][2][j].X -= repulsion[0] * penDepth;
-													}
-													shapeSelection[unit][2][j].Y -= repulsion[1] * penDepth;
-												}
-												
-												/** repulsiveF is just for blueprint**/
-												repulsiveF[0] = -repulsion[0] * penDepth;
-												repulsiveF[1] = -repulsion[1] * penDepth;	
+										var repulsiveFactor = MagColVelocityAB * 100;
+										
+										/*if((MagColVelocityAB < 0.01 || MagVelocityA < 0.01 || MagVelocityB < 0.01) && unit != 'wall'){
+											repulsiveFactor = 1;
+										}*/
+										if(MagColVelocityAB < 0.01 && unit != 'wall'){
+											repulsiveFactor = 1;
+										}
+										//var ABdistance = distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y) * repulsiveFactor*1;
+										var ABdistance = distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y);
+										
+										/*if(ABdistance < 1){
+											ABdistance = 10;
+										}*/
+										
+										var ABdistanceVector = [shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y];
+										//var magABdistanceVector = distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y) * repulsiveFactor;
+										//var magABdistanceVector = ABdistance * repulsiveFactor;
+										
+										var penDepth = distance(collisionPointA_x + shapeSelection.shapes[key][2][i].X - collision_Data.collision_Data.x, collisionPointA_y + shapeSelection.shapes[key][2][i].Y - collision_Data.collision_Data.y);
 
-												
+										repulsion = [ABdistanceVector[0]/ABdistance, ABdistanceVector[1]/ABdistance];
+
+										var maxDepth = 0.15;
+										if(penDepth > maxDepth){
+											penDepth = maxDepth;
+										}
+										
+										//if(unit != 'wall'){
+											/*console.log('############################################################################################################  repulsion', repulsion);
+											console.log('############################################################################################################  repulsion Magnitude', distance(repulsion[0], repulsion[1]));
+											console.log('############################################################################################################  repulsiveFactor', repulsiveFactor);
+											console.log('############################################################################################################  ABdistance', ABdistance);
+											console.log('############################################################################################################  MagColVelocityAB', MagColVelocityAB);
+											console.log('############################################################################################################  penDepth', penDepth);
+											console.log('############################################################################################################  velocity of A', shapeSelection.shapes[key][2][i].velocity);
+											console.log('############################################################################################################  collision_Data.x', collision_Data.collision_Data.x);*/
+										//}
+
+										
+										/***************************** Getting the objects to rest on each other ****************************/
+										
+										if(penDepth <= 0.01 && key != 'wall'){
+											shapeSelection.shapes[key][2][i].velocity[0] = 0; //Ideally relative velocity should be used here instead of absolute velocity
+											shapeSelection.shapes[key][2][i].velocity[1] = 0;
+										}else{
+											shapeSelection.shapes[key][2][i].gravity = true;
+										}
+										
+										var perpPointX = collisionPointA_x + shapeSelection.shapes[key][2][i].X;
+										var perpPointY = collisionPointA_y + shapeSelection.shapes[key][2][i].Y;
+										
+										/***  Colliding Side ***/
+										var gradient = collision_Data.collision_Data.gradient;
+										sidePointX = collision_Data.collision_Data.x;
+										sidePointY = collision_Data.collision_Data.y;
+										colVelocity = collision_Data.collision_Data.velocity
+										
+										shapeA = [];
+										shapeB = [];
+										
+											for(var s = 0; s < shapeSelection.shapes[key][2][i].vertices.length; s++){
+												shapeA[s] = [];
+												shapeA[s][0] = shapeSelection.shapes[key][2][i].vertices[s][0]; 
+												shapeA[s][1] = shapeSelection.shapes[key][2][i].vertices[s][1]; 
+											}
+											for(var s = 0; s < shapeSelection.shapes[unit][2][j].vertices.length; s++){	
+												shapeB[s] = [];
+												shapeB[s][0] = shapeSelection.shapes[unit][2][j].vertices[s][0]; 
+												shapeB[s][1] = shapeSelection.shapes[unit][2][j].vertices[s][1]; 
 											}
 											
-										}else{
-											shapeSelection[key][2][i].vertices[k][3] = {collision: false};
-											shapeSelection[key][2][i].contactList = [];
-											}
-									}
+										shapeACenter = collision_Data.collision_Data.shapeACenter;
+										shapeBCenter = collision_Data.collision_Data.shapeBCenter;
 										
-									//check to see if any of the vertices are colliding before setting the collision of the shape
-									shapeSelection[key][2][i].collision = false;
-									shapeSelection[unit][2][j].collision = false;
-									for(var m = 0; m < shapeSelection[key][2][i].vertices.length; m++){
-										if(shapeSelection[key][2][i].vertices[m][3].collision){
-											shapeSelection[key][2][i].collision = true;
-											shapeSelection[unit][2][j].collision = true;
-											break;
+										var sideC = sidePointY - gradient * sidePointX;
+										
+										/*** The perpendicular line that connects the colliding side and the colliding vertex ***/
+										var perpGradient = collision_Data.unitNormal[1]/collision_Data.unitNormal[0];
+										var perpC = perpPointY - perpGradient * perpPointX;
+										
+										var intersectionPointX = (perpC - sideC)/(gradient - perpGradient);
+										var intersectionPointY = gradient * intersectionPointX + sideC;
+
+										if(Math.abs(gradient) >= 100){ // if the gradient is very steep use swap the roles of x and y axis in the calculation to get more accurate values for x and y at the point of intersection
+											
+											/***  Colliding Side ***/
+											var swappedGradient = 1 / gradient;
+											var swappedSideC = sidePointX - swappedGradient * sidePointY;
+											
+											/*** The perpendicular line ***/
+											var swappedPerpGradient = 1 / perpGradient;
+											var swappedPerpC = perpPointX - swappedPerpGradient * perpPointY;
+											
+											intersectionPointY = (swappedPerpC - swappedSideC)/(swappedGradient - swappedPerpGradient);
+											intersectionPointX = swappedGradient * intersectionPointY + swappedSideC;
+											
 										}
+										/** edgeDistance: perpendicular distance between colliding vertex and the colliding side **/
+										var edgeDistance = distance(perpPointX - intersectionPointX, perpPointY - intersectionPointY); //possibly replace perpPoint with colliding vertex
+										
+										
+										/** check to see where repulsion would move the colliding vertex relative to shape B **/
+										var onPath = false;
+										var checkPoint = [];
+										checkPoint[0] =  perpPointX + repulsion[0] * penDepth; //multiply repulsion by 2
+										checkPoint[1] =  perpPointY + repulsion[1] * penDepth; //multiply repulsion by 2
+
+										
+										var checkPointDistance = distance(checkPoint[0] - intersectionPointX, checkPoint[1] - intersectionPointY);
+										
+													/**** Check to see if repulsion is moving shape A in the right direction ****/
+										
+										bufferCtx.beginPath();
+										bufferCtx.moveTo(shapeSelection.shapes[unit][2][j].vertices[0][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[0][1] + shapeSelection.shapes[unit][2][j].Y);
+										for(var m = 0; m < shapeSelection.shapes[unit][2][j].vertices.length; m++){ // check shape B
+											bufferCtx.lineTo(shapeSelection.shapes[unit][2][j].vertices[m][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[m][1] + shapeSelection.shapes[unit][2][j].Y);
+										}
+										if(bufferCtx.isPointInPath(checkPoint[0], checkPoint[1])){
+											onPath = true;
+										}
+										
+//console.log('##########################################################################################edgeDistance', edgeDistance, checkPointDistance, pointOnB);
+										if(onPath == true && checkPointDistance > edgeDistance){
+											//penDepth *= -1;
+										}
+
+										
+										if(key != 'wall'){ // this condition is probably redundant
+											if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
+												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
+											}
+											shapeSelection.shapes[key][2][i].Y += repulsion[1] * penDepth;
+										}
+										
+										
+										if(penDepth <= 0.01 && unit != 'wall'){
+											shapeSelection.shapes[unit][2][j].velocity[0] = 0; // Ideally relative velocity should be used here instead of absolute velocity
+											shapeSelection.shapes[unit][2][j].velocity[1] = 0;
+										}else{
+											shapeSelection.shapes[unit][2][j].gravity = true;
+										}
+										
+										if(unit != 'wall'){
+											if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
+												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
+											}
+											shapeSelection.shapes[unit][2][j].Y -= repulsion[1] * penDepth;
+										}
+										
+										/** repulsiveF is just for blueprint**/
+										repulsiveF[0] = -repulsion[0] * penDepth;
+										repulsiveF[1] = -repulsion[1] * penDepth;	
+
+										
 									}
 									
-									//}
+								}else{
+									shapeSelection.shapes[key][2][i].vertices[k][3] = {collision: false};
+									shapeSelection.shapes[key][2][i].contactList = [];
+									}
+							}
+								
+							//check to see if any of the vertices are colliding before setting the collision of the shape
+							shapeSelection.shapes[key][2][i].collision = false;
+							shapeSelection.shapes[unit][2][j].collision = false;
+							for(var m = 0; m < shapeSelection.shapes[key][2][i].vertices.length; m++){
+								if(shapeSelection.shapes[key][2][i].vertices[m][3].collision){
+									shapeSelection.shapes[key][2][i].collision = true;
+									shapeSelection.shapes[unit][2][j].collision = true;
+									break;
 								}
 							}
+							
+							//}
 						}
 					}
 				}
@@ -1511,16 +1481,16 @@ function closestPoint(point, array){
 }
 
 function animator(){
-	for(key in shapeSelection){
+	for(key in shapeSelection.shapes){
 		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < shapeSelection[key][2].length; i++){
+			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 				if(physics){
-					shapeSelection[key][2][i].X += shapeSelection[key][2][i].velocity[0];
-					shapeSelection[key][2][i].Y += shapeSelection[key][2][i].velocity[1];
-					for(var n = 0; n < shapeSelection[key][2][i].vertices.length; n++){
-						var rot = rotater2(0, 0, shapeSelection[key][2][i].vertices[n][0], shapeSelection[key][2][i].vertices[n][1], shapeSelection[key][2][i].angularVelocity);
-						shapeSelection[key][2][i].vertices[n][0] += rot[0];
-						shapeSelection[key][2][i].vertices[n][1] += rot[1];
+					shapeSelection.shapes[key][2][i].X += shapeSelection.shapes[key][2][i].velocity[0];
+					shapeSelection.shapes[key][2][i].Y += shapeSelection.shapes[key][2][i].velocity[1];
+					for(var n = 0; n < shapeSelection.shapes[key][2][i].vertices.length; n++){
+						var rot = rotater2(0, 0, shapeSelection.shapes[key][2][i].vertices[n][0], shapeSelection.shapes[key][2][i].vertices[n][1], shapeSelection.shapes[key][2][i].angularVelocity);
+						shapeSelection.shapes[key][2][i].vertices[n][0] += rot[0];
+						shapeSelection.shapes[key][2][i].vertices[n][1] += rot[1];
 					}		
 				}
 			}
@@ -2099,8 +2069,8 @@ function draw(){
 		// so it can be saved as an image
 		//document.getElementById('canvasImg').src = dataURL;
 		image.src = dataURL;
-		//console.log(dataURL);
-		window.location.replace(dataURL);
+		console.log(dataURL);
+		//window.location.replace(dataURL);
 	}
 }
 
@@ -2329,7 +2299,7 @@ function wallDrawer(){
 function circleDrawer(){
 	bufferCtx.globalAlpha = 1;
 	bufferCtx.lineWidth = 0.5;
-	if(!dragging && shapeSelection.circle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+	if(!dragging && shapeSelection.shapes.circle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
 		bufferCtx.beginPath();
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
@@ -2347,7 +2317,7 @@ function circleDrawer(){
 function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
-		if(!dragging && shapeSelection.square[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+		if(!dragging && shapeSelection.shapes.square[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
@@ -2368,7 +2338,7 @@ function squareDrawer(){
 
 function triangleDrawer(){
 		bufferCtx.globalAlpha = 1;
-		if(!dragging && shapeSelection.triangle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+		if(!dragging && shapeSelection.shapes.triangle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
@@ -2605,9 +2575,9 @@ function backgroundGradient(icon){
 }
 
 function shapeSelector(){
-	shapeSelection.circle[0] = false;
-	shapeSelection.square[0] = false;
-	shapeSelection.triangle[0] = false;
+	shapeSelection.shapes.circle[0] = false;
+	shapeSelection.shapes.square[0] = false;
+	shapeSelection.shapes.triangle[0] = false;
 	deletion = false;
 	reSize = false;
 	reShape = false; 
@@ -2674,10 +2644,10 @@ function leave(shapes, shape){
 }
 
 function shapeSelect(){
-	for(key in shapeSelection){
+	for(key in shapeSelection.shapes){
 		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			if(shapeSelection[key][0]){
-				return [shapeSelection[key][1](), shapeSelection[key][2]];
+			if(shapeSelection.shapes[key][0]){
+				return [shapeSelection.shapes[key][1](), shapeSelection.shapes[key][2]];
 			}
 		}
 	}
@@ -2713,59 +2683,55 @@ function chooseColour(){
 wallConfig = {clearWall: false};
 	
 function clearAll(obj){
-	for(e in shapeSelection){ //if(unit != 'userID' && unit != 'isPublic'){
+	for(e in shapeSelection.shapes){ //if(unit != 'userID' && unit != 'isPublic'){
 		if(e != 'wall' || e == 'wall' && obj.clearWall){
-			if(e != 'userID' && e != 'isPublic' && e != 'name'){
-				var arrayOfShapes = shapeSelection[e][2];
-				arrayOfShapes.splice(0, arrayOfShapes.length);
-			}
+			var arrayOfShapes = shapeSelection.shapes[e][2];
+			arrayOfShapes.splice(0, arrayOfShapes.length);
 		}
 	}
 }
 
 /** this function saves simulations to the Mongodb database **/
 function loadShapes(sim){
-	for(key in sim){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < sim[key][2].length; i++){ //populate sim with shapes from e.g circleArray
-				
-				shapeSelection[key][2][i] = {};
-				
-				if(key == 'circle'){
-					var circle = new Circle();
-					shapeSelection[key][2][i] = circle;
-				}
-				if(key == 'square'){
-					var square = new Square();
-					shapeSelection[key][2][i] = square;
-				}
-				if(key == 'triangle'){
-					var triangle = new Triangle();
-					shapeSelection[key][2][i] = triangle;
-				}
-				if(key == 'customShape'){
-					var customShape = new CustomShape();
-					shapeSelection[key][2][i] = customShape;
-				}
-				if(key == 'pencil'){
-					var pointsArray = sim[key][2][i].pointsArray;
-					var pencil = new Pencil(pointsArray);
-					shapeSelection[key][2][i] = pencil;
-				}
-				
-				if(key == 'wall'){
-					var wall = new Walls();
-					shapeSelection[key][2][i] = wall;
-				}
-				
-				for(prop in sim[key][2][i]){ //populate the ith shape (js object) with properties
-					shapeSelection[key][2][i][prop] = sim[key][2][i][prop];
-				}
-				
-				if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-					shapeSelection[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-					shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
-				}
+	for(key in sim.shapes){
+		for(var i = 0; i < sim.shapes[key][2].length; i++){ //populate sim with shapes from e.g circleArray
+			
+			shapeSelection.shapes[key][2][i] = {};
+			
+			if(key == 'circle'){
+				var circle = new Circle();
+				shapeSelection.shapes[key][2][i] = circle;
+			}
+			if(key == 'square'){
+				var square = new Square();
+				shapeSelection.shapes[key][2][i] = square;
+			}
+			if(key == 'triangle'){
+				var triangle = new Triangle();
+				shapeSelection.shapes[key][2][i] = triangle;
+			}
+			if(key == 'customShape'){
+				var customShape = new CustomShape();
+				shapeSelection.shapes[key][2][i] = customShape;
+			}
+			if(key == 'pencil'){
+				var pointsArray = sim.shapes[key][2][i].pointsArray;
+				var pencil = new Pencil(pointsArray);
+				shapeSelection.shapes[key][2][i] = pencil;
+			}
+			
+			if(key == 'wall'){
+				var wall = new Walls();
+				shapeSelection.shapes[key][2][i] = wall;
+			}
+			
+			for(prop in sim.shapes[key][2][i]){ //populate the ith shape (js object) with properties
+				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][2][i][prop];
+			}
+			
+			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
+				shapeSelection.shapes[key][2][i].mass = 1.7976931348623157E+10308; //infinity
+				shapeSelection.shapes[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
 			}
 		}
 	}
@@ -2773,50 +2739,48 @@ function loadShapes(sim){
 
 function loadShapes_idb(sim){
 console.log('loading!!!');
-	for(key in sim){
-		if(key != 'userID' && key != 'isPublic' && key != 'name'){
-			for(var i = 0; i < sim[key].length; i++){ //populate sim with shapes from e.g circleArray			
-				shapeSelection[key][2][i] = {};
-				
-				if(key == 'circle'){
-					var circle = new Circle();
-					shapeSelection[key][2][i] = circle;
-				}
-				if(key == 'square'){
-					var square = new Square();
-					shapeSelection[key][2][i] = square;
-				}
-				if(key == 'triangle'){
-					var triangle = new Triangle();
-					shapeSelection[key][2][i] = triangle;
-				}
-				if(key == 'customShape'){
-					var customShape = new CustomShape();
-					shapeSelection[key][2][i] = customShape;
-				}
-				if(key == 'pencil'){
-					var pointsArray = sim[key][i].pointsArray;
-					var pencil = new Pencil(pointsArray);
-					shapeSelection[key][2][i] = pencil;
-				}
-				
-				if(key == 'wall'){
-					var wall = new Walls();
-					shapeSelection[key][2][i] = wall;
-				}
-				
-				for(prop in sim[key][i]){ //populate the ith shape (js object) with properties
-					shapeSelection[key][2][i][prop] = sim[key][i][prop];
-				}
-				
-				if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-					shapeSelection[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-					shapeSelection[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
-				}
+	for(key in sim.shapes){
+		for(var i = 0; i < sim.shapes[key].length; i++){ //populate sim with shapes from e.g circleArray			
+			shapeSelection.shapes[key][2][i] = {};
+			
+			if(key == 'circle'){
+				var circle = new Circle();
+				shapeSelection.shapes[key][2][i] = circle;
 			}
-		}else if(key == 'name'){
-			shapeSelection[key] = sim[key];
+			if(key == 'square'){
+				var square = new Square();
+				shapeSelection.shapes[key][2][i] = square;
+			}
+			if(key == 'triangle'){
+				var triangle = new Triangle();
+				shapeSelection.shapes[key][2][i] = triangle;
+			}
+			if(key == 'customShape'){
+				var customShape = new CustomShape();
+				shapeSelection.shapes[key][2][i] = customShape;
+			}
+			if(key == 'pencil'){
+				var pointsArray = sim.shapes[key][2][i].pointsArray;
+				var pencil = new Pencil(pointsArray);
+				shapeSelection.shapes[key][2][i] = pencil;
+			}
+			
+			if(key == 'wall'){
+				var wall = new Walls();
+				shapeSelection.shapes[key][2][i] = wall;
+			}
+			
+			for(prop in sim.shapes[key][i]){ //populate the ith shape (js object) with properties
+				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][i][prop];
+			}
+			
+			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
+				shapeSelection.shapes[key][2][i].mass = 1.7976931348623157E+10308; //infinity
+				shapeSelection.shapes[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+			}
 		}
 	}
+	console.log('load shapeSelection: ', shapeSelection);
+	shapeSelection.name = sim.name;
 	return shapeSelection;
 }

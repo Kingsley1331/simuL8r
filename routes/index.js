@@ -106,13 +106,15 @@ module.exports = function(passport){
 			name: sim.name,
 			userID: sim.userID,
 			isPublic: sim.isPublic,
-			circle: sim.circle,
-			square: sim.square,
-			triangle: sim.triangle,
-			customShape: sim.customShape,
-			pencil: sim.pencil,
-			curve: sim.curve,
-			wall: sim.wall
+			shapes: {
+				circle: sim.shapes.circle,
+				square: sim.shapes.square,
+				triangle: sim.shapes.triangle,
+				customShape: sim.shapes.customShape,
+				pencil: sim.shapes.pencil,
+				curve: sim.shapes.curve,
+				wall: sim.shapes.wall
+			}
 		});
 		newScene.save(function(err, newScene){
 			if(err){
@@ -132,13 +134,15 @@ module.exports = function(passport){
 			name: sim.name,
 			userID: sim.userID,
 			isPublic: sim.isPublic,
-			circle: sim.circle,
-			square: sim.square,
-			triangle: sim.triangle,
-			customShape: sim.customShape,
-			pencil: sim.pencil,
-			curve: sim.curve,
-			wall: sim.wall
+			shapes: {
+				circle: sim.shapes.circle,
+				square: sim.shapes.square,
+				triangle: sim.shapes.triangle,
+				customShape: sim.shapes.customShape,
+				pencil: sim.shapes.pencil,
+				curve: sim.shapes.curve,
+				wall: sim.shapes.wall
+			}
 		});
 		
 		Scenes.findById(id, function(err, scene){
@@ -148,13 +152,13 @@ module.exports = function(passport){
 			scene.name = newScene.name,
 			scene.userID = newScene.userID,
 			scene.isPublic = newScene.isPublic,
-			scene.circle = newScene.circle,
-			scene.square = newScene.square,
-			scene.triangle = newScene.triangle,
-			scene.customShape = newScene.customShape,
-			scene.pencil = newScene.pencil,
-			scene.curve = newScene.curve,
-			scene.wall = newScene.wall
+			scene.shapes.circle = newScene.shapes.circle,
+			scene.shapes.square = newScene.shapes.square,
+			scene.shapes.triangle = newScene.shapes.triangle,
+			scene.shapes.customShape = newScene.shapes.customShape,
+			scene.shapes.pencil = newScene.shapes.pencil,
+			scene.shapes.curve = newScene.shapes.curve,
+			scene.shapes.wall = newScene.shapes.wall
 			
 			scene.save(function(err) {
 			if (err){

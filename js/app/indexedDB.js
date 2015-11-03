@@ -62,7 +62,7 @@ if (window.IDBTransaction){
 
 		// Create an objectStore for this database
 		var objectStore = db.createObjectStore("scenes", { keyPath: "userID" });
-
+/*
 		// define what data items the objectStore will contain
 		objectStore.createIndex('name', 'name', { unique: false });		
 		objectStore.createIndex('userID', 'userID', { unique: false });
@@ -73,7 +73,15 @@ if (window.IDBTransaction){
 		objectStore.createIndex('customShape', 'customShape', { unique: false });
 		objectStore.createIndex('pencil', 'pencil', { unique: false });
 		objectStore.createIndex('curve', 'curve', { unique: false });
-		objectStore.createIndex('wall', 'wall', { unique: false });
+		objectStore.createIndex('wall', 'wall', { unique: false });*/
+		
+		// define what data items the objectStore will contain
+		objectStore.createIndex('name', 'name', { unique: false });		
+		objectStore.createIndex('userID', 'userID', { unique: false });
+		objectStore.createIndex('isPublic', 'isPublic', { unique: false });
+		objectStore.createIndex('shapes', 'shapes', { unique: false });
+
+		
 		
 		console.log('Object store created');
 	};
@@ -113,7 +121,7 @@ if (window.IDBTransaction){
 
 		var scene = {};
 		
-		loadDatabase(scene);
+		scene = loadDatabase(scene);
 		// add our newItem object to the object store
 		scene.userID = Math.floor(10000000000 * Math.random());
 		var name = prompt('please choose a name for this scene', 'untitled');
@@ -124,26 +132,26 @@ if (window.IDBTransaction){
 			console.log('New scene added to database');		
 			appendTable(null, scene.userID, scene);			
 		};
-	}
-		
-	function loadDatabase(scene){		
-		for(key in shapeSelection){ // for each shape category
-			if(key != 'userID' && key != 'isPublic' && key != 'name'){
-				scene[key] = [];
-				for(var i = 0; i < shapeSelection[key][2].length; i++){ // for each shape in the shape array e.g squareArray
-					scene[key][i] = {};
-					for(z in shapeSelection[key][2][i]){ // for the zth property in the ith shape
-						if(typeof shapeSelection[key][2][i][z] != 'function'){
-							scene[key][i][z] = shapeSelection[key][2][i][z]; 
+	}	
+	
+	function loadDatabase(scene){
+		// structure: scene = { shapes:{square: squareArray, circle: circleArray}}	
+		scene.shapes = {};	
+		for(key in shapeSelection.shapes){ // for each shape category
+				scene.shapes[key] = []; // this line initialises the shapeArray 
+				for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){ // for each shape in the shape array e.g squareArray
+					scene.shapes[key][i] = {}; // initiate the ith shape as an empty object					
+					for(z in shapeSelection.shapes[key][2][i]){ // for the zth property in the ith shape
+						if(typeof shapeSelection.shapes[key][2][i][z] != 'function'){
+							scene.shapes[key][i][z] = shapeSelection.shapes[key][2][i][z]; 
 						}
 					}
 				}
 			}
-		}
-		//scene.name = shapeSelection.name;
 		return scene;
-	}		
-		
+	}
+
+	
 	function displayData(){
 		if(display){
 			console.log('sceneTable.children.length', sceneTable.children.length);
@@ -211,7 +219,7 @@ if (window.IDBTransaction){
 		
 		button.addEventListener('click', function(){
 			clearAll(wallConfig);
-			if(i !== null){
+			if(i !== null){			
 				currentScene = loadShapes_idb(scenes[i]);
 			}else if(i === null){
 				currentScene = loadShapes_idb(scene);				
@@ -312,7 +320,7 @@ if (window.IDBTransaction){
 				//var editDivEl = document.querySelector('#editRecordDiv');
 	 
 				if(data === undefined){
-					console.log('Key doesnt exist or has been previouslyremoved');
+					console.log('Key doesnt exist or has been previousl yremoved');
 					return;
 				}
 	 
