@@ -134,8 +134,15 @@ if (window.IDBTransaction){
 		};
 	}	
 	
+	/** The structure of the scene object is different from that of the shapeSelection object
+		structure: scene = {
+						name: 'untitled',
+						userID: null,
+						isPublic: true,			
+						shapes:{square: squareArray, circle: circleArray, triangle: triangleArray,.....}
+			}	
+	**/
 	function loadDatabase(scene){
-		// structure: scene = { shapes:{square: squareArray, circle: circleArray}}	
 		scene.shapes = {};	
 		for(key in shapeSelection.shapes){ // for each shape category
 				scene.shapes[key] = []; // this line initialises the shapeArray 

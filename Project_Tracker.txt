@@ -1,3 +1,5 @@
+/*************************************** Physics **************************************/
+
 1. Create the intersectingLines function
 
 	- create a function that takes as its input the coordinates of 2 lines and does the following:
@@ -56,10 +58,29 @@
 
 	- the deletion and updating of scenes does not fully take effect until after the page is reloaded, this is probably due to the fact that the 'scenes' array (initialised in the displayData function) is not in sync with the database
 	
+	
+/*************************************** MongoDB **************************************/
 
 10. MongoDB scenes
 
 	when getting multiple scenes from MongoDB the browser grinds to a halt as it gets overloaded with too much data, this problem can be solved by transferring the data to indexedDB and freeing up the browser.
 
+	
+/*************************************** User Interface and Scenes **************************************/
 
+11. User Account
+	
+	- give users the ability to change the name scenes or delete them from within their profile page
+	
+	- create admin users 
+	
+	- create public and private scenes 
+	
+	- add the following metadata to scenes 
+		
+		(a) date and time scene was created
+		
+		(b) date and time scene was last modified	
+		
+		(b) size of scene (in terms of data)	
 	
