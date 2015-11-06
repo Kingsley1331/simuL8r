@@ -8,6 +8,19 @@ simApp.controller('SimCtrl', function($scope, $http){
 		}
 	});
 	
+	$scope.showSceneTable = false;
+	$scope.scenesVisibility = 'show scenes';
+	
+	$scope.toggleSceneTable = function(){
+		if(!$scope.showSceneTable){
+			$scope.showSceneTable = true;
+			$scope.scenesVisibility = 'hide scenes';			
+		}else if($scope.showSceneTable){
+			$scope.showSceneTable = false;
+			$scope.scenesVisibility = 'show scenes';			
+		}
+	}
+	
 	$scope.currentUser = {};
 	
 	$scope.simulation = shapeSelection;

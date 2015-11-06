@@ -17,7 +17,7 @@
 
 <div id = 'bar'>
 
-<div id = 'tipsSee'> See Tips </div>
+<div id = 'tipsSee'> See Tips </div> <div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div>
 
 <div class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector();}else{shapeSelector(); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></div>
 
@@ -92,7 +92,7 @@
 
 <div class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector();}else{shapeSelector(); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></img></div>
 
-<table id='sceneTable'>
+<table id='sceneTable' ng-show='showSceneTable'>
 	<tr>
 		<th>Current User: {{currentUser.google.name || currentUser.local.username}}</th>
 		<th><button><a href='/#home'>home</a></button></th>
