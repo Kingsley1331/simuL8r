@@ -356,6 +356,7 @@ function init(){
     bufferCtx.canvas.width = context.canvas.width;
     bufferCtx.canvas.height = context.canvas.height;
 	
+	
 	options();
 	locate();
 	mouseMove()
@@ -2782,5 +2783,6 @@ console.log('loading!!!');
 	}
 	console.log('load shapeSelection: ', shapeSelection);
 	shapeSelection.name = sim.name;
+	shapeSelection.imgURL = sim.imgURL;
 	return shapeSelection;
 }

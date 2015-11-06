@@ -23,9 +23,6 @@ if (window.IDBTransaction){
     window.IDBTransaction.READ_WRITE = window.IDBTransaction.READ_WRITE || 'readwrite';
     window.IDBTransaction.READ_ONLY = window.IDBTransaction.READ_ONLY || 'readonly';
 }
-
-
-
 	
   // Let us open our database
 	//var DBOpenRequest = window.indexedDB.open("simulations", 4);
@@ -78,6 +75,7 @@ if (window.IDBTransaction){
 		// define what data items the objectStore will contain
 		objectStore.createIndex('name', 'name', { unique: false });		
 		objectStore.createIndex('userID', 'userID', { unique: false });
+		objectStore.createIndex('imgURL', 'imgURL', { unique: false });
 		objectStore.createIndex('isPublic', 'isPublic', { unique: false });
 		objectStore.createIndex('shapes', 'shapes', { unique: false });
 
@@ -111,6 +109,10 @@ if (window.IDBTransaction){
 			console.log('Transaction not opened due to error: ' + transaction.error);
 		};
 		
+		
+		dataURL = canvas.toDataURL();
+		console.log('dataURL4: ' , dataURL);		
+				
 		// call an object store that's already been added to the database
 		var objectStore = transaction.objectStore("scenes");
 		/*console.log(objectStore.indexNames);
@@ -125,12 +127,15 @@ if (window.IDBTransaction){
 		// add our newItem object to the object store
 		scene.userID = Math.floor(10000000000 * Math.random());
 		var name = prompt('please choose a name for this scene', 'untitled');
-		scene.name = name
+		scene.name = name;
+		
+		scene.imgURL = dataURL;
+
 		var objectStoreRequest = objectStore.add(scene); 		
 		objectStoreRequest.onsuccess = function(event) {
 			// report the success of our new item going into the database
 			console.log('New scene added to database');		
-			appendTable(null, scene.userID, scene);			
+			appendTable(null, scene.userID, scene, scene.imgURL);			
 		};
 	}	
 	
@@ -195,24 +200,30 @@ if (window.IDBTransaction){
 		}
 	}
 	
-	function appendTable(i, id, scene){
+	function appendTable(i, id, scene, imgURL){
 		//console.trace()
 		if(i !== null){
 			var userID = scenes[i].userID;
+			var imgURL = scenes[i].imgURL;
 		}else if(i === null){
 			var userID = id;
+			//var imgURL = 'https://en.wikipedia.org/wiki/Wikipedia:Featured_picture_candidates/Sunset_Marina#/media/File:Sunset_Marina.JPG';
 		}
 		
 		var tr = document.createElement('tr');
 		var displayData = document.createElement('td');
-		var button = document.createElement('button');
+		//var button = document.createElement('button');
+		var sceneThumb = document.createElement('img');
 		var deleteButton = document.createElement('button');
 		var updateButton = document.createElement('button');
 		//var DeleteAllButton = document.createElement('button');
 		
-		button.setAttribute('id', userID);
+		/*button.setAttribute('id', userID);
 		button.setAttribute('class', 'browser');
-		button.innerHTML = userID;
+		button.innerHTML = userID;*/
+		
+		sceneThumb.setAttribute('id', 'sceneThumbnail');
+		sceneThumb.src = imgURL;
 		
 		deleteButton.innerHTML = 'delete';
 		deleteButton.setAttribute('class', 'browser');
@@ -224,14 +235,25 @@ if (window.IDBTransaction){
 		//DeleteAllButton.setAttribute('class', 'browser');
 		
 		
-		button.addEventListener('click', function(){
+		/*button.addEventListener('click', function(){
 			clearAll(wallConfig);
 			if(i !== null){			
 				currentScene = loadShapes_idb(scenes[i]);
 			}else if(i === null){
 				currentScene = loadShapes_idb(scene);				
 			}
-		} , false);
+		} , false);*/
+		
+		sceneThumb.addEventListener('click', function(){
+			clearAll(wallConfig);
+			if(i !== null){			
+				currentScene = loadShapes_idb(scenes[i]);
+			}else if(i === null){
+				currentScene = loadShapes_idb(scene);				
+			}
+		} , false);		
+		
+		
 		
 		
 		deleteButton.addEventListener('click', function(){
@@ -242,7 +264,8 @@ if (window.IDBTransaction){
 			editRecord(userID);
 		} , false);
 		
-		displayData.appendChild(button);
+		//displayData.appendChild(button);
+		displayData.appendChild(sceneThumb);
 	
 		//create empty cells and append them to the row
 		var td1 = document.createElement('td');
@@ -336,8 +359,10 @@ if (window.IDBTransaction){
 				
 				//var name = prompt("add or update this scene's name", 'scene name');
 				console.log('shapeSelection: ', currentScene, currentScene.name);
+				console.log('currentScene: ', currentScene.imgURL);
 				var name = prompt("add or update this scene's name", currentScene.name);				
 				data.name = name;
+				data.imgURL = currentScene.imgURL;
 				
 				var result = objectStore.put(data);
 				console.log('data: ', data);
@@ -366,5 +391,9 @@ if (window.IDBTransaction){
 			request.onerror = function() { console.log('drop failed') };
 		}
 	}
-	
+	/*setTimeout(
+		function(){
+			console.log('dataURL2: ' , dataURL);
+		}, 500
+	);*/
 })();

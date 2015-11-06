@@ -564,3 +564,8 @@ h2{
 	position: relative;
 	left: 150px;
 }
+
+#sceneThumbnail{
+	width: 75px;
+	border-radius: 5px;
+}
