@@ -92,7 +92,7 @@ if (window.IDBTransaction){
 		
 		
 		dataURL = canvas.toDataURL();
-		console.log('dataURL4: ' , dataURL);		
+		//console.log('dataURL4: ' , dataURL);		
 				
 		// call an object store that's already been added to the database
 		var objectStore = transaction.objectStore("scenes");
@@ -242,8 +242,8 @@ if (window.IDBTransaction){
 		tr.appendChild(td4);
 		tr.appendChild(td5);		
 		tr.appendChild(displayData);
+		tr.appendChild(update);		
 		tr.appendChild(deleteScene);
-		tr.appendChild(update);
 		sceneTable.appendChild(tr);
 	}
 
@@ -285,8 +285,10 @@ if (window.IDBTransaction){
 					console.log('Key doesnt exist or has been previousl yremoved');
 					return;
 				}
-	 
+				
+				dataURL = canvas.toDataURL();
 				scene.userID = key;
+				currentScene.imgURL = dataURL;
 				data = scene;
 				console.log('shapeSelection: ', currentScene, currentScene.name);
 				console.log('currentScene: ', currentScene.imgURL);
@@ -297,9 +299,9 @@ if (window.IDBTransaction){
 				var result = objectStore.put(data);
 				console.log('data: ', data);
 				result.onsuccess = function(ev){
-					var sceneName = ev.target.result;
+					var sceneKey = ev.target.result;
 					console.log('Updated scene: ', ev.target);
-					console.log('Successfully edited key ' + sceneName);
+					console.log('Successfully edited key ' + sceneKey);
 				};
 	 
 				result.onerror = function(ev){
