@@ -3,9 +3,7 @@
 	var scenes = [];
 	var display = true;
 	var sceneTable = document.getElementById('sceneTable');
-	
-	//var newScene = {circle: 'circle', square: 'square', triangle: 'triangle' };
-	
+		
 	// In the following line, you should include the prefixes of implementations you want to test.
 	window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 	// DON'T use "var indexedDB = ..." if you're not in a function.
@@ -14,11 +12,6 @@
 	window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 	// (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
 	
-/*if (IDBTransaction){
-    IDBTransaction.READ_WRITE = IDBTransaction.READ_WRITE || 'readwrite';
-    IDBTransaction.READ_ONLY = IDBTransaction.READ_ONLY || 'readonly';
-}*/
-
 if (window.IDBTransaction){
     window.IDBTransaction.READ_WRITE = window.IDBTransaction.READ_WRITE || 'readwrite';
     window.IDBTransaction.READ_ONLY = window.IDBTransaction.READ_ONLY || 'readonly';
@@ -59,18 +52,6 @@ if (window.IDBTransaction){
 
 		// Create an objectStore for this database
 		var objectStore = db.createObjectStore("scenes", { keyPath: "userID" });
-/*
-		// define what data items the objectStore will contain
-		objectStore.createIndex('name', 'name', { unique: false });		
-		objectStore.createIndex('userID', 'userID', { unique: false });
-		objectStore.createIndex('isPublic', 'isPublic', { unique: false });
-		objectStore.createIndex('circle', 'circle', { unique: false });
-		objectStore.createIndex('square', 'square', { unique: false });
-		objectStore.createIndex('triangle', 'triangle', { unique: false });
-		objectStore.createIndex('customShape', 'customShape', { unique: false });
-		objectStore.createIndex('pencil', 'pencil', { unique: false });
-		objectStore.createIndex('curve', 'curve', { unique: false });
-		objectStore.createIndex('wall', 'wall', { unique: false });*/
 		
 		// define what data items the objectStore will contain
 		objectStore.createIndex('name', 'name', { unique: false });		
@@ -115,12 +96,6 @@ if (window.IDBTransaction){
 				
 		// call an object store that's already been added to the database
 		var objectStore = transaction.objectStore("scenes");
-		/*console.log(objectStore.indexNames);
-		console.log(objectStore.keyPath);
-		console.log(objectStore.name);
-		console.log(objectStore.transaction);
-		console.log(objectStore.autoIncrement);*/
-
 		var scene = {};
 		
 		scene = loadDatabase(scene);
@@ -169,8 +144,6 @@ if (window.IDBTransaction){
 			console.log('sceneTable.children.length', sceneTable.children.length);
 			console.log('sceneTable.childNodes.length', sceneTable.childNodes.length);
 			for(var i = 3; i < sceneTable.children.length; i++){
-			//for(var i = 0; i < sceneTable.childNodes.length; i++){	
-				//sceneTable.children[i].innerHTML = '';
 				sceneTable.removeChild(sceneTable.childNodes[i]);
 			}			
 			scenes = [];
@@ -190,7 +163,6 @@ if (window.IDBTransaction){
 						for(var i = 0; i < scenes.length; i++){
 							appendTable(i);
 						}
-						//console.log('sceneTable.children.length', sceneTable.children.length);
 						console.log('All entries displayed.');
 						console.log('scenes: ', scenes);	
 					}
@@ -201,26 +173,18 @@ if (window.IDBTransaction){
 	}
 	
 	function appendTable(i, id, scene, imgURL){
-		//console.trace()
 		if(i !== null){
 			var userID = scenes[i].userID;
 			var imgURL = scenes[i].imgURL;
 		}else if(i === null){
 			var userID = id;
-			//var imgURL = 'https://en.wikipedia.org/wiki/Wikipedia:Featured_picture_candidates/Sunset_Marina#/media/File:Sunset_Marina.JPG';
 		}
 		
 		var tr = document.createElement('tr');
 		var displayData = document.createElement('td');
-		//var button = document.createElement('button');
 		var sceneThumb = document.createElement('img');
 		var deleteButton = document.createElement('button');
 		var updateButton = document.createElement('button');
-		//var DeleteAllButton = document.createElement('button');
-		
-		/*button.setAttribute('id', userID);
-		button.setAttribute('class', 'browser');
-		button.innerHTML = userID;*/
 		
 		sceneThumb.setAttribute('id', 'sceneThumbnail');
 		sceneThumb.src = imgURL;
@@ -230,19 +194,6 @@ if (window.IDBTransaction){
 		
 		updateButton.innerHTML = 'update';
 		updateButton.setAttribute('class', 'browser');
-		
-		//DeleteAllButton.innerHTML = 'delete';
-		//DeleteAllButton.setAttribute('class', 'browser');
-		
-		
-		/*button.addEventListener('click', function(){
-			clearAll(wallConfig);
-			if(i !== null){			
-				currentScene = loadShapes_idb(scenes[i]);
-			}else if(i === null){
-				currentScene = loadShapes_idb(scene);				
-			}
-		} , false);*/
 		
 		sceneThumb.addEventListener('click', function(){
 			clearAll(wallConfig);
@@ -264,7 +215,6 @@ if (window.IDBTransaction){
 			editRecord(userID);
 		} , false);
 		
-		//displayData.appendChild(button);
 		displayData.appendChild(sceneThumb);
 	
 		//create empty cells and append them to the row
@@ -273,10 +223,8 @@ if (window.IDBTransaction){
 		var td3 = document.createElement('td');
 		var td4 = document.createElement('td');
 		var td5 = document.createElement('td');
-		var td6 = document.createElement('td');
 		var deleteScene = document.createElement('td');
 		var update = document.createElement('td');
-		//var removeAllScenes = document.createElement('td');
 		
 		deleteScene.appendChild(deleteButton);
 		update.appendChild(updateButton);
@@ -287,21 +235,15 @@ if (window.IDBTransaction){
 			var name = document.createTextNode(scene.name);	
 		}	
 		
-		td6.appendChild(name);
-		
+		td5.appendChild(name);
 		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);
 		tr.appendChild(td4);
-		tr.appendChild(td5);
-		tr.appendChild(td6);	
-		
-		//var td6 = document.createElement('td');
-		
+		tr.appendChild(td5);		
 		tr.appendChild(displayData);
 		tr.appendChild(deleteScene);
 		tr.appendChild(update);
-		//tr.appendChild(removeAllScenes);
 		sceneTable.appendChild(tr);
 	}
 
@@ -314,9 +256,7 @@ if (window.IDBTransaction){
 				var idb = e.target.result;
 				var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
 				console.log('objectStore: ', objectStore);
-				//var request = objectStore.delete(6128202404);
 				var request = objectStore.delete(id);
-				//var request = objectStore.delete('keyPath');
 			 
 				request.onsuccess = function(ev){
 					console.log('three-->', ev);
@@ -329,17 +269,11 @@ if (window.IDBTransaction){
 		}
 	}
 	
-	//function editRecord(key, newValue){
 	function editRecord(key){
 		var request = indexedDB.open('test');
 		
 		var scene = {};
-		scene = loadDatabase(scene);
-		//alert(scene.name);
-		//var name = prompt("add or update this scene's name", scene.name);
-		//scene.name = name;
-		//console.log('loadDatabase: ', scene);
-		
+		scene = loadDatabase(scene);	
 		request.onsuccess = function(e){
 			var idb = e.target.result;
 			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
@@ -347,8 +281,6 @@ if (window.IDBTransaction){
 	 
 			request.onsuccess = function(ev){
 				var data = ev.target.result;
-				//var editDivEl = document.querySelector('#editRecordDiv');
-	 
 				if(data === undefined){
 					console.log('Key doesnt exist or has been previousl yremoved');
 					return;
@@ -356,8 +288,6 @@ if (window.IDBTransaction){
 	 
 				scene.userID = key;
 				data = scene;
-				
-				//var name = prompt("add or update this scene's name", 'scene name');
 				console.log('shapeSelection: ', currentScene, currentScene.name);
 				console.log('currentScene: ', currentScene.imgURL);
 				var name = prompt("add or update this scene's name", currentScene.name);				
@@ -391,9 +321,4 @@ if (window.IDBTransaction){
 			request.onerror = function() { console.log('drop failed') };
 		}
 	}
-	/*setTimeout(
-		function(){
-			console.log('dataURL2: ' , dataURL);
-		}, 500
-	);*/
 })();
