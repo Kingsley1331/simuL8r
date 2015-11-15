@@ -2,5 +2,4 @@
 #images/profiles/ *
 node_modules
 js/lib
-/simuL8r.js
-/simuL8r.min.js
+
