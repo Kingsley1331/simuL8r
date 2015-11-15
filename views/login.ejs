@@ -1,0 +1,30 @@
+<div class="account-wall">
+	<div class='container'>
+		<div class='row'>
+			<div class='col-sm-6 col-md-4 col-md-offset-4'>
+				<!--<form class='form-signin' action='/login' method='POST'>-->
+				<% hello %>
+				<% if(message.length > 0) { %>
+					<div class='alert alert-danger'><% message %></div>
+				<% } %>
+				<form class='form-signin' enctype="multipart/form-data">
+					<input type='text' name='username' class='form-control' placeholder='Username' autofocus ng-model='user.username'/>
+					<input type='password' name='password' class='form-control nomargin' placeholder='Password' ng-model='user.password'/><br>
+					<button class='btn btn-lg btn-primary btn-block' type='submit' ng-click='login(user)'> Login </button>
+				</form><br>
+				<!--<a href='/auth/facebook' class = 'btn btn-block btn-social btn-facebook' style="padding-left:20px">
+					<i class = 'fa fa-facebook' style='position: relative'>
+						<span style="position: relative; left:35px">Sign in with Facebook</span>
+					</i>
+				</a>
+				<br>-->
+				<a href='/auth/google' class = 'btn btn-block btn-social btn-google' style="padding-left:20px">
+					<i class = 'fa fa-google-plus' style='position: relative'>
+						<span style="position: relative; left:25px">Sign in with Google</span>
+					</i>
+				</a>
+				
+			</div>
+		</div>
+	</div>
+</div>

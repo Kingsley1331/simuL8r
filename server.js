@@ -12,6 +12,7 @@ var databaseConfig = require('./database');
 var initPassport = require('./passport/init');
 var busboy = require('connect-busboy');
 var User = require('./models/users');
+var flash = require('connect-flash');
 var app = express();
 var routes = require('./routes/index')(passport);
 //app.use(express.static(__dirname + 'login.html'));
@@ -78,7 +79,8 @@ app.use(expressSession({secret: 'mySecretKey'}));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(flash());
+app.set('view engine', 'ejs');
 // Initialize Passport
 initPassport(passport);
 app.use('/', routes);
