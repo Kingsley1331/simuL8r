@@ -1,0 +1,28 @@
+{
+  "name": "simuL8r",
+  "description": "Physics Engine",
+  "main": "server.js",
+  "authors": [
+    "Kingsley Ankomah"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/Kingsley1331/simuL8r",
+  "moduleType": [
+    "node"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#~1.4.7",
+    "angular-route": "~1.4.7",
+    "bootstrap": "~3.3.5",
+    "PACE": "pace#~1.0.2",
+    "bootstrap-social": "~4.10.1"
+  }
+}
