@@ -1,3 +1,179 @@
+function sortRange(arr) {
+	if(arr[0] > arr[1]) {
+		return [arr[1], arr[0]];
+	} else if(arr[0] < arr[1]) {
+		return [arr[0], arr[1]];
+	} else {
+		return arr;
+	}
+}
+
+function xyRange(arr){
+	var xRange_a = sortRange([arr[0][0], arr[1][0]]);
+	var yRange_a = sortRange([arr[0][1], arr[1][1]]);
+	return [xRange_a, yRange_a];
+}
+
+function overlap(arr1, arr2){ //arr1 and arr2 are sorted arrays
+	if(arr1[0] > arr2[1]) {
+		return false;
+	}else if(arr1[1] < arr2[0]){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+function findIntersectionPoint(arr1, arr2){
+	//line A
+	var width_a = arr1[1][0] - arr1[0][0];
+	var height_a = arr1[1][1] - arr1[0][1];
+	var gradient_a = height_a / width_a;
+	var yIntercept_a = arr1[1][1] - gradient_a * arr1[1][0];
+	
+	//line B
+	var width_b = arr2[1][0] - arr2[0][0];
+	var height_b = arr2[1][1] - arr2[0][1];
+	var gradient_b = height_b / width_b;	
+	var yIntercept_b = arr2[1][1] - gradient_b * arr2[1][0];
+	
+	
+	/**** Handling zero and infinite gradients ****/
+	if(gradient_a !== gradient_b){
+		if(!(gradient_b === 0 || Math.abs(gradient_b) === Infinity)){
+			if(gradient_a === 0) {//if lineA is horizontal ie y = c where c is a constant
+				var intersectionPointY = arr1[0][1];
+				var intersectionPointX = (intersectionPointY - yIntercept_b) / gradient_b;
+			} else if(Math.abs(gradient_a) === Infinity){//if lineA is vertical
+				var intersectionPointX = arr1[0][0]; console.log
+				var intersectionPointY = gradient_b * intersectionPointX + yIntercept_b;
+			}
+		} 
+		if(!(gradient_a === 0 || Math.abs(gradient_a) === Infinity)){
+			if(gradient_b === 0) {
+				var intersectionPointY = arr2[0][1];
+				var intersectionPointX = (intersectionPointY - yIntercept_a) / gradient_a;
+			} else if(Math.abs(gradient_b) === Infinity){
+				var intersectionPointX = arr2[0][0];
+				var intersectionPointY = gradient_a * intersectionPointX + yIntercept_a;
+			}
+		}
+
+		if(!(gradient_b === 0 || Math.abs(gradient_b) === Infinity) && !(gradient_a === 0 || Math.abs(gradient_a) === Infinity)){
+			var intersectionPointX = (yIntercept_b - yIntercept_a) / (gradient_a - gradient_b);
+			var intersectionPointY = gradient_a * intersectionPointX + yIntercept_a;		
+		}	
+
+		if((gradient_a === 0 && Math.abs(gradient_b) === Infinity)){
+			var intersectionPointX = arr2[0][0];
+			var intersectionPointY = arr1[0][1];	
+		} else if((gradient_b === 0 && Math.abs(gradient_a) === Infinity)){
+			var intersectionPointX = arr1[0][0];
+			var intersectionPointY = arr2[0][1];
+		}
+
+		if(intersectionPointX >= xyRange(arr1)[0][0] && intersectionPointX <= xyRange(arr1)[0][1]){
+			return [intersectionPointX, intersectionPointY, true];
+		}
+		return [intersectionPointX, intersectionPointY, false];
+		
+	} else if(gradient_a !== gradient_b && yIntercept_a !== yIntercept_b){
+		
+		return [null, null, false];
+		
+	} else if(gradient_a !== gradient_b && yIntercept_a === yIntercept_b){
+		/*** if the parallel line overlap return [null, null, true] if not return [null, null, false] ***/
+		var xRange_a = xyRange(arr1)[0];
+		var xRange_b = xyRange(arr2)[0];
+		if(overlap(xRange_a, xRange_b)){
+			return [null, null, true];
+		}
+		return [null, null, false];
+	}
+}
+
+
+function intersect(arr1, arr2){	
+	var ranges_a = xyRange(arr1);
+	var ranges_b = xyRange(arr2);
+	
+	var xRange_a = ranges_a[0];
+	var yRange_a = ranges_a[1];
+	
+	var xRange_b = ranges_b[0];
+	var yRange_b = ranges_b[1];
+	
+	if(overlap(xRange_a, xRange_b) && overlap(yRange_a, yRange_b)){
+		return findIntersectionPoint(arr1, arr2)[2];
+	} else {		
+		return false;
+	}	
+}
+
+
+function intersectingLines(arr1, arr2){
+	var intersectionPoints = findIntersectionPoint(arr1, arr2);
+	console.log('intersectionPoints',intersectionPoints)
+	if(intersect(arr1, arr2)){
+		//find point of intersection
+		return { intersecting: true, intersectionPoint: [intersectionPoints[0], intersectionPoints[1]] };
+	}
+	return { intersecting: false, intersectionPoint: [intersectionPoints[0], intersectionPoints[1]] };
+}
+
+console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
+console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
+
+/** Horizontal line crossing vertica line **/
+console.log('intersectingLines: ', intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
+console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
+
+/** Horizontal line crossing diagonal line **/
+console.log('intersectingLines: ', intersectingLines([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
+
+/** vertical line crossing diagonal line**/
+console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+
+
+
+
+
+
+console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
+console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
+console.log('findIntersectionPoint: ', findIntersectionPoint([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
+console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
+console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
+console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+
+console.log('intersect: ', intersect([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
+console.log('intersect: ', intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
+
+/** Horizontal line crossing vertica line **/
+console.log('intersect: ', intersect([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
+console.log('intersect: ', intersect([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
+
+/** Horizontal line crossing diagonal line **/
+console.log('intersect: ', intersect([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
+
+/** vertical line crossing diagonal line**/
+console.log('intersect: ', intersect([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+
+/*
+console.log('overlap: ', overlap([1, 3], [4, 7]));
+console.log('overlap: ', overlap([1, 3], [2, 7]));
+console.log('overlap: ', overlap([2, 7], [2, 7]));
+console.log('overlap: ', overlap([1, 3], [3, 7]));*/
+
+/*
+console.log('sortRange: ', sortRange([1, 2]));
+console.log('sortRange: ', sortRange([2, 1]));
+console.log('sortRange: ', sortRange([2, 10]));
+console.log('sortRange: ', sortRange([30, 10]));
+console.log('sortRange: ', sortRange([5, 5]));
+console.log('sortRange: ', sortRange([21, 0]));
+console.log('sortRange: ', sortRange([2, -10]));*/
+
 var physicsObject = {throwArray:[]};
 var gravity = 0.1;
 var restitution = 0.5;
@@ -267,12 +443,12 @@ if(physics)
 										
 										/***************************** Getting the objects to rest on each other ****************************/
 										
-										if(penDepth <= 0.01 && key != 'wall'){
+										/*if(penDepth <= 0.01 && key != 'wall'){
 											shapeSelection.shapes[key][2][i].velocity[0] = 0; //Ideally relative velocity should be used here instead of absolute velocity
 											shapeSelection.shapes[key][2][i].velocity[1] = 0;
 										}else{
 											shapeSelection.shapes[key][2][i].gravity = true;
-										}
+										}*/
 										
 										var perpPointX = collisionPointA_x + shapeSelection.shapes[key][2][i].X;
 										var perpPointY = collisionPointA_y + shapeSelection.shapes[key][2][i].Y;
@@ -300,6 +476,8 @@ if(physics)
 										shapeACenter = collision_Data.collision_Data.shapeACenter;
 										shapeBCenter = collision_Data.collision_Data.shapeBCenter;
 										
+										
+/*********************************************** START -- Replusion Direction Check ******************************************************************/										
 										var sideC = sidePointY - gradient * sidePointX;
 										
 										/*** The perpendicular line that connects the colliding side and the colliding vertex ***/
@@ -347,33 +525,33 @@ if(physics)
 											onPath = true;
 										}
 										
-//console.log('##########################################################################################edgeDistance', edgeDistance, checkPointDistance, pointOnB);
+										//console.log('##########################################################################################edgeDistance', edgeDistance, checkPointDistance, pointOnB);
 										if(onPath == true && checkPointDistance > edgeDistance){
 											//penDepth *= -1;
 										}
-
+/*********************************************** END -- Replusion Direction Check ***********************************************************************/
 										
-										if(key != 'wall'){ // this condition is probably redundant
+										/*if(key != 'wall'){ // this condition is probably redundant
 											if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
 												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
 											}
 											shapeSelection.shapes[key][2][i].Y += repulsion[1] * penDepth;
-										}
+										}*/
 										
 										
-										if(penDepth <= 0.01 && unit != 'wall'){
+										/*if(penDepth <= 0.01 && unit != 'wall'){
 											shapeSelection.shapes[unit][2][j].velocity[0] = 0; // Ideally relative velocity should be used here instead of absolute velocity
 											shapeSelection.shapes[unit][2][j].velocity[1] = 0;
 										}else{
 											shapeSelection.shapes[unit][2][j].gravity = true;
-										}
+										}*/
 										
-										if(unit != 'wall'){
+										/*if(unit != 'wall'){
 											if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
 												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
 											}
 											shapeSelection.shapes[unit][2][j].Y -= repulsion[1] * penDepth;
-										}
+										}*/
 										
 										/** repulsiveF is just for blueprint**/
 										repulsiveF[0] = -repulsion[0] * penDepth;
@@ -452,14 +630,13 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 
 			}
 			
-			
+			//unecessary repition between these equations and the ones below				
 			var diffA_x = shapeB[i][0] + shapeB_Offset[0] - x; 
 			var diffB_x = shapeB[j][0] + shapeB_Offset[0] - x; 
-			
 			var diffA_y = shapeB[i][1] + shapeB_Offset[1] - y; 
 			var diffB_y = shapeB[j][1] + shapeB_Offset[1] - y; 
 			
-			//console.log('x: ' + x, 'y: ' + y);
+			//unecessary repition between these equations and the ones above				
 			shapeB_X1 = shapeB[j][0] + shapeB_Offset[0];
 			shapeB_Y1 = shapeB[j][1] + shapeB_Offset[1];
 			shapeB_X2 = shapeB[i][0] + shapeB_Offset[0];
@@ -514,6 +691,7 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 	var closestIndex;
 	
 	for(var n = 0; n < intersection.length; n++){
+		//console.log('intersection.length: ', intersection.length);
 		var vertexDistanceVector = [intersection[n].intersection_x - collidingVertex[0], intersection[n].intersection_y - collidingVertex[1]]; //distance vector between the colliding vertex and the intersection point
 		var _velocity = distance(velocity[0], velocity[1]); // magnitude of the velocity vector
 		var _vertexDistance = distance(vertexDistanceVector[0], vertexDistanceVector[1]);
