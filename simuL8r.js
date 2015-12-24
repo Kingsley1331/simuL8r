@@ -2637,12 +2637,23 @@ function blueprint(Array, i){
 	}
 }
 
+/***
+	xyRange: takes a 2 dimensional array which represents 2 lines and returns another
+	2 dimensional array with the x and y coordinates sorted numerically and grouped together
+	Examples: xyRange([[1, 2], [3, 4]]) => [[1, 3], [2, 4]] 
+			  xyRange([[3, 4], [1, 2])) => [[1, 3], [2, 4]]
+***/
 function xyRange(arr){
 	var xRange_a = sortRange([arr[0][0], arr[1][0]]);
 	var yRange_a = sortRange([arr[0][1], arr[1][1]]);
 	return [xRange_a, yRange_a];
 }
 
+/***
+	overlap: takes 2 numerically sorted arrays and checks to see if their values overlap
+	Examples: overlap([1, 3], [4, 7]) => false
+			  overlap([1, 3], [2, 7]) => true
+***/
 function overlap(arr1, arr2){ //arr1 and arr2 are sorted arrays
 	if(arr1[0] > arr2[1]) {
 		return false;
@@ -2652,6 +2663,16 @@ function overlap(arr1, arr2){ //arr1 and arr2 are sorted arrays
 		return true;
 	}
 }
+
+/***
+	findIntersectionPoint: takes 2 2-dimensional arrays which represent 2 line segments, 
+	it finds the equation of the lines in terms of y = mx + c and then it calculates
+	their point of intersection, provided that they are not parallel.
+	findIntersectionPoint returns an array, the first 2 elements are the x and y coordinates of the intersection point respectively,
+	the 3rd element tells us if the intersection point lies on the line segments.
+	Examples: findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]]) => [2.14, 3.14, true]	
+			  findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]]) => [3, 4, false]
+***/
 
 function findIntersectionPoint(arr1, arr2){
 	//line A
@@ -2702,25 +2723,36 @@ function findIntersectionPoint(arr1, arr2){
 		}
 
 		if(intersectionPointX >= xyRange(arr1)[0][0] && intersectionPointX <= xyRange(arr1)[0][1]){
-			return [intersectionPointX, intersectionPointY, true];
+			//return [intersectionPointX, intersectionPointY, true];
+			return { intersecting: true, intersectionPoint: [intersectionPointX, intersectionPointY] };
 		}
-		return [intersectionPointX, intersectionPointY, false];
-		
-	} else if(gradient_a !== gradient_b && yIntercept_a !== yIntercept_b){
-		
-		return [null, null, false];
-		
+		//return [intersectionPointX, intersectionPointY, false];
+		return { intersecting: false, intersectionPoint: [intersectionPointX, intersectionPointY] };
+	} else if(gradient_a !== gradient_b && yIntercept_a !== yIntercept_b){	
+		//return [null, null, false];
+		return { intersecting: false, intersectionPoint: [null, null] };
 	} else if(gradient_a !== gradient_b && yIntercept_a === yIntercept_b){
 		/*** if the parallel line overlap return [null, null, true] if not return [null, null, false] ***/
 		var xRange_a = xyRange(arr1)[0];
 		var xRange_b = xyRange(arr2)[0];
 		if(overlap(xRange_a, xRange_b)){
-			return [null, null, true];
+			//return [null, null, true];
+			return { intersecting: true, intersectionPoint: [null, null] };
 		}
-		return [null, null, false];
+		//return [null, null, false];
+		return { intersecting: false, intersectionPoint: [null, null] };
 	}
 }
 
+/**
+	intersect: takes a 2 2-dimensional arrays which represents 2 lines and returns
+	an object with the following format { intersecting: true, intersectionPoint: [x, y] }
+	the "intersecting" property tells us whether or not the point of intersection is on the line segment
+	and the "intersectionPoint" property contains the intersection of the lines (in the form of y = mx + c)
+	that describe the 2 line segments
+	Examples: intersect([[6, 6], [6, 4]], [[5, 5], [7, 5]]) => { intersecting: true, intersectionPoint: [2.14, 3.14] }
+			  intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]]) => { intersecting: false, intersectionPoint: [null, null] }
+**/
 
 function intersect(arr1, arr2){	
 	var ranges_a = xyRange(arr1);
@@ -2733,35 +2765,47 @@ function intersect(arr1, arr2){
 	var yRange_b = ranges_b[1];
 	
 	if(overlap(xRange_a, xRange_b) && overlap(yRange_a, yRange_b)){
-		return findIntersectionPoint(arr1, arr2)[2];
+		return findIntersectionPoint(arr1, arr2);
 	} else {		
-		return false;
+		return { intersecting: false, intersectionPoint: [null, null] };
 	}	
 }
 
+/**
+	intersectingLines: takes a 2 2-dimensional arrays which represents 2 lines and a boolean and returns
+	an object with the following format { intersecting: true, intersectionPoint: [x, y] }
+	the "intersecting" property tells us whether or not the point of intersection is on the line segment
+	and the "intersectionPoint" property contains the intersection of the lines (in the form of y = mx + c)
+	that describe the 2 line segments.
+	Boolean parameter: in situations where calculating the point of intersection is absolutely necessary
+					   the boolean should be set to TRUE and the findIntersectionPoint function is used.
+					   On the other hand if we simply need to know whether or not 2 line segments intersect
+					   then we set the boolean to FALSE and the intersect function is used instead.
+	
+	Examples: intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false) => { intersecting: false, intersectionPoint: [null, null] }
+			  intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], true) => { intersecting: false, intersectionPoint: [3, 4] }
+**/
 
-function intersectingLines(arr1, arr2){
-	var intersectionPoints = findIntersectionPoint(arr1, arr2);
-	console.log('intersectionPoints',intersectionPoints)
-	if(intersect(arr1, arr2)){
-		//find point of intersection
-		return { intersecting: true, intersectionPoint: [intersectionPoints[0], intersectionPoints[1]] };
+function intersectingLines(arr1, arr2, bool){
+	if(bool === true){
+		return findIntersectionPoint(arr1, arr2);
+	}else if(bool === false){
+		return intersect(arr1, arr2);
 	}
-	return { intersecting: false, intersectionPoint: [intersectionPoints[0], intersectionPoints[1]] };
 }
 
-console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
-console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
+console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
+console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
 
 /** Horizontal line crossing vertica line **/
-console.log('intersectingLines: ', intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
-console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
+console.log('intersectingLines: ', intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]], false)); // true
+console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[7, 1], [8, 3]], false)); // false
 
 /** Horizontal line crossing diagonal line **/
-console.log('intersectingLines: ', intersectingLines([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
+console.log('intersectingLines: ', intersectingLines([[1, 3], [3, 3]], [[1, 2], [3, 4]], false)); // true
 
 /** vertical line crossing diagonal line**/
-console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]], false)); // true
 
 
 
@@ -2793,6 +2837,10 @@ console.log('overlap: ', overlap([1, 3], [4, 7]));
 console.log('overlap: ', overlap([1, 3], [2, 7]));
 console.log('overlap: ', overlap([2, 7], [2, 7]));
 console.log('overlap: ', overlap([1, 3], [3, 7]));*/
+
+/*
+console.log('xyRange ', xyRange([[1, 2], [3, 4]]));
+console.log('xyRange ', xyRange([[3, 4], [1, 2]]));*/
 
 /*
 console.log('sortRange: ', sortRange([1, 2]));
