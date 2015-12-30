@@ -891,34 +891,6 @@ function rotateObject(shape, angle){
 } 
 
 
-
-function sameDirection(vector1, vector2){
-	if(distance(vector1[0] + vector2[0], vector1[1] + vector2[1]) > distance(vector1[0] - vector2[0], vector1[1] - vector2[1])){
-		return true;
-	}else if(distance(vector1[0] + vector2[0], vector1[1] + vector2[1]) < distance(vector1[0] - vector2[0], vector1[1] - vector2[1])){
-		return false;
-	}
-}
-
-
-function normalVector(gradient, translationalVelocity, rotationVelocity){
-	var isColInternal = false;
-	var normalGradient = -1/gradient;
-	var theta = Math.atan(normalGradient);
-	var _normalVector = [Math.cos(theta), Math.sin(theta)];
-												//make sure that the normal vector is pointing outward										
-	
-	if(sameDirection(translationalVelocity, _normalVector)/* && sameDirection(translationalVelocity, rotationVelocity)*/){
-		_normalVector[0] *= -1;
-		_normalVector[1] *= -1;
-		isColInternal = true;
-	}
-
-	return [_normalVector[0], _normalVector[1], isColInternal];
-}
-
-
-
 //calculates the closest vertex to a given point from an array of vertices
 function closestPoint(point, array){
 	var distances = array.map(function(ele){ 

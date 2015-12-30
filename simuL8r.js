@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2015-12-24 **/ 
+/** simuL8r - v1.0.0 - 2015-12-28 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -890,34 +890,6 @@ function rotateObject(shape, angle){
 		shape[i][1] += rotation[1];
 	}
 } 
-
-
-
-function sameDirection(vector1, vector2){
-	if(distance(vector1[0] + vector2[0], vector1[1] + vector2[1]) > distance(vector1[0] - vector2[0], vector1[1] - vector2[1])){
-		return true;
-	}else if(distance(vector1[0] + vector2[0], vector1[1] + vector2[1]) < distance(vector1[0] - vector2[0], vector1[1] - vector2[1])){
-		return false;
-	}
-}
-
-
-function normalVector(gradient, translationalVelocity, rotationVelocity){
-	var isColInternal = false;
-	var normalGradient = -1/gradient;
-	var theta = Math.atan(normalGradient);
-	var _normalVector = [Math.cos(theta), Math.sin(theta)];
-												//make sure that the normal vector is pointing outward										
-	
-	if(sameDirection(translationalVelocity, _normalVector)/* && sameDirection(translationalVelocity, rotationVelocity)*/){
-		_normalVector[0] *= -1;
-		_normalVector[1] *= -1;
-		isColInternal = true;
-	}
-
-	return [_normalVector[0], _normalVector[1], isColInternal];
-}
-
 
 
 //calculates the closest vertex to a given point from an array of vertices
@@ -2627,7 +2599,65 @@ function blueprint(Array, i){
 	//}//if physics
 
 }
-/***** New File *****/function sortRange(arr) {
+/***** New File *****/function isPointInShape(point, shape, x, y){
+	console.log('[x, y]: ', [x, y]);
+	console.log('point: ', point);	
+	bufferCtx.beginPath();
+	bufferCtx.moveTo(shape[0][0] + x, shape[0][1] + y);
+	for(var m = 0; m < shape.length; m++){ // check shape B
+		bufferCtx.lineTo(shape[m][0] + x, shape[m][1] + y);
+	}
+	if(bufferCtx.isPointInPath(point[0], point[1])){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// shape = shapeSelection.shapes[unit][2][j].vertices
+// point = [shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y]
+// x = shapeSelection.shapes[unit][2][j].X
+// y = shapeSelection.shapes[unit][2][j].Y
+
+
+function sameDirection(vector1, vector2){
+	if(distance(vector1[0] + vector2[0], vector1[1] + vector2[1]) > distance(vector1[0] - vector2[0], vector1[1] - vector2[1])){
+		return true;
+	}else if(distance(vector1[0] + vector2[0], vector1[1] + vector2[1]) < distance(vector1[0] - vector2[0], vector1[1] - vector2[1])){
+		return false;
+	}
+}
+
+function normalVector(gradient, translationalVelocity, point, shape, x, y){
+	var isColInternal = false;
+	var normalGradient = -1/gradient;
+	var theta = Math.atan(normalGradient);
+	var _normalVector = [Math.cos(theta), Math.sin(theta)];
+												//make sure that the normal vector is pointing outward										
+	
+	point[0] -= _normalVector[0] * 1;
+	point[1] -= _normalVector[1] * 1;
+	
+	//if(sameDirection(translationalVelocity, _normalVector)){
+	if(!isPointInShape(point, shape, x, y)){	
+		_normalVector[0] *= -1;
+		_normalVector[1] *= -1;
+		isColInternal = true;
+	}	
+	
+	
+	var pointInShape = isPointInShape(point, shape, x, y);
+	//console.log('point#################################################################################', point);
+	//console.log('isPointInShape#################################################################################', pointInShape);
+	
+	return [_normalVector[0], _normalVector[1], isColInternal];
+}
+
+/*** 
+	sortRange: takes an a array of 2 number and returns a numerically sorted version
+	Example: sortRange([5, 3]) => [3, 5]
+***/
+function sortRange(arr) {
 	if(arr[0] > arr[1]) {
 		return [arr[1], arr[0]];
 	} else if(arr[0] < arr[1]) {
@@ -2723,23 +2753,18 @@ function findIntersectionPoint(arr1, arr2){
 		}
 
 		if(intersectionPointX >= xyRange(arr1)[0][0] && intersectionPointX <= xyRange(arr1)[0][1]){
-			//return [intersectionPointX, intersectionPointY, true];
 			return { intersecting: true, intersectionPoint: [intersectionPointX, intersectionPointY] };
 		}
-		//return [intersectionPointX, intersectionPointY, false];
 		return { intersecting: false, intersectionPoint: [intersectionPointX, intersectionPointY] };
-	} else if(gradient_a !== gradient_b && yIntercept_a !== yIntercept_b){	
-		//return [null, null, false];
+	} else if(gradient_a === gradient_b && yIntercept_a !== yIntercept_b){	
 		return { intersecting: false, intersectionPoint: [null, null] };
-	} else if(gradient_a !== gradient_b && yIntercept_a === yIntercept_b){
+	} else if(gradient_a === gradient_b && yIntercept_a === yIntercept_b){
 		/*** if the parallel line overlap return [null, null, true] if not return [null, null, false] ***/
 		var xRange_a = xyRange(arr1)[0];
 		var xRange_b = xyRange(arr2)[0];
 		if(overlap(xRange_a, xRange_b)){
-			//return [null, null, true];
 			return { intersecting: true, intersectionPoint: [null, null] };
 		}
-		//return [null, null, false];
 		return { intersecting: false, intersectionPoint: [null, null] };
 	}
 }
@@ -2794,30 +2819,55 @@ function intersectingLines(arr1, arr2, bool){
 	}
 }
 
-console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
-console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
+//console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
+//console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
 
 /** Horizontal line crossing vertica line **/
-console.log('intersectingLines: ', intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]], false)); // true
-console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[7, 1], [8, 3]], false)); // false
+//console.log('intersectingLines: ', intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]], false)); // true
+//console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[7, 1], [8, 3]], false)); // false
 
 /** Horizontal line crossing diagonal line **/
-console.log('intersectingLines: ', intersectingLines([[1, 3], [3, 3]], [[1, 2], [3, 4]], false)); // true
+//console.log('intersectingLines: ', intersectingLines([[1, 3], [3, 3]], [[1, 2], [3, 4]], false)); // true
 
-/** vertical line crossing diagonal line**/
-console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]], false)); // true
+/** vertical line crossing diagonal line **/
+//console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]], false)); // true
+
+/** 2 non-intersecting parallel line segments with equal y-intercepts **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [4, 4]], [[8, 8], [10, 10]], false));
+
+/** 2 non-intersecting parallel line segments with different y-intercepts **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [8, 8]], [[3, 2], [9, 8]], false));
+
+/** 2 intersecting parallel line segments **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [8, 8]], [[4, 4], [12, 12]], false));
+
+/** 2 vertical parallel line segments with different x-values **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [2, 4]], [[3, 2], [3, 4]], false));
+
+/** 2 non-overlapping vertical parallel line segments with same x-value **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [2, 4]], [[2, 6], [2, 8]], false));
+
+/** 2 overlapping vertical parallel line segments with same x-value **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [2, 4]], [[2, 3], [2, 8]], false));
 
 
 
+/** 2 horizontal parallel line segments with different y-values **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [4, 2]], [[2, 4], [4, 4]], false));
 
+/** 2 non-overlapping horizontal parallel line segments with same y-value **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [4, 2]], [[6, 2], [8, 2]], false));
 
+/** 2 overlapping horizontal parallel line segments with same y-value **/
+//console.log('intersectingLines: ', intersectingLines([[2, 2], [4, 2]], [[3, 2], [8, 2]], false));
 
+/*
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
 console.log('findIntersectionPoint: ', findIntersectionPoint([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
 console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
-console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true*/
 
 console.log('intersect: ', intersect([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
 console.log('intersect: ', intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
@@ -2829,8 +2879,7 @@ console.log('intersect: ', intersect([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // fa
 /** Horizontal line crossing diagonal line **/
 console.log('intersect: ', intersect([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
 
-/** vertical line crossing diagonal line**/
-console.log('intersect: ', intersect([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+
 
 /*
 console.log('overlap: ', overlap([1, 3], [4, 7]));
@@ -2942,7 +2991,7 @@ if(physics)
 										bufferCtx.lineTo(shapeSelection.shapes[unit][2][j].vertices[m][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[m][1] + shapeSelection.shapes[unit][2][j].Y);
 									}
 									if(bufferCtx.isPointInPath(shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y)){
-										
+										console.log('[X, Y]', [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y]);
 										shapeSelection.shapes[key][2][i].contactList[0] = shapeSelection.shapes[unit][2][j].id;
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
 										
@@ -3004,7 +3053,7 @@ if(physics)
 										var rot_x = rotA[0];
 										var rot_y = rotA[1];
 
-										collision_Data = collisionData([collisionPointA_x + shapeSelection.shapes[key][2][i].X, collisionPointA_y + shapeSelection.shapes[key][2][i].Y], [colVelocityAB_x, colVelocityAB_y], shapeSelection.shapes[key][2][i].vertices, [shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].Y], shapeSelection.shapes[unit][2][j].vertices, [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y], [rot_x, rot_y]);
+										collision_Data = collisionData([collisionPointA_x + shapeSelection.shapes[key][2][i].X, collisionPointA_y + shapeSelection.shapes[key][2][i].Y], [colVelocityAB_x, colVelocityAB_y], shapeSelection.shapes[key][2][i].vertices, [shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].Y], shapeSelection.shapes[unit][2][j].vertices, [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y]);
 										
 										//magnitude of vector relVelocityAB
 										MagColVelocityAB = distance(colVelocityAB_x, colVelocityAB_y);
@@ -3208,12 +3257,7 @@ if(physics)
 										}
 /*********************************************** END -- Replusion Direction Check ***********************************************************************/
 										
-										/*if(key != 'wall'){ // this condition is probably redundant
-											if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
-												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
-											}
-											shapeSelection.shapes[key][2][i].Y += repulsion[1] * penDepth;
-										}*/
+
 										
 										
 										/*if(penDepth <= 0.01 && unit != 'wall'){
@@ -3223,17 +3267,74 @@ if(physics)
 											shapeSelection.shapes[unit][2][j].gravity = true;
 										}*/
 										
-										/*if(unit != 'wall'){
-											if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y/normalVector_x) > 1){ // this line of code works but needs to be improved
-												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
+										//(penDepth >= maxDepth * 4) condition is always false and therefore pointless since (penDepth =< maxDepth)
+										if(key != 'wall' && penDepth){ // this condition is probably redundant
+											//if(Math.abs(normalVector_y / normalVector_x) > 1){
+											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){	
+												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
+											}*/
+											/*
+											if(penDepth <= 1){
+												shapeSelection.shapes[key][2][i].X += 0;
+											} else {
+												if(penDepth > 1){penDepth = 0.10}
+												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
 											}
-											shapeSelection.shapes[unit][2][j].Y -= repulsion[1] * penDepth;
-										}*/
+											if(penDepth > 0.10){penDepth = 0.10}*/
+											
+											//shapeSelection.shapes[key][2][i].X -= repulsion[0] * penDepth;
+											//shapeSelection.shapes[key][2][i].Y -= repulsion[1] * penDepth;
+											
+											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
+											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
+										}									
+										
+										
+										if(unit != 'wall'){
+											//if(Math.abs(normalVector_y / normalVector_x) > 1){											
+											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){
+												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
+											}*/
+											/*
+											 if( penDepth <= 1){
+												shapeSelection.shapes[unit][2][j].X -= 0; 
+											} else {
+												 if(penDepth > 1){penDepth = 0.10}
+												 shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
+											}
+											 
+											if(penDepth > 0.10){penDepth = 0.10}*/
+											//shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
+											//shapeSelection.shapes[unit][2][j].Y -= repulsion[1] * penDepth;
+											
+											shapeSelection.shapes[unit][2][j].X -= normalVector_x * penDepth;
+											shapeSelection.shapes[unit][2][j].Y -= normalVector_y * penDepth;											
+											
+										}
+										
+										/*if(key != 'wall'){ // this condition is probably redundant
+											if(penDepth >= maxDepth * 4){
+												shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
+												shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
+											}											
+										}										
+										
+										if(unit != 'wall'){
+											if(penDepth >= maxDepth * 4){
+												shapeSelection.shapes[unit][2][j].X -= normalVector_x * penDepth;
+												shapeSelection.shapes[unit][2][j].Y -= normalVector_y * penDepth;
+											}										
+										}*/									
 										
 										/** repulsiveF is just for blueprint**/
-										repulsiveF[0] = -repulsion[0] * penDepth;
-										repulsiveF[1] = -repulsion[1] * penDepth;	
+										//repulsiveF[0] = -repulsion[0] * penDepth;
+										//repulsiveF[1] = -repulsion[1] * penDepth;
 
+										/** repulsiveF is just for blueprint**/
+										repulsiveF[0] = -normalVector_x * penDepth;
+										repulsiveF[1] = -normalVector_y * penDepth;	
+										
+										
 										
 									}
 									
@@ -3263,11 +3364,12 @@ if(physics)
 	}	
 }
 
-function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB, shapeB_Offset, rotationVelocity){
+function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB, shapeB_Offset){
 	/*if(distance(velocity[0], velocity[1]) < 0.01){ //this is to help repulsion when the collision velocity is zero or there is no collision
 		velocity[0] = (collidingVertex[0] - shapeA_Offset[0])/10;
 		velocity[1] = (collidingVertex[1] - shapeA_Offset[1])/10;
 	}*/
+	console.log('shapeB_Offset: ', shapeB_Offset)
 	var unitNormal = [];
 	var intersection = [];
 	var _collisionData = {};
@@ -3381,8 +3483,13 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 	for(var k = 0; k < intersection.length; k++){
 		if(closestPoint0[0] === closestPoint1[k]){
 			closestIndex = k;
+			var sideOnBMidPoint = []; // mid-point of side B
+			sideOnBMidPoint[0] = (intersection[k].sideOnB.first[0] + intersection[k].sideOnB.second[0]) / 2;
+			sideOnBMidPoint[1] = (intersection[k].sideOnB.first[1] + intersection[k].sideOnB.second[1]) / 2;
 			
-			var normal = normalVector(intersection[k].gradient, velocity, rotationVelocity);
+			
+			var normal = normalVector(intersection[k].gradient, velocity, sideOnBMidPoint, shapeB, shapeB_Offset[0], shapeB_Offset[1]);
+			//var normal = normalVector(intersection[k].gradient, velocity, shapeB_Offset, shapeB, shapeB_Offset[0], shapeB_Offset[1]);
 			unitNormal = [normal[0], normal[1]];
 			_collisionData = {
 				'unitNormal': unitNormal,
