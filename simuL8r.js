@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2015-12-28 **/ 
+/** simuL8r - v1.0.0 - 2016-01-01 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2604,7 +2604,7 @@ function blueprint(Array, i){
 	console.log('point: ', point);	
 	bufferCtx.beginPath();
 	bufferCtx.moveTo(shape[0][0] + x, shape[0][1] + y);
-	for(var m = 0; m < shape.length; m++){ // check shape B
+	for(var m = 0; m < shape.length; m++){ // check the shape
 		bufferCtx.lineTo(shape[m][0] + x, shape[m][1] + y);
 	}
 	if(bufferCtx.isPointInPath(point[0], point[1])){
@@ -2980,21 +2980,13 @@ if(physics)
 							unit == 'wall' && j == 0 && shapeSelection.shapes[key][2][i].X < shapeSelection.shapes[key][2][i].setOuterRadius() ||
 							unit == 'wall' && j == 1 && shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.width ||
 							unit == 'wall' && j == 2 && shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.height ||
-							unit == 'wall' && j == 3 && shapeSelection.shapes[key][2][i].Y < shapeSelection.shapes[key][2][i].setOuterRadius() + 50){
-							
+							unit == 'wall' && j == 3 && shapeSelection.shapes[key][2][i].Y < shapeSelection.shapes[key][2][i].setOuterRadius() + 50){							
 							shapeSelection.shapes[key][2][i].preCollision = true;
-
 								for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){ // check each vertex of shape A to see if it's in shape B
-									bufferCtx.beginPath();
-									bufferCtx.moveTo(shapeSelection.shapes[unit][2][j].vertices[0][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[0][1] + shapeSelection.shapes[unit][2][j].Y);
-									for(var m = 0; m < shapeSelection.shapes[unit][2][j].vertices.length; m++){ // check shape B
-										bufferCtx.lineTo(shapeSelection.shapes[unit][2][j].vertices[m][0] + shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].vertices[m][1] + shapeSelection.shapes[unit][2][j].Y);
-									}
-									if(bufferCtx.isPointInPath(shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y)){
-										console.log('[X, Y]', [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y]);
+									var collidingVertex = [shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y];
+									if(isPointInShape([collidingVertex[0], collidingVertex[1]], shapeSelection.shapes[unit][2][j].vertices, shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y)){																														
 										shapeSelection.shapes[key][2][i].contactList[0] = shapeSelection.shapes[unit][2][j].id;
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
-										
 										if(shapeSelection.shapes[key][2][i].vertices[k][3].collision === false){
 										/*****************************************Body A ***************************************************/
 										//finding collision points on A
@@ -3052,9 +3044,9 @@ if(physics)
 										
 										var rot_x = rotA[0];
 										var rot_y = rotA[1];
-
-										collision_Data = collisionData([collisionPointA_x + shapeSelection.shapes[key][2][i].X, collisionPointA_y + shapeSelection.shapes[key][2][i].Y], [colVelocityAB_x, colVelocityAB_y], shapeSelection.shapes[key][2][i].vertices, [shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].Y], shapeSelection.shapes[unit][2][j].vertices, [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y]);
-										
+										//collidingVertex
+										//collision_Data = collisionData([collisionPointA_x + shapeSelection.shapes[key][2][i].X, collisionPointA_y + shapeSelection.shapes[key][2][i].Y], [colVelocityAB_x, colVelocityAB_y], shapeSelection.shapes[key][2][i].vertices, [shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].Y], shapeSelection.shapes[unit][2][j].vertices, [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y]);
+										collision_Data = collisionData(collidingVertex, [colVelocityAB_x, colVelocityAB_y], shapeSelection.shapes[key][2][i].vertices, [shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].Y], shapeSelection.shapes[unit][2][j].vertices, [shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y]);
 										//magnitude of vector relVelocityAB
 										MagColVelocityAB = distance(colVelocityAB_x, colVelocityAB_y);
 										
@@ -3124,7 +3116,7 @@ if(physics)
 										startPoint = collision_Data.collision_Data.sideOnB.first;
 										endPoint = collision_Data.collision_Data.sideOnB.second;
 
-							}
+							//}
 									if(key != 'wall'){
 
 										var repulsiveFactor = MagColVelocityAB * 100;
@@ -3284,9 +3276,16 @@ if(physics)
 											
 											//shapeSelection.shapes[key][2][i].X -= repulsion[0] * penDepth;
 											//shapeSelection.shapes[key][2][i].Y -= repulsion[1] * penDepth;
+											//shapeSelection.shapes[key][2][i].X
 											
-											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
-											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
+											var reposition = [shapeSelection.shapes[unit][2][j].X + collisionPointB_x - collidingVertex[0], shapeSelection.shapes[unit][2][j].Y + collisionPointB_y - collidingVertex[1]];
+											console.log('reposition', reposition);
+											
+											//shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
+											//shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
+											
+											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth + reposition[0];
+											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth + reposition[1];											
 										}									
 										
 										
@@ -3307,8 +3306,8 @@ if(physics)
 											//shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
 											//shapeSelection.shapes[unit][2][j].Y -= repulsion[1] * penDepth;
 											
-											shapeSelection.shapes[unit][2][j].X -= normalVector_x * penDepth;
-											shapeSelection.shapes[unit][2][j].Y -= normalVector_y * penDepth;											
+											shapeSelection.shapes[unit][2][j].X -= normalVector_x * penDepth;;
+											shapeSelection.shapes[unit][2][j].Y -= normalVector_y * penDepth;;											
 											
 										}
 										
@@ -3333,11 +3332,9 @@ if(physics)
 										/** repulsiveF is just for blueprint**/
 										repulsiveF[0] = -normalVector_x * penDepth;
 										repulsiveF[1] = -normalVector_y * penDepth;	
-										
-										
-										
+											
 									}
-									
+								}// 526
 								}else{
 									shapeSelection.shapes[key][2][i].vertices[k][3] = {collision: false};
 									shapeSelection.shapes[key][2][i].contactList = [];
