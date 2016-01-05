@@ -4,8 +4,8 @@
 **/
 
 function isPointInShape(point, shape, x, y){
-	console.log('[x, y]: ', [x, y]);
-	console.log('point: ', point);	
+	/*console.log('[x, y]: ', [x, y]);
+	console.log('point: ', point);*/
 	bufferCtx.beginPath();
 	bufferCtx.moveTo(shape[0][0] + x, shape[0][1] + y);
 	for(var m = 0; m < shape.length; m++){ // check the shape
@@ -305,7 +305,8 @@ console.log('sortRange: ', sortRange([21, 0]));
 console.log('sortRange: ', sortRange([2, -10]));*/
 
 var physicsObject = {throwArray:[]};
-var gravity = 0.1;
+//var gravity = 0.1;
+var gravity = 0;
 var restitution = 0.5;
 var minBounceVelocity = 5;
 var massToPixelRatio = 0.01;
@@ -683,7 +684,7 @@ if(physics)
 											//shapeSelection.shapes[key][2][i].X
 											
 											var reposition = [shapeSelection.shapes[unit][2][j].X + collisionPointB_x - collidingVertex[0], shapeSelection.shapes[unit][2][j].Y + collisionPointB_y - collidingVertex[1]];
-											console.log('reposition', reposition);
+											//console.log('reposition', reposition);
 											
 											//shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
 											//shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
@@ -770,7 +771,7 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 		velocity[0] = (collidingVertex[0] - shapeA_Offset[0])/10;
 		velocity[1] = (collidingVertex[1] - shapeA_Offset[1])/10;
 	}*/
-	console.log('shapeB_Offset: ', shapeB_Offset)
+	//console.log('shapeB_Offset: ', shapeB_Offset)
 	var unitNormal = [];
 	var intersection = [];
 	var _collisionData = {};

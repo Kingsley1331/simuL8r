@@ -171,6 +171,14 @@
 		<button id='bpApply' onclick='selectAll=true; reset=false; displayData();'>select all</button>
 </div>
 
+<div id='settings'>
+	frame rate&nbsp;<input id='frame_rate' type='text'/><br>
+	velocity<sub>x</sub>&nbsp;<input id='vx' type='text'/><br>
+	velocity<sub>y</sub>&nbsp;<input id='vy' type='text'/><br>
+	angular velocity&nbsp;<input id='v_angular' type='text'/><br><br>
+	<button id='applySettings'>apply</button>
+</div>
+
 <!--</div>-->
 <script type="text/javascript" src="js/lib/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="js/lib/angular/angular.js"></script>
@@ -178,6 +186,7 @@
 <script type="text/javascript" src="js/lib/angular-route/angular-route.js"></script>
 <script type="text/javascript" src="js/lib/PACE/pace.min.js"></script>
 <script type="text/javascript" src='simuL8r.js'></script>
+<script type="text/javascript" src='settings.js'></script>
 <script type="text/javascript" data-pace-options='{ "ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>
 </body>
 </html>

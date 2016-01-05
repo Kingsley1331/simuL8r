@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-01-01 **/ 
+/** simuL8r - v1.0.0 - 2016-01-05 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -18,6 +18,9 @@ var onObject = false;
 var dragging = false;var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || "grabbing" || 'move';
 var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
+var selectedShape = [];
+var frame_Rate = 100;
+var playScenes;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -361,7 +364,7 @@ function init(){
 	mouseUp();
 	eraser();
 	animate();
-	setInterval(animator, 10);
+	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
 	var wallCollisionRadius = 0;
 
 	for(var i = 0; i < 4; i++){
@@ -444,7 +447,7 @@ window.requestAnimFrame = (function(callback) {
 function animate(){
 	draw();
 	requestAnimFrame(function() {
-	animate();
+		animate();
 	});
 }
 
@@ -556,6 +559,14 @@ function drag(){
 				shapeSelection.shapes[key][2][i].locateTouchPoint();
 				shapeSelection.shapes[key][2][i].velocity = [0, 0];
 				if(!pencils) {canvas.style.cursor = cursor_grab;}
+				if(physics){
+					selectedShape[0] = shapeSelection.shapes[key][2][i];
+					selectedShape[1] = key;
+				}
+				if(selectedShape[0] && selectedShape[1] !== 'wall'){
+					//selectedShape[0].velocity = [2, 2];
+					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
+				}			
 			}
 		}
 	}
@@ -566,7 +577,6 @@ function selected(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			shapeSelection.shapes[key][2][i].selected = false; 
-			
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(shapeSelection.shapes[key][2][i].vertices[0][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[0][1] + shapeSelection.shapes[key][2][i].Y);
 			
@@ -577,6 +587,14 @@ function selected(){
 				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) >= 10){
 					shapeSelection.shapes[key][2][i].selected = true;
 					select = true;
+					/*if(physics){
+						selectedShape[0] = shapeSelection.shapes[key][2][i];
+						selectedShape[1] = key;
+					}
+					if(selectedShape[0] && selectedShape[1] !== 'wall'){
+						selectedShape[0].velocity = [10, 10];
+						console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
+					}*/					
 				}
 			}
 		}
@@ -2436,7 +2454,7 @@ function arrow(firstPoint, secondPoint, type){
 var obj = {a:6, b:3, c:5}; //Temporary
 var arr = [1, 2, 3]; //Temporary
 
-function blueprint(Array, i){
+function blueprint(array, i){
 	//if(physics){
 	
 	if(showBlueprint.on && showBlueprint.collidingSide){
@@ -2515,65 +2533,65 @@ function blueprint(Array, i){
 		bufferCtx.font = "13px sans-serif";
 		bufferCtx.fillText("(" + mousePos.x + ", " + mousePos.y + ")", mousePos.x, mousePos.y - 30);
 		
-		for(var i = 0; i < Array.length; i++){
+		for(var i = 0; i < array.length; i++){
 			if(showBlueprint.centroid){
 								/** The Centroid **/
 				bufferCtx.fillStyle = 'black';
 				bufferCtx.beginPath();
-				bufferCtx.arc(Array[i].X, Array[i].Y, 3, 0, 2*Math.PI);
+				bufferCtx.arc(array[i].X, array[i].Y, 3, 0, 2*Math.PI);
 				bufferCtx.fill();
 			}
 		if(showBlueprint.all){
 			bufferCtx.save();
-			for(var n = 0; n < Array[i].vertices.length; n++){
-				if(Array[i].vertices[n][3] && Array[i].vertices[n][3].collision){
+			for(var n = 0; n < array[i].vertices.length; n++){
+				if(array[i].vertices[n][3] && array[i].vertices[n][3].collision){
 					bufferCtx.fillStyle = 'red';
 					bufferCtx.beginPath();
-					bufferCtx.arc(Array[i].X + Array[i].vertices[n][0], Array[i].Y  + Array[i].vertices[n][1], 5, 0, 2*Math.PI);
+					bufferCtx.arc(array[i].X + array[i].vertices[n][0], array[i].Y  + array[i].vertices[n][1], 5, 0, 2*Math.PI);
 					bufferCtx.fill();
 				}
 			}
 		bufferCtx.restore();
 			//bufferCtx.fillStyle = 'black';
 			bufferCtx.beginPath();
-			bufferCtx.arc(Array[i].X, Array[i].Y, 4, 0, 2*Math.PI);
+			bufferCtx.arc(array[i].X, array[i].Y, 4, 0, 2*Math.PI);
 			bufferCtx.fill();
 			
 			bufferCtx.beginPath();
-			bufferCtx.arc(Array[i].X, Array[i].Y, Array[i].radius, 0, 2*Math.PI);
+			bufferCtx.arc(array[i].X, array[i].Y, array[i].radius, 0, 2*Math.PI);
 			bufferCtx.stroke();
 			
 			bufferCtx.strokeStyle = 'red';
 			bufferCtx.beginPath();
-			bufferCtx.arc(Array[i].X, Array[i].Y, Array[i].stretchRadius, 0, 2*Math.PI);
+			bufferCtx.arc(array[i].X, array[i].Y, array[i].stretchRadius, 0, 2*Math.PI);
 			bufferCtx.stroke();
 
 			bufferCtx.strokeStyle = 'black';
 			bufferCtx.fillStyle = 'white';
 			bufferCtx.beginPath();
-			bufferCtx.arc(Array[i].centroid[0], Array[i].centroid[1], 3, 0, 2*Math.PI);
+			bufferCtx.arc(array[i].centroid[0], array[i].centroid[1], 3, 0, 2*Math.PI);
 			bufferCtx.fill();
 			bufferCtx.stroke();
 			}
-			if(Array[i].preCollision && showBlueprint.preCollision){
+			if(array[i].preCollision && showBlueprint.preCollision){
 				bufferCtx.save();
 				bufferCtx.strokeStyle = 'green';
 				bufferCtx.lineWidth = 0.7;
 				bufferCtx.beginPath();
-				bufferCtx.arc(Array[i].X, Array[i].Y, Array[i].setOuterRadius(), 0, 2*Math.PI);
+				bufferCtx.arc(array[i].X, array[i].Y, array[i].setOuterRadius(), 0, 2*Math.PI);
 				bufferCtx.stroke();
-				if(Array[i].collision){
+				if(array[i].collision){
 					bufferCtx.fillStyle = 'black';
 					bufferCtx.strokeStyle = 'black';
-					var collisionPoint_x = Array[i].X + Array[i].collisionPoint.x;
-					var collisionPoint_y = Array[i].Y + Array[i].collisionPoint.y;
+					var collisionPoint_x = array[i].X + array[i].collisionPoint.x;
+					var collisionPoint_y = array[i].Y + array[i].collisionPoint.y;
 					
-					Array[i].lineColour = 'blue';
-					Array[i].lineWidth = 4;
+					array[i].lineColour = 'blue';
+					array[i].lineWidth = 4;
 					
 					bufferCtx.beginPath();
 					bufferCtx.moveTo(collisionPoint_x, collisionPoint_y);
-					bufferCtx.lineTo(collisionPoint_x + 100 * Array[i].collisionPoint.velocity[0], collisionPoint_y + 100 * Array[i].collisionPoint.velocity[1]);
+					bufferCtx.lineTo(collisionPoint_x + 100 * array[i].collisionPoint.velocity[0], collisionPoint_y + 100 * array[i].collisionPoint.velocity[1]);
 					bufferCtx.stroke();
 					
 					bufferCtx.beginPath();
@@ -2581,15 +2599,15 @@ function blueprint(Array, i){
 					bufferCtx.fill();
 					bufferCtx.restore();
 				}else{
-					Array[i].lineColour = 'black';
-					Array[i].lineWidth = 0.7;
+					array[i].lineColour = 'black';
+					array[i].lineWidth = 0.7;
 					bufferCtx.restore();
 				}
 				
 			}
 			if(showBlueprint.boundingRect){
 				bufferCtx.save();
-				bufferCtx.rect(Array[i].boundingRectangle.minX + Array[i].X, Array[i].boundingRectangle.minY + Array[i].Y, Array[i].boundingRectangle.width, Array[i].boundingRectangle.height);
+				bufferCtx.rect(array[i].boundingRectangle.minX + array[i].X, array[i].boundingRectangle.minY + array[i].Y, array[i].boundingRectangle.width, array[i].boundingRectangle.height);
 				bufferCtx.stroke();
 				bufferCtx.restore();
 			}
@@ -2600,8 +2618,8 @@ function blueprint(Array, i){
 
 }
 /***** New File *****/function isPointInShape(point, shape, x, y){
-	console.log('[x, y]: ', [x, y]);
-	console.log('point: ', point);	
+	/*console.log('[x, y]: ', [x, y]);
+	console.log('point: ', point);*/
 	bufferCtx.beginPath();
 	bufferCtx.moveTo(shape[0][0] + x, shape[0][1] + y);
 	for(var m = 0; m < shape.length; m++){ // check the shape
@@ -2901,7 +2919,8 @@ console.log('sortRange: ', sortRange([21, 0]));
 console.log('sortRange: ', sortRange([2, -10]));*/
 
 var physicsObject = {throwArray:[]};
-var gravity = 0.1;
+//var gravity = 0.1;
+var gravity = 0;
 var restitution = 0.5;
 var minBounceVelocity = 5;
 var massToPixelRatio = 0.01;
@@ -3279,7 +3298,7 @@ if(physics)
 											//shapeSelection.shapes[key][2][i].X
 											
 											var reposition = [shapeSelection.shapes[unit][2][j].X + collisionPointB_x - collidingVertex[0], shapeSelection.shapes[unit][2][j].Y + collisionPointB_y - collidingVertex[1]];
-											console.log('reposition', reposition);
+											//console.log('reposition', reposition);
 											
 											//shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
 											//shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
@@ -3366,7 +3385,7 @@ function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB,
 		velocity[0] = (collidingVertex[0] - shapeA_Offset[0])/10;
 		velocity[1] = (collidingVertex[1] - shapeA_Offset[1])/10;
 	}*/
-	console.log('shapeB_Offset: ', shapeB_Offset)
+	//console.log('shapeB_Offset: ', shapeB_Offset)
 	var unitNormal = [];
 	var intersection = [];
 	var _collisionData = {};

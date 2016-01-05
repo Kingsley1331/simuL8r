@@ -17,6 +17,9 @@ var onObject = false;
 var dragging = false;var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || "grabbing" || 'move';
 var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
+var selectedShape = [];
+var frame_Rate = 100;
+var playScenes;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -360,7 +363,7 @@ function init(){
 	mouseUp();
 	eraser();
 	animate();
-	setInterval(animator, 10);
+	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
 	var wallCollisionRadius = 0;
 
 	for(var i = 0; i < 4; i++){
@@ -443,7 +446,7 @@ window.requestAnimFrame = (function(callback) {
 function animate(){
 	draw();
 	requestAnimFrame(function() {
-	animate();
+		animate();
 	});
 }
 
@@ -555,6 +558,14 @@ function drag(){
 				shapeSelection.shapes[key][2][i].locateTouchPoint();
 				shapeSelection.shapes[key][2][i].velocity = [0, 0];
 				if(!pencils) {canvas.style.cursor = cursor_grab;}
+				if(physics){
+					selectedShape[0] = shapeSelection.shapes[key][2][i];
+					selectedShape[1] = key;
+				}
+				if(selectedShape[0] && selectedShape[1] !== 'wall'){
+					//selectedShape[0].velocity = [2, 2];
+					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
+				}			
 			}
 		}
 	}
@@ -565,7 +576,6 @@ function selected(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			shapeSelection.shapes[key][2][i].selected = false; 
-			
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(shapeSelection.shapes[key][2][i].vertices[0][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[0][1] + shapeSelection.shapes[key][2][i].Y);
 			
@@ -576,6 +586,14 @@ function selected(){
 				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) >= 10){
 					shapeSelection.shapes[key][2][i].selected = true;
 					select = true;
+					/*if(physics){
+						selectedShape[0] = shapeSelection.shapes[key][2][i];
+						selectedShape[1] = key;
+					}
+					if(selectedShape[0] && selectedShape[1] !== 'wall'){
+						selectedShape[0].velocity = [10, 10];
+						console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
+					}*/					
 				}
 			}
 		}
