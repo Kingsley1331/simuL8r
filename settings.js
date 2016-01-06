@@ -14,10 +14,20 @@ var displaySettings = function(){
 	if(selectedShape[0]){
 		selectedShape[0].velocity = [x, y];	
 		selectedShape[0].angularVelocity = ang_v;
-		clearInterval(playScenes);
-		setInterval(animator, 1000 / f_rate);
-		//frame_Rate = f_rate;
-		//alert(frame_Rate);
+		clearFrames();
+		startFrames(f_rate);
+	}
+}
+
+function clearFrames(){
+	intervalRunning = false;
+	clearInterval(playScenes);
+}
+
+function startFrames(frame__rate){
+	if(intervalRunning === false){
+		intervalRunning = true;
+		playScenes = setInterval(animator, 1000 / frame__rate);
 	}
 }
 

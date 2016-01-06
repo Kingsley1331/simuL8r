@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-01-05 **/ 
+/** simuL8r - v1.0.0 - 2016-01-06 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -364,6 +364,8 @@ function init(){
 	mouseUp();
 	eraser();
 	animate();
+	
+	intervalRunning = true;
 	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
 	var wallCollisionRadius = 0;
 

@@ -363,6 +363,8 @@ function init(){
 	mouseUp();
 	eraser();
 	animate();
+	
+	intervalRunning = true;
 	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
 	var wallCollisionRadius = 0;
 
