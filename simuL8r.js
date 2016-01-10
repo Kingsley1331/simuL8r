@@ -561,10 +561,11 @@ function drag(){
 				shapeSelection.shapes[key][2][i].locateTouchPoint();
 				shapeSelection.shapes[key][2][i].velocity = [0, 0];
 				if(!pencils) {canvas.style.cursor = cursor_grab;}
-				if(physics){
+				//if(physics){
 					selectedShape[0] = shapeSelection.shapes[key][2][i];
 					selectedShape[1] = key;
-				}
+					console.log('selectedShape: ', selectedShape)
+				//}
 				if(selectedShape[0] && selectedShape[1] !== 'wall'){
 					//selectedShape[0].velocity = [2, 2];
 					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
@@ -968,18 +969,19 @@ function rotationRecalculation(shape){
 
 var side = 55;
 function CustomShape(){
+	this.isFixed = false;
 	this.isAsleep = false;
 	this.id = 1;
 	this.contactList = [];
-	this.gravity = true;
 	this.pointsArray = pointsArray;
 	this.centroid = [0,0];
 	this.vertices = [];
 	this.referenceVertices = [];
 	this.X = 0;
 	this.Y = 0;
-	this.mass = 1;
-	this.momentOfInertia = this.mass*(side*side + side*side)/12
+	this.mass = 0;
+	this.momentOfInertia = 0;
+	this.gravity = true;
 	this.rotationalKineticEnergy = 0;
 	this.translationalKineticEnergy = 0;
 	this.velocity = [0,0];
@@ -2178,9 +2180,9 @@ function loadShapes(sim){
 				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][2][i][prop];
 			}
 			
-			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-				shapeSelection.shapes[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-				shapeSelection.shapes[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+			if(key == 'wall' || shapeSelection.shapes[key][2][i].isFixed){ // this part was added because mongodb couldn't store the very high(infinity) values
+				shapeSelection.shapes[key][2][i].mass = Infinity;
+				shapeSelection.shapes[key][2][i].momentOfInertia = Infinity;
 			}
 		}
 	}
@@ -2223,9 +2225,9 @@ console.log('loading!!!');
 				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][i][prop];
 			}
 			
-			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-				shapeSelection.shapes[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-				shapeSelection.shapes[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+			if(key == 'wall' || shapeSelection.shapes[key][2][i].isFixed){ // this part was added because mongodb couldn't store the very high(infinity) values
+				shapeSelection.shapes[key][2][i].mass = Infinity;
+				shapeSelection.shapes[key][2][i].momentOfInertia = Infinity;
 			}
 		}
 	}
@@ -2873,8 +2875,8 @@ function distanceFromLine(point, line){
 }
 
 
-console.log('distanceFromLine: ', distanceFromLine([0, 2], [[0, 0], [2, 2]]));
-console.log('distanceFromLine: ', distanceFromLine([1, 5], [[0, 0], [2, 0]]));
+//console.log('distanceFromLine: ', distanceFromLine([0, 2], [[0, 0], [2, 2]]));
+//console.log('distanceFromLine: ', distanceFromLine([1, 5], [[0, 0], [2, 0]]));
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
 
@@ -3125,9 +3127,15 @@ if(physics)
 										//finding the impulse
 										
 										var impulse = -(1 + restitution) * dotColVelocityABNormal/(1/massA + 1/massB + crossVelocityANormal * crossVelocityANormal/momentOfInertiaA + crossVelocityBNormal * crossVelocityBNormal/momentOfInertiaB);
-										
+										if(massA === Infinity && massB === Infinity && momentOfInertiaA === Infinity && momentOfInertiaB === Infinity ){
+											impulse = 0;
+										}
+										//console.log('##########################################################################################################################impulse: ', impulse);
 										velocityChangeA_x = impulse * normalVector_x/massA;
 										velocityChangeA_y = impulse * normalVector_y/massA;
+										
+										//console.log('velocityChangeA: ', [velocityChangeA_x, velocityChangeA_y]);
+										//console.log('velocityChangeA: ', shapeSelection.shapes[key][2][i].velocity);
 										
 										velocityChangeB_x = -impulse * normalVector_x/massB;
 										velocityChangeB_y = -impulse * normalVector_y/massB;
@@ -3145,9 +3153,10 @@ if(physics)
 											shapeSelection.shapes[unit][2][j].angularVelocity += angularVelocityChangeB;
 											
 										//Friction: subtract a percentage of the velocity
-										shapeSelection.shapes[key][2][i].velocity[0] -= velocityAB_x/20;
-										shapeSelection.shapes[key][2][i].velocity[1] -= velocityAB_y/20;
-										
+										if(!shapeSelection.shapes[key][2][i].isFixed){
+											shapeSelection.shapes[key][2][i].velocity[0] -= velocityAB_x/20;
+											shapeSelection.shapes[key][2][i].velocity[1] -= velocityAB_y/20;
+										}
 										//Freeze object if its been slowed below a certain velocity due to friction
 										var MagVelocityAB = distance(velocityAB_x, velocityAB_y);
 										
@@ -3316,7 +3325,7 @@ if(physics)
 										}*/
 										
 										//(penDepth >= maxDepth * 4) condition is always false and therefore pointless since (penDepth =< maxDepth)
-										if(key != 'wall' && penDepth){ // this condition is probably redundant
+										if(key != 'wall' && !shapeSelection.shapes[key][2][i].isFixed){ // this condition is probably redundant
 											//if(Math.abs(normalVector_y / normalVector_x) > 1){
 											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){	
 												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
@@ -3342,7 +3351,7 @@ if(physics)
 										}									
 										
 										
-										if(unit != 'wall'){
+										if(unit != 'wall' && !shapeSelection.shapes[unit][2][j].isFixed){
 											//if(Math.abs(normalVector_y / normalVector_x) > 1){											
 											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){
 												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;

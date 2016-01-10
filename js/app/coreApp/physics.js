@@ -257,8 +257,8 @@ function distanceFromLine(point, line){
 }
 
 
-console.log('distanceFromLine: ', distanceFromLine([0, 2], [[0, 0], [2, 2]]));
-console.log('distanceFromLine: ', distanceFromLine([1, 5], [[0, 0], [2, 0]]));
+//console.log('distanceFromLine: ', distanceFromLine([0, 2], [[0, 0], [2, 2]]));
+//console.log('distanceFromLine: ', distanceFromLine([1, 5], [[0, 0], [2, 0]]));
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
 
@@ -509,9 +509,15 @@ if(physics)
 										//finding the impulse
 										
 										var impulse = -(1 + restitution) * dotColVelocityABNormal/(1/massA + 1/massB + crossVelocityANormal * crossVelocityANormal/momentOfInertiaA + crossVelocityBNormal * crossVelocityBNormal/momentOfInertiaB);
-										
+										if(massA === Infinity && massB === Infinity && momentOfInertiaA === Infinity && momentOfInertiaB === Infinity ){
+											impulse = 0;
+										}
+										//console.log('##########################################################################################################################impulse: ', impulse);
 										velocityChangeA_x = impulse * normalVector_x/massA;
 										velocityChangeA_y = impulse * normalVector_y/massA;
+										
+										//console.log('velocityChangeA: ', [velocityChangeA_x, velocityChangeA_y]);
+										//console.log('velocityChangeA: ', shapeSelection.shapes[key][2][i].velocity);
 										
 										velocityChangeB_x = -impulse * normalVector_x/massB;
 										velocityChangeB_y = -impulse * normalVector_y/massB;
@@ -529,9 +535,10 @@ if(physics)
 											shapeSelection.shapes[unit][2][j].angularVelocity += angularVelocityChangeB;
 											
 										//Friction: subtract a percentage of the velocity
-										shapeSelection.shapes[key][2][i].velocity[0] -= velocityAB_x/20;
-										shapeSelection.shapes[key][2][i].velocity[1] -= velocityAB_y/20;
-										
+										if(!shapeSelection.shapes[key][2][i].isFixed){
+											shapeSelection.shapes[key][2][i].velocity[0] -= velocityAB_x/20;
+											shapeSelection.shapes[key][2][i].velocity[1] -= velocityAB_y/20;
+										}
 										//Freeze object if its been slowed below a certain velocity due to friction
 										var MagVelocityAB = distance(velocityAB_x, velocityAB_y);
 										
@@ -700,7 +707,7 @@ if(physics)
 										}*/
 										
 										//(penDepth >= maxDepth * 4) condition is always false and therefore pointless since (penDepth =< maxDepth)
-										if(key != 'wall' && penDepth){ // this condition is probably redundant
+										if(key != 'wall' && !shapeSelection.shapes[key][2][i].isFixed){ // this condition is probably redundant
 											//if(Math.abs(normalVector_y / normalVector_x) > 1){
 											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){	
 												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
@@ -726,7 +733,7 @@ if(physics)
 										}									
 										
 										
-										if(unit != 'wall'){
+										if(unit != 'wall' && !shapeSelection.shapes[unit][2][j].isFixed){
 											//if(Math.abs(normalVector_y / normalVector_x) > 1){											
 											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){
 												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;

@@ -560,10 +560,11 @@ function drag(){
 				shapeSelection.shapes[key][2][i].locateTouchPoint();
 				shapeSelection.shapes[key][2][i].velocity = [0, 0];
 				if(!pencils) {canvas.style.cursor = cursor_grab;}
-				if(physics){
+				//if(physics){
 					selectedShape[0] = shapeSelection.shapes[key][2][i];
 					selectedShape[1] = key;
-				}
+					console.log('selectedShape: ', selectedShape)
+				//}
 				if(selectedShape[0] && selectedShape[1] !== 'wall'){
 					//selectedShape[0].velocity = [2, 2];
 					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
@@ -967,18 +968,19 @@ function rotationRecalculation(shape){
 
 var side = 55;
 function CustomShape(){
+	this.isFixed = false;
 	this.isAsleep = false;
 	this.id = 1;
 	this.contactList = [];
-	this.gravity = true;
 	this.pointsArray = pointsArray;
 	this.centroid = [0,0];
 	this.vertices = [];
 	this.referenceVertices = [];
 	this.X = 0;
 	this.Y = 0;
-	this.mass = 1;
-	this.momentOfInertia = this.mass*(side*side + side*side)/12
+	this.mass = 0;
+	this.momentOfInertia = 0;
+	this.gravity = true;
 	this.rotationalKineticEnergy = 0;
 	this.translationalKineticEnergy = 0;
 	this.velocity = [0,0];
@@ -2177,9 +2179,9 @@ function loadShapes(sim){
 				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][2][i][prop];
 			}
 			
-			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-				shapeSelection.shapes[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-				shapeSelection.shapes[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+			if(key == 'wall' || shapeSelection.shapes[key][2][i].isFixed){ // this part was added because mongodb couldn't store the very high(infinity) values
+				shapeSelection.shapes[key][2][i].mass = Infinity;
+				shapeSelection.shapes[key][2][i].momentOfInertia = Infinity;
 			}
 		}
 	}
@@ -2222,9 +2224,9 @@ console.log('loading!!!');
 				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][i][prop];
 			}
 			
-			if(key == 'wall'){ // this part was added because mongodb couldn't store the very high(infinity) values
-				shapeSelection.shapes[key][2][i].mass = 1.7976931348623157E+10308; //infinity
-				shapeSelection.shapes[key][2][i].momentOfInertia = 1.7976931348623157E+10308;
+			if(key == 'wall' || shapeSelection.shapes[key][2][i].isFixed){ // this part was added because mongodb couldn't store the very high(infinity) values
+				shapeSelection.shapes[key][2][i].mass = Infinity;
+				shapeSelection.shapes[key][2][i].momentOfInertia = Infinity;
 			}
 		}
 	}
