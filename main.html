@@ -172,7 +172,12 @@
 </div>
 
 <div id='settings'>
-	frame rate&nbsp;<input id='frame_rate' type='text'/><br>
+	<center><strong><h1>Settings</h1></strong></center>
+	<h3>Global</h3>
+	gravity<sub>x</sub>&nbsp;<input id='gx' type='text'/><br>
+	gravity<sub>y</sub>&nbsp;<input id='gy' type='text'/><br>
+	frame rate&nbsp;<input id='frame_rate' type='text'/><br><br>
+	<h3>Selected Object</h3>
 	velocity<sub>x</sub>&nbsp;<input id='vx' type='text'/><br>
 	velocity<sub>y</sub>&nbsp;<input id='vy' type='text'/><br>
 	angular velocity&nbsp;<input id='v_angular' type='text'/><br><br>
@@ -187,6 +192,6 @@
 <script type="text/javascript" src="js/lib/PACE/pace.min.js"></script>
 <script type="text/javascript" src='simuL8r.js'></script>
 <script type="text/javascript" src='settings.js'></script>
-<script type="text/javascript" data-pace-options='{ "ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>
+<script type="text/javascript" data-pace-options='{"ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>
 </body>
 </html>

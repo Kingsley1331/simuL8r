@@ -2,8 +2,8 @@ var startPoint = [];
 var endPoint = [];
 var normalVector_x = [];
 var normalVector_y = [];
-var sidePointX = 0;
-var sidePointY = 0;
+var calculatedCollisionPointX = 0;
+var calculatedCollisionPointY = 0;
 var repulsiveF = [];
 var shapeBCenter = [];
 var shapeACenter = [];
@@ -272,10 +272,10 @@ function blueprint(array, i){
 		}
 				//}
 	
-	arrow([sidePointX, sidePointY], [sidePointX + normalVector_x * 20, sidePointY + normalVector_y * 20], 'normal');// normal vector
+	arrow([calculatedCollisionPointX, calculatedCollisionPointY], [calculatedCollisionPointX + normalVector_x * 20, calculatedCollisionPointY + normalVector_y * 20], 'normal');// normal vector
 	arrow([shapeACenter[0], shapeACenter[1]], [shapeACenter[0] - repulsiveF[0] * 200, shapeACenter[1] - repulsiveF[1] * 200], 'repulsionA'); // repulsion vector Shape A
 	arrow([shapeBCenter[0], shapeBCenter[1]], [shapeBCenter[0] + repulsiveF[0] * 200, shapeBCenter[1] + repulsiveF[1] * 200], 'repulsionB'); // repulsion vector Shape B
-	arrow([sidePointX, sidePointY], [sidePointX + 20 * colVelocity[0], sidePointY + 20 * colVelocity[1]], 'relativeCollisionPointVelocity'); // collision velocity vector
+	arrow([calculatedCollisionPointX, calculatedCollisionPointY], [calculatedCollisionPointX + 20 * colVelocity[0], calculatedCollisionPointY + 20 * colVelocity[1]], 'relativeCollisionPointVelocity'); // collision velocity vector
 	collisionShadow();
 	
 	if(showBlueprint.collisionPoint && showBlueprint.on){// Draw collision point
@@ -283,12 +283,12 @@ function blueprint(array, i){
 		bufferCtx.save();
 		bufferCtx.fillStyle = 'black';
 		bufferCtx.beginPath();
-		bufferCtx.arc(sidePointX, sidePointY, 2, 0, 2*Math.PI);
+		bufferCtx.arc(calculatedCollisionPointX, calculatedCollisionPointY, 2, 0, 2*Math.PI);
 		bufferCtx.fill();
 						/** Inner Circle **/
 		bufferCtx.fillStyle = 'yellow';
 		bufferCtx.beginPath();
-		bufferCtx.arc(sidePointX, sidePointY, 1, 0, 2*Math.PI);
+		bufferCtx.arc(calculatedCollisionPointX, calculatedCollisionPointY, 1, 0, 2*Math.PI);
 		bufferCtx.fill();
 		bufferCtx.restore();
 	}

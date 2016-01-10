@@ -99,6 +99,25 @@ function overlap(arr1, arr2){ //arr1 and arr2 are sorted arrays
 }
 
 /***
+	defineLine: takes a line and finds the formular of the equation that desrcribe the line
+	by calculating its gradient and y-intercept.
+	Example: overlap([[0, 0], [4, 8]]) => {gradient: 2, yIntercept: 0}
+***/
+//ToDO: this function needs to work for vertical and horizontal lines
+function defineLine(arr){
+	var width = arr[1][0] - arr[0][0];
+	var height = arr[1][1] - arr[0][1];
+	var gradient = height / width;
+	var yIntercept = arr[1][1] - gradient * arr[1][0];
+	var line = {
+			gradient: gradient,
+			yIntercept: yIntercept
+		};
+	return line;
+}
+
+
+/***
 	findIntersectionPoint: takes 2 2-dimensional arrays which represent 2 line segments, 
 	it finds the equation of the lines in terms of y = mx + c and then it calculates
 	their point of intersection, provided that they are not parallel.
@@ -109,17 +128,16 @@ function overlap(arr1, arr2){ //arr1 and arr2 are sorted arrays
 ***/
 
 function findIntersectionPoint(arr1, arr2){
+	var lineA = defineLine(arr1);
+	var lineB = defineLine(arr2);	
+	
 	//line A
-	var width_a = arr1[1][0] - arr1[0][0];
-	var height_a = arr1[1][1] - arr1[0][1];
-	var gradient_a = height_a / width_a;
-	var yIntercept_a = arr1[1][1] - gradient_a * arr1[1][0];
+	var gradient_a = lineA.gradient;
+	var yIntercept_a = lineA.yIntercept;	
 	
 	//line B
-	var width_b = arr2[1][0] - arr2[0][0];
-	var height_b = arr2[1][1] - arr2[0][1];
-	var gradient_b = height_b / width_b;	
-	var yIntercept_b = arr2[1][1] - gradient_b * arr2[1][0];
+	var gradient_b = lineB.gradient;	
+	var yIntercept_b = lineB.yIntercept;
 	
 	
 	/**** Handling zero and infinite gradients ****/
@@ -204,10 +222,12 @@ function intersect(arr1, arr2){
 	intersectingLines: takes a 2 2-dimensional arrays which represents 2 lines and a boolean and returns
 	an object with the following format { intersecting: true, intersectionPoint: [x, y] }
 	the "intersecting" property tells us whether or not the point of intersection is on the line segment
-	and the "intersectionPoint" property contains the intersection of the lines (in the form of y = mx + c)
+	and the "intersectionPoint" property contains the intersection point of the lines (in the form of y = mx + c)
 	that describe the 2 line segments.
-	Boolean parameter: in situations where calculating the point of intersection is absolutely necessary
-					   the boolean should be set to TRUE and the findIntersectionPoint function is used.
+	Boolean parameter: in situations where calculating the point of intersection
+					   (this is the intersection point of the equations that describes the line segments)
+					   is absolutely necessary the boolean should be set to TRUE and the findIntersectionPoint 
+					   function is used.
 					   On the other hand if we simply need to know whether or not 2 line segments intersect
 					   then we set the boolean to FALSE and the intersect function is used instead.
 	
@@ -222,7 +242,23 @@ function intersectingLines(arr1, arr2, bool){
 		return intersect(arr1, arr2);
 	}
 }
+/***
+	distanceFromLine: takes a point and a line and calculates the distance between the line and the point.
+	Example: distanceFromLine([0, 2], [[0, 0], [2, 2]]) => 1.4142135623730951
+***/
+function distanceFromLine(point, line){
+	var lineGradient = defineLine(line).gradient;
+	var perpLineGradient = ( -1 / lineGradient );
+	var newPoint = [point[0] + 1, point[1] + perpLineGradient];
+	var newLine = [point, newPoint];
+	var intersectionPoint = findIntersectionPoint(line, newLine).intersectionPoint;
+	var pointDistance = distance(intersectionPoint[0] - point[0], intersectionPoint[1] - point[1]);
+	return pointDistance;
+}
 
+
+console.log('distanceFromLine: ', distanceFromLine([0, 2], [[0, 0], [2, 2]]));
+console.log('distanceFromLine: ', distanceFromLine([1, 5], [[0, 0], [2, 0]]));
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
 
@@ -265,13 +301,13 @@ function intersectingLines(arr1, arr2, bool){
 /** 2 overlapping horizontal parallel line segments with same y-value **/
 //console.log('intersectingLines: ', intersectingLines([[2, 2], [4, 2]], [[3, 2], [8, 2]], false));
 
-/*
+
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
 console.log('findIntersectionPoint: ', findIntersectionPoint([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
 console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
-console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true*/
+console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
 
 console.log('intersect: ', intersect([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
 console.log('intersect: ', intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
@@ -305,8 +341,7 @@ console.log('sortRange: ', sortRange([21, 0]));
 console.log('sortRange: ', sortRange([2, -10]));*/
 
 var physicsObject = {throwArray:[]};
-//var gravity = 0.1;
-var gravity = 0;
+var gravity = 0.1;
 var restitution = 0.5;
 var minBounceVelocity = 5;
 var massToPixelRatio = 0.01;
@@ -578,8 +613,8 @@ if(physics)
 										
 										/***  Colliding Side ***/
 										var gradient = collision_Data.collision_Data.gradient;
-										sidePointX = collision_Data.collision_Data.x;
-										sidePointY = collision_Data.collision_Data.y;
+										calculatedCollisionPointX = collision_Data.collision_Data.x;
+										calculatedCollisionPointY = collision_Data.collision_Data.y;
 										colVelocity = collision_Data.collision_Data.velocity
 										
 										shapeA = [];
@@ -601,7 +636,7 @@ if(physics)
 										
 										
 /*********************************************** START -- Replusion Direction Check ******************************************************************/										
-										var sideC = sidePointY - gradient * sidePointX;
+										var sideC = calculatedCollisionPointY - gradient * calculatedCollisionPointX;
 										
 										/*** The perpendicular line that connects the colliding side and the colliding vertex ***/
 										var perpGradient = collision_Data.unitNormal[1]/collision_Data.unitNormal[0];
@@ -614,7 +649,7 @@ if(physics)
 											
 											/***  Colliding Side ***/
 											var swappedGradient = 1 / gradient;
-											var swappedSideC = sidePointX - swappedGradient * sidePointY;
+											var swappedSideC = calculatedCollisionPointX - swappedGradient * calculatedCollisionPointY;
 											
 											/*** The perpendicular line ***/
 											var swappedPerpGradient = 1 / perpGradient;
@@ -683,14 +718,11 @@ if(physics)
 											//shapeSelection.shapes[key][2][i].Y -= repulsion[1] * penDepth;
 											//shapeSelection.shapes[key][2][i].X
 											
-											var reposition = [shapeSelection.shapes[unit][2][j].X + collisionPointB_x - collidingVertex[0], shapeSelection.shapes[unit][2][j].Y + collisionPointB_y - collidingVertex[1]];
-											//console.log('reposition', reposition);
+											var reposition = [calculatedCollisionPointX - collidingVertex[0], calculatedCollisionPointY - collidingVertex[1]];
 											
-											//shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
-											//shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
-											
-											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth + reposition[0];
-											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth + reposition[1];											
+											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
+											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
+																					
 										}									
 										
 										

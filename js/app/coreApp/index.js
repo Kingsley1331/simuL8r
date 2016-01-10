@@ -1278,8 +1278,8 @@ function customShapeGen(){
 }
 
 function Walls(){
-	this.mass = 1.7976931348623157E+10308; //infinity
-	this.momentOfInertia = 1.7976931348623157E+10308;
+	this.mass = Infinity;
+	this.momentOfInertia = Infinity;
 	this.side = 60;
 	this.defaultSide = 60;
 	this.velocity = [0, 0];
