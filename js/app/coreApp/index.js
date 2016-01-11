@@ -132,7 +132,7 @@ function circleMaker(){
 		circularArray.push([x, y]);
 	}
 }
-
+/*
 $(document).ready(function(){
   $("#tipsRemove").click(function(){
     $("#tips").fadeOut("slow");
@@ -145,7 +145,7 @@ $(document).ready(function(){
     $("#tipsSee").fadeOut("slow");
 	$("#tips").fadeIn("slow");
   });
-})
+})*/
 
 // the function below determines whether the pencil draws shapes or strokes
 $(document).ready(function(){
@@ -324,7 +324,7 @@ function init(){
 	selectPencilStroke();
 
 	pencilCursor();
-	if(tipping){tips.style.visibility = 'visible';}
+	//if(tipping){tips.style.visibility = 'visible';}
 
 	mousePos = 0;
 	canvas = document.getElementById('canvas');
@@ -348,7 +348,7 @@ function init(){
 	bar = document.getElementById('bar');
 	bar.style.width = window.innerWidth + 'px';;
 	
-	tips = document.getElementById('tips');
+	//tips = document.getElementById('tips');
 	
 	bufferCanvas = document.createElement('canvas');
     bufferCtx = bufferCanvas.getContext("2d");

@@ -8,6 +8,9 @@ simApp.controller('SimCtrl', function($scope, $http){
 		}
 	});
 	
+	$scope.currentScene = '';
+	
+	
 	$scope.showSceneTable = false;
 	$scope.scenesVisibility = 'show scenes';
 	
@@ -128,7 +131,16 @@ simApp.controller('SimCtrl', function($scope, $http){
 	$scope.retrieve = function(id){
 		clearAll(wallConfig);
 		$scope.select(id);
+		$scope.currentScene = id;
 	}
+	
+	$scope.refresh = function(id){
+		if($scope.currentScene !== ''){
+		clearAll(wallConfig);
+		$scope.select(id);
+		}
+	}
+	
 	
 	$scope.newScene = function(){
 		clearAll(wallConfig);

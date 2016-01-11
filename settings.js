@@ -4,6 +4,10 @@ var v_angular = document.getElementById('v_angular');
 var frame_rate = document.getElementById('frame_rate');
 var applySettings = document.getElementById('applySettings');
 var fix = document.getElementById('fix');
+var showOptions = document.getElementById('showOptions');
+var settings = document.getElementById('settings');
+var settingsShowing = false
+
 
 var displaySettings = function(){
 	var f_rate = Number(frame_rate.value) || 100;
@@ -28,6 +32,19 @@ var displaySettings = function(){
 	}
 }
 
+/** do this with angular**/
+function showSettings(){
+	if(!settingsShowing){
+		settings.style.display = 'inline-block';
+		console.log('show settings');
+		settingsShowing = true;
+	}else if(settingsShowing){
+		settings.style.display = 'none';
+		console.log('hide settings');
+		settingsShowing = false;
+	}
+}
+
 function clearFrames(){
 	intervalRunning = false;
 	clearInterval(playScenes);
@@ -41,3 +58,4 @@ function startFrames(frame__rate){
 }
 
 applySettings.addEventListener('click', displaySettings);
+showOptions.addEventListener('click', showSettings);
