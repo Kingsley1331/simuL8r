@@ -87,9 +87,8 @@ app.use('/', routes);
 
 
 function startServer(){
-	var port = 5000;
-	//app.listen(port);
-	app.listen(process.env.PORT || 5000);
+	var port = 3000;
+	app.listen(process.env.PORT || port);
 	console.log('listening on port:' + port);
 }
 
