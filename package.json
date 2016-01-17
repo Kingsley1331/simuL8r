@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Physics Engine",
   "main": "server.js",
+  "repository" : { 
+	"type" : "git",
+	"url" : "https://github.com/Kingsley1331/simuL8r.git"
+  },
   "dependencies": {
     "base64-image": "^0.1.0",
     "bcrypt-nodejs": "0.0.3",
