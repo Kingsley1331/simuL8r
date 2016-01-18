@@ -106,6 +106,7 @@ module.exports = function(passport){
 			name: sim.name,
 			userID: sim.userID,
 			isPublic: sim.isPublic,
+			imageUrl: sim.imageUrl,
 			shapes: {
 				circle: sim.shapes.circle,
 				square: sim.shapes.square,
@@ -134,6 +135,7 @@ module.exports = function(passport){
 			name: sim.name,
 			userID: sim.userID,
 			isPublic: sim.isPublic,
+			imageUrl: sim.imageUrl,
 			shapes: {
 				circle: sim.shapes.circle,
 				square: sim.shapes.square,
@@ -152,6 +154,7 @@ module.exports = function(passport){
 			scene.name = newScene.name,
 			scene.userID = newScene.userID,
 			scene.isPublic = newScene.isPublic,
+			scene.imageUrl = newScene.imageUrl,
 			scene.shapes.circle = newScene.shapes.circle,
 			scene.shapes.square = newScene.shapes.square,
 			scene.shapes.triangle = newScene.shapes.triangle,
@@ -172,7 +175,7 @@ module.exports = function(passport){
 
 	router.delete('/scene/:id', function(req, res){
 		var id = req.params.id;
-		deleteFile('images/thumbnails/' + id + '.png');
+		//deleteFile('images/thumbnails/' + id + '.png');
 		Scenes.remove({_id: id}, function(err) {
 			if(err){
 				console.log(err);
@@ -203,7 +206,7 @@ module.exports = function(passport){
 		Scenes.find({userID : userID}, function(err, scenes){
 			for(var i = 0; i < scenes.length; i++){
 				console.log('scenes: ', scenes);
-				deleteFile('images/thumbnails/' + scenes[i]._id + '.png');
+				//deleteFile('images/thumbnails/' + scenes[i]._id + '.png');
 			}
 			res.send(scenes);
 		});
@@ -240,13 +243,13 @@ module.exports = function(passport){
 		var thumbnailUrl = req.body.id;
 		var imageBuffer = decodeBase64Image(canvasData);
 		console.log(imageBuffer);
-		fs.writeFile(thumbnailUrl, imageBuffer.data, function(err) { 
+		/*fs.writeFile(thumbnailUrl, imageBuffer.data, function(err) { 
 			if(err){
 				console.log(err);
 			}else{
 				console.log('file saved');
 			}
-		});
+		});*/
 	});
 	
 	router.post('/uploadProfile', function(req, res){

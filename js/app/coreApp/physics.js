@@ -302,22 +302,22 @@ function distanceFromLine(point, line){
 //console.log('intersectingLines: ', intersectingLines([[2, 2], [4, 2]], [[3, 2], [8, 2]], false));
 
 
-console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
+/*console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
 console.log('findIntersectionPoint: ', findIntersectionPoint([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
 console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
 console.log('findIntersectionPoint: ', findIntersectionPoint([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
-console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true
+console.log('findIntersectionPoint: ', findIntersectionPoint([[5, 3], [6, 1]], [[5.5, 0], [5.5, 3]])); // true*/
 
-console.log('intersect: ', intersect([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
-console.log('intersect: ', intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
+//console.log('intersect: ', intersect([[1, 6], [3, 1]], [[1, 2], [3, 4]])); // true
+//console.log('intersect: ', intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]])); // false
 
 /** Horizontal line crossing vertica line **/
-console.log('intersect: ', intersect([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
-console.log('intersect: ', intersect([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
+//console.log('intersect: ', intersect([[6, 6], [6, 4]], [[5, 5], [7, 5]])); // true
+//console.log('intersect: ', intersect([[5, 3], [6, 1]], [[7, 1], [8, 3]])); // false
 
 /** Horizontal line crossing diagonal line **/
-console.log('intersect: ', intersect([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
+//console.log('intersect: ', intersect([[1, 3], [3, 3]], [[1, 2], [3, 4]])); // true
 
 
 

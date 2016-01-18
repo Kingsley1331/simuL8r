@@ -38,6 +38,10 @@ simApp.controller('SimCtrl', function($scope, $http){
 		if(name !== ''){
 			shapeSelection.name = name;
 		}
+		var dataURL = canvas.toDataURL();
+		shapeSelection.imageUrl = dataURL;
+		
+		//console.log('imageUrl', shapeSelection.imageUrl);
 		
 		$scope.simulation = shapeSelection;
 		console.log('create: ', $scope.simulation);
@@ -74,15 +78,19 @@ simApp.controller('SimCtrl', function($scope, $http){
 		if(!shapeSelection.name){
 			shapeSelection.name = 'untitled';
 		}
+		
+		var dataURL = canvas.toDataURL();
+		shapeSelection.imageUrl = dataURL;
 		shapeSelection.name = name;	
 		$scope.simulation = shapeSelection;
 		console.log('updateScene: ', $scope.simulation);			
 				$http.put('/scenes/' + id, $scope.simulation)
 				.success(function(response){
 					console.log('update ', response);
+					
 					$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
 					var thumbnailUrl = $scope.currentThumbnail[response._id];
-					$scope.saveThumbnail(thumbnailUrl);
+					//$scope.saveThumbnail(thumbnailUrl);
 					$scope.getAll();
 				});
 
@@ -148,7 +156,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 		console.log('newScene: ', $scope.simulation);
 	}
 	
-	$scope.saveThumbnail = function(id){
+	/*$scope.saveThumbnail = function(id){
 		var image = canvas.toDataURL('image/png');
 		postData = {
 					canvasData: image,
@@ -158,7 +166,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 		 .success(function(response){
 			console.log('successful upload!');
 		});
-	}
+	}*/
 	
 	$scope.logout = function(){
 		console.log('Simtroller logging out!!!');

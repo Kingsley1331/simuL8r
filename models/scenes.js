@@ -4,6 +4,7 @@ module.exports = mongoose.model('scenes', {
 	name: String,
 	userID: String,
 	isPublic: Boolean,
+	imageUrl: String, 
 	shapes: {
 		circle: Array,
 		square: Array,

@@ -25,6 +25,7 @@ var shapeSelection = {
 						name: 'untitled',
 						userID: null,
 						isPublic: true,
+						imageUrl: '',
 						shapes: {
 							circle:[false, circleGen, circleArray, 0],
 							square:[false, squareGen, squareArray, 1],

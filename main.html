@@ -108,7 +108,8 @@
 	</tr>
 	<tr ng-repeat='scene in scenes'>
 		<td>{{scene.name}}</td>
-		<td ng-click='retrieve(scene._id);'><img class='thumbnail' ng-src='images/thumbnails/{{scene._id}}.png' id = 'thumbnail'/></td>
+		<!--<td ng-click='retrieve(scene._id);'><img class='thumbnail' ng-src='images/thumbnails/{{scene._id}}.png' id = 'thumbnail'/></td>-->
+		<td ng-click='retrieve(scene._id);'><img class='thumbnail' ng-src='{{scene.imageUrl}}' id = 'thumbnail'/></td>
 		<td><button ng-click='updateScene(scene._id);'>update</button></td>
 		<td><button ng-click='remove(scene._id);'>delete</button></td>
 	</tr>
