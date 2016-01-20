@@ -357,6 +357,15 @@ function wallMaker(){
 	
 }
 
+function setCanvasSize(canvas, width, height){
+	$(canvas).prop('width', width);
+	$(canvas).prop('height', height);
+	shapeSelection.canvas = {
+		width: width,
+		height: height
+	};	
+}
+
 function init(){
 	//displayData();
 	checkParameters();
@@ -384,13 +393,7 @@ function init(){
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
 	
-	
-	function setCanvasSize(){
-		$(canvas).prop('width', window.innerWidth);
-		$(canvas).prop('height', window.innerHeight);
-	}
-	
-	setCanvasSize();
+	setCanvasSize(canvas, window.innerWidth, window.innerHeight);
 	window.onresize = function(event) {
 		/*canvas = document.getElementById('canvas');
 		context = canvas.getContext('2d');*/

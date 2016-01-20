@@ -57,8 +57,19 @@ simApp.controller('SimCtrl', function($scope, $http){
 		$scope.getAll();
 	}
 	//positions all elements retrieved from the database relative to the bottom of the canvas
-	function shifter(canvas, dbCanvas, shapes){
-		var heightDiff = canvas.height - dbCanvas.height;
+	function shifter(currentCanvas, dbCanvas, shapes){
+		var width = dbCanvas.width;
+		var height = dbCanvas.height;
+		var innerHeight = window.innerHeight;
+		var innerWidth = window.innerWidth;
+		
+		if(dbCanvas.width <= innerWidth && currentCanvas.width > innerWidth ){
+			setCanvasSize(canvas, innerWidth, innerHeight);
+			setCanvasSize(bufferCanvas, innerWidth, innerHeight);	
+			currentCanvas.height = innerHeight;
+		}
+		
+		var heightDiff = currentCanvas.height - dbCanvas.height;
 		if(heightDiff > 0){
 			for(var e in shapes){
 				var len = shapes[e][2].length;
@@ -66,6 +77,9 @@ simApp.controller('SimCtrl', function($scope, $http){
 					shapes[e][2][i].Y += heightDiff;
 				}
 			}
+		}else if(heightDiff < 0){	
+			setCanvasSize(canvas, width, height);
+			setCanvasSize(bufferCanvas, width, height);			
 		}
 	}
 
