@@ -24,6 +24,10 @@ app.config(function($routeProvider){
 		templateUrl: 'views/signup.html',
 		controller: 'SignupCtrl'
 	})
+	.when('/demos', {
+		templateUrl: 'views/demos.html',
+		controller: 'DemosCtrl'
+	})
 	.otherwise({
 		redirectTo: '/home'
 	})
