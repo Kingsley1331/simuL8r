@@ -82,5 +82,12 @@
 		
 		(b) date and time scene was last modified	
 		
-		(b) size of scene (in terms of data)	
+		(b) size of scene (in terms of data)
+		
+12. Responsive scenes
 	
+	- Since making scenes responsive, the performance of some and possibly all scenes have suffered, in some cases very severely.
+	
+	- This might be due to memory leaks, a function being called too many times or some of the new function being more expensive than they appear.
+	
+	- These changes were made in commits ee49f03 and c7c205d on Jan 20 2016
