@@ -26,6 +26,10 @@ var shapeSelection = {
 						userID: null,
 						isPublic: true,
 						imageUrl: '',
+						canvas: {
+							width:0,
+							height:0
+						},
 						shapes: {
 							circle:[false, circleGen, circleArray, 0],
 							square:[false, squareGen, squareArray, 1],
@@ -302,73 +306,8 @@ function rotater2(center_x, center_y, point_x, point_y, angle){
 	return [x_change, y_change];
 }
 
-
-
-function init(){
-	//displayData();
-	checkParameters();
-	var arrow_keys_handler = function(e) {
-    switch(e.keyCode){
-		case 32: if(physics == true){
-			physics = false;
-		}else{
-			physics = true;
-		}
-		e.preventDefault();
-		break; 
-        default: break; // do not block other keys
-    }
-};
-	window.addEventListener("keydown", arrow_keys_handler, false);
-
-	circleMaker();
-	selectPencilStroke();
-
-	pencilCursor();
-	//if(tipping){tips.style.visibility = 'visible';}
-
-	mousePos = 0;
-	canvas = document.getElementById('canvas');
-	context = canvas.getContext('2d');
-	
-	
-	function setCanvasSize(){
-		$(canvas).prop('width', window.innerWidth)
-		$(canvas).prop('height', window.innerHeight)
-	}
-	
-	setCanvasSize();
-	window.onresize = function(event) {
-		/*canvas = document.getElementById('canvas');
-		context = canvas.getContext('2d');*/
-		//setCanvasSize();
-    };
-	
-	body = document.getElementById('body');
-	
-	bar = document.getElementById('bar');
-	bar.style.width = window.innerWidth + 'px';;
-	
-	//tips = document.getElementById('tips');
-	
-	bufferCanvas = document.createElement('canvas');
-    bufferCtx = bufferCanvas.getContext("2d");
-    bufferCtx.canvas.width = context.canvas.width;
-    bufferCtx.canvas.height = context.canvas.height;
-	
-	
-	options();
-	locate();
-	mouseMove()
-	mouseDown();
-	mouseUp();
-	eraser();
-	animate();
-	
-	intervalRunning = true;
-	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
+function wallMaker(){
 	var wallCollisionRadius = 0;
-
 	for(var i = 0; i < 4; i++){
 		//left wall
 		if(i === 0){
@@ -415,6 +354,78 @@ function init(){
 			};
 		}
 	}
+	
+}
+
+function init(){
+	//displayData();
+	checkParameters();
+	var arrow_keys_handler = function(e) {
+    switch(e.keyCode){
+		case 32: if(physics == true){
+			physics = false;
+		}else{
+			physics = true;
+		}
+		e.preventDefault();
+		break; 
+        default: break; // do not block other keys
+    }
+};
+	window.addEventListener("keydown", arrow_keys_handler, false);
+
+	circleMaker();
+	selectPencilStroke();
+
+	pencilCursor();
+	//if(tipping){tips.style.visibility = 'visible';}
+
+	mousePos = 0;
+	canvas = document.getElementById('canvas');
+	context = canvas.getContext('2d');
+	
+	
+	function setCanvasSize(){
+		$(canvas).prop('width', window.innerWidth);
+		$(canvas).prop('height', window.innerHeight);
+	}
+	
+	setCanvasSize();
+	window.onresize = function(event) {
+		/*canvas = document.getElementById('canvas');
+		context = canvas.getContext('2d');*/
+		//setCanvasSize();
+    };
+	
+	body = document.getElementById('body');
+	
+	bar = document.getElementById('bar');
+	bar.style.width = window.innerWidth + 'px';;
+	
+	//tips = document.getElementById('tips');
+	
+	bufferCanvas = document.createElement('canvas');
+    bufferCtx = bufferCanvas.getContext("2d");
+    bufferCtx.canvas.width = context.canvas.width;
+    bufferCtx.canvas.height = context.canvas.height;
+	
+	shapeSelection.canvas = {
+		width: context.canvas.width,
+		height: context.canvas.height
+	};
+	
+	options();
+	locate();
+	mouseMove()
+	mouseDown();
+	mouseUp();
+	eraser();
+	animate();
+	
+	intervalRunning = true;
+	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
+	
+	wallMaker();
 }
 
 function options(){

@@ -5,6 +5,10 @@ module.exports = mongoose.model('scenes', {
 	userID: String,
 	isPublic: Boolean,
 	imageUrl: String, 
+	canvas: {
+		width: Number, 
+		height: Number
+	},
 	shapes: {
 		circle: Array,
 		square: Array,

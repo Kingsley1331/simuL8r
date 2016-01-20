@@ -57,6 +57,7 @@ if (window.IDBTransaction){
 		objectStore.createIndex('name', 'name', { unique: false });		
 		objectStore.createIndex('userID', 'userID', { unique: false });
 		objectStore.createIndex('imgURL', 'imgURL', { unique: false });
+		objectStore.createIndex('canvas', 'canvas', { unique: false });
 		objectStore.createIndex('isPublic', 'isPublic', { unique: false });
 		objectStore.createIndex('shapes', 'shapes', { unique: false });
 

@@ -107,6 +107,10 @@ module.exports = function(passport){
 			userID: sim.userID,
 			isPublic: sim.isPublic,
 			imageUrl: sim.imageUrl,
+			canvas: {
+				width: sim.canvas.width, 
+				height: sim.canvas.height
+			},
 			shapes: {
 				circle: sim.shapes.circle,
 				square: sim.shapes.square,
@@ -136,6 +140,10 @@ module.exports = function(passport){
 			userID: sim.userID,
 			isPublic: sim.isPublic,
 			imageUrl: sim.imageUrl,
+			canvas: {
+				width: sim.canvas.width, 
+				height: sim.canvas.height
+			},
 			shapes: {
 				circle: sim.shapes.circle,
 				square: sim.shapes.square,
@@ -155,6 +163,8 @@ module.exports = function(passport){
 			scene.userID = newScene.userID,
 			scene.isPublic = newScene.isPublic,
 			scene.imageUrl = newScene.imageUrl,
+			scene.canvas.width = newScene.canvas.width,
+			scene.canvas.height = newScene.canvas.height,
 			scene.shapes.circle = newScene.shapes.circle,
 			scene.shapes.square = newScene.shapes.square,
 			scene.shapes.triangle = newScene.shapes.triangle,

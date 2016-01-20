@@ -52,9 +52,21 @@ simApp.controller('SimCtrl', function($scope, $http){
 			console.log(response);			
 			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
 			var thumbnailUrl = $scope.currentThumbnail[response._id];
-			$scope.saveThumbnail(thumbnailUrl);
+			//$scope.saveThumbnail(thumbnailUrl);
 		});
 		$scope.getAll();
+	}
+	//positions all elements retrieved from the database relative to the bottom of the canvas
+	function shifter(canvas, dbCanvas, shapes){
+		var heightDiff = canvas.height - dbCanvas.height;
+		if(heightDiff > 0){
+			for(var e in shapes){
+				var len = shapes[e][2].length;
+				for(var i = 0; i < len; i++){
+					shapes[e][2][i].Y += heightDiff;
+				}
+			}
+		}
 	}
 
 	$scope.select = function(id){
@@ -68,7 +80,17 @@ simApp.controller('SimCtrl', function($scope, $http){
 			delete response.__v;
 			console.log('select ', response);
 			shapeSelection.name = response.name;
+			var canvas = shapeSelection.canvas;
+			var dbCanvas = response.canvas;
+			var shapes = response.shapes;
+			console.log('canvas: ', canvas);
+			console.log('response: ', response);
+			console.log('dbCanvas: ', dbCanvas);
+			if(response.canvas){
+				shifter(canvas, dbCanvas, shapes);
+			}
 			loadShapes(response);
+			wallMaker();
 		});
 	}
 	
