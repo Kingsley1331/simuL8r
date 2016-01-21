@@ -82,6 +82,15 @@ simApp.controller('SimCtrl', function($scope, $http){
 			setCanvasSize(bufferCanvas, width, height);			
 		}
 	}
+	
+	function shapeLoader(response){
+		try {
+			loadShapes(response);
+		}catch(err){
+			console.log(error, 'err');
+			catchLoadingError(response);
+		}
+	}
 
 	$scope.select = function(id){
 		$http.get('/scene/' + id)
@@ -103,7 +112,8 @@ simApp.controller('SimCtrl', function($scope, $http){
 			if(response.canvas){
 				shifter(canvas, dbCanvas, shapes);
 			}
-			loadShapes(response);
+			//loadShapes(response);
+			shapeLoader(response)
 			wallMaker();
 		});
 	}
