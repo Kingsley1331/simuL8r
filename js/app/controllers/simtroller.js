@@ -87,7 +87,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 		try {
 			loadShapes(response);
 		}catch(err){
-			console.log(error, 'err');
+			console.log('error', err);
 			catchLoadingError(response);
 		}
 	}
