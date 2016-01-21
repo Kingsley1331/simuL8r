@@ -88,9 +88,8 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			loadShapes(response);
 		}catch(err){
 			console.log('error', err);
-			/*var path ='/simuL8r?id=' + id;
-			$window.location.href = path;*/
-			$scope.select(id);
+			var path ='/simuL8r?id=' + id;
+			$window.location.href = path;
 		}
 	}
 
