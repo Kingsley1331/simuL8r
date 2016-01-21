@@ -1,4 +1,4 @@
-simApp.controller('SimCtrl', function($scope, $http){
+simApp.controller('SimCtrl', function($scope, $http, $window){
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
 		if(user !== '0'){
@@ -83,13 +83,14 @@ simApp.controller('SimCtrl', function($scope, $http){
 		}
 	}
 	
-	function shapeLoader(response){
+	function shapeLoader(response, id){
 		try {
 			loadShapes(response);
 		}catch(err){
 			console.log('error', err);
 			//shapeLoader(response);
-			$scope.loadSelectedScene();
+			var path ='/simuL8r?id=' + id;
+			$window.location.href = path;
 		}
 	}
 
@@ -114,7 +115,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 				shifter(canvas, dbCanvas, shapes);
 			}
 			//loadShapes(response);
-			shapeLoader(response)
+			shapeLoader(response, id);
 			wallMaker();
 		});
 	}
