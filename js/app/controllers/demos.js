@@ -45,7 +45,7 @@ app.controller('DemosCtrl', function($scope, $rootScope, $http){
 			console.log('getAllScenes ', response);
 			$scope.scenes = response;
 		});
-		$scope.showScenes = !$scope.showScenes;		
+		//$scope.showScenes = !$scope.showScenes;		
 	}	
 	
 	$scope.remove = function(id){
@@ -92,4 +92,6 @@ app.controller('DemosCtrl', function($scope, $rootScope, $http){
 	$scope.getSelectedScene = function(id){
 		location.replace('/simuL8r?id=' + id);		
 	}
+	
+	$scope.showAllScenes();
 });
