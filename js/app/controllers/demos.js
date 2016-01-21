@@ -1,4 +1,4 @@
-app.controller('DemosCtrl', function($scope, $rootScope, $http){
+app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
 	console.log('DemosCtrl');
 	$rootScope.loggedin = true;
 	$scope.showUsers = false;
@@ -90,7 +90,9 @@ app.controller('DemosCtrl', function($scope, $rootScope, $http){
 	}	
 	
 	$scope.getSelectedScene = function(id){
-		location.replace('/simuL8r?id=' + id);		
+		//location.replace('/simuL8r?id=' + id);
+		var path ='/simuL8r?id=' + id;
+		$window.location.href = path;	
 	}
 	
 	$scope.showAllScenes();

@@ -230,6 +230,7 @@ simApp.controller('SimCtrl', function($scope, $http){
 	// load scenes from id value in querystring
 	$scope.loadSelectedScene = function(){
 		id = getQueryVariable('id');
+		console.log('loadSelectedScene id', id);
 		$scope.select(id);
 	}
 	
