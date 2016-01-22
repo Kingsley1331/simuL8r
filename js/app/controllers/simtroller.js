@@ -245,7 +245,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 		$scope.select(id);
 	}
 	
-	setTimeout($scope.loadSelectedScene, 2000);
+	setTimeout($scope.loadSelectedScene, 500);
 	
 	$scope.findCurrentUser();
 
