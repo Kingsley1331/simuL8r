@@ -308,6 +308,8 @@ function rotater2(center_x, center_y, point_x, point_y, angle){
 
 function wallMaker(){
 	var wallCollisionRadius = 0;
+	wallArray = [];
+	console.log('wallArray: ', wallArray);
 	for(var i = 0; i < 4; i++){
 		//left wall
 		if(i === 0){
@@ -354,7 +356,7 @@ function wallMaker(){
 			};
 		}
 	}
-	
+	shapeSelection.shapes.wall[2] = wallArray;
 }
 
 function setCanvasSize(canvas, width, height){

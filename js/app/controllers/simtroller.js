@@ -242,7 +242,9 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 	$scope.loadSelectedScene = function(){
 		id = getQueryVariable('id');
 		console.log('loadSelectedScene id', id);
-		$scope.select(id);
+		if(id){
+			$scope.select(id);
+		}
 	}
 	
 	setTimeout($scope.loadSelectedScene, 500);
