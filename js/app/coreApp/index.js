@@ -368,6 +368,13 @@ function setCanvasSize(canvas, width, height){
 	};	
 }
 
+var canvasReadyEvent = new CustomEvent("canvasReady", {
+  detail: {
+    hazcheeseburger: true
+  }
+});
+
+
 function init(){
 	//displayData();
 	checkParameters();
@@ -394,6 +401,8 @@ function init(){
 	mousePos = 0;
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
+	
+	
 	
 	setCanvasSize(canvas, window.innerWidth, window.innerHeight);
 	window.onresize = function(event) {
@@ -431,6 +440,8 @@ function init(){
 	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
 	
 	wallMaker();
+	
+	canvas.dispatchEvent(canvasReadyEvent);
 }
 
 function options(){

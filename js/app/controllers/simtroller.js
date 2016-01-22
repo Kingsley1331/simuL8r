@@ -247,7 +247,10 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 		}
 	}
 	
-	setTimeout($scope.loadSelectedScene, 500);
+	//setTimeout($scope.loadSelectedScene, 500);
+	canvas = document.getElementById('canvas');
+	
+	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
 	
 	$scope.findCurrentUser();
 
