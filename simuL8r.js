@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-01-22 **/ 
+/** simuL8r - v1.0.0 - 2016-01-24 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -305,6 +305,37 @@ function rotater2(center_x, center_y, point_x, point_y, angle){
 	var x_change = center_x + length*Math.cos(totalAngle) - point_x;
 	var y_change = center_y + length*Math.sin(totalAngle) - point_y;
 	return [x_change, y_change];
+}
+
+//positions all elements retrieved from the database relative to the bottom of the canvas
+function shifter(currentCanvas, dbCanvas, shapes){
+	var width = dbCanvas.width;
+	var height = dbCanvas.height;
+	var innerHeight = window.innerHeight;
+	var innerWidth = window.innerWidth;
+	
+	if(dbCanvas.width <= innerWidth && currentCanvas.width > innerWidth ){
+		setCanvasSize(canvas, innerWidth, innerHeight);
+		setCanvasSize(bufferCanvas, innerWidth, innerHeight);	
+		currentCanvas.height = innerHeight;
+	}
+	
+	var heightDiff = currentCanvas.height - dbCanvas.height;
+	console.log('currentCanvas.height ', currentCanvas.height);	
+	console.log('dbCanvas.height ', dbCanvas.height);	
+	console.log('heightDiff ', heightDiff);	
+	
+	if(heightDiff > 0){
+		for(var e in shapes){		
+			var len = shapes[e][2].length;
+			for(var i = 0; i < len; i++){
+				shapes[e][2][i].Y += heightDiff;
+			}
+		}
+	}else if(heightDiff < 0){	
+		setCanvasSize(canvas, width, height);
+		setCanvasSize(bufferCanvas, width, height);			
+	}
 }
 
 function wallMaker(){
@@ -2217,7 +2248,6 @@ function loadShapes(sim){
 }
 
 function loadShapes_idb(sim){
-console.log('loading!!!');
 	for(key in sim.shapes){
 		for(var i = 0; i < sim.shapes[key].length; i++){ //populate sim with shapes from e.g circleArray			
 			shapeSelection.shapes[key][2][i] = {};
@@ -2259,7 +2289,6 @@ console.log('loading!!!');
 			}
 		}
 	}
-	console.log('load shapeSelection: ', shapeSelection);
 	shapeSelection.name = sim.name;
 	shapeSelection.imgURL = sim.imgURL;
 	return shapeSelection;
@@ -3735,6 +3764,9 @@ if (window.IDBTransaction){
 					}
 				}
 			}
+			scene.canvas = {};
+			scene.canvas.width = shapeSelection.canvas.width;
+			scene.canvas.height = shapeSelection.canvas.height;
 		return scene;
 	}
 
@@ -3763,8 +3795,7 @@ if (window.IDBTransaction){
 						for(var i = 0; i < scenes.length; i++){
 							appendTable(i);
 						}
-						console.log('All entries displayed.');
-						console.log('scenes: ', scenes);	
+						console.log('All entries displayed.');	
 					}
 				};
 			}
@@ -3796,24 +3827,31 @@ if (window.IDBTransaction){
 		updateButton.setAttribute('class', 'browser');
 		
 		sceneThumb.addEventListener('click', function(){
-			clearAll(wallConfig);
+			
+			clearAll(wallConfig);			
+			//
 			if(i !== null){			
 				currentScene = loadShapes_idb(scenes[i]);
+				if(scenes[i].shapes){
+					shifter(shapeSelection.canvas, scenes[i].canvas, currentScene.shapes);
+				}
 			}else if(i === null){
-				currentScene = loadShapes_idb(scene);				
+				currentScene = loadShapes_idb(scene);
+				shifter(shapeSelection.canvas, scene.canvas, currentScene.shapes);				
 			}
-		} , false);		
+			wallMaker();
+		}, false);		
 		
 		
 		
 		
 		deleteButton.addEventListener('click', function(){
 			deleteData(userID);
-		} , false);
+		}, false);
 		
 		updateButton.addEventListener('click', function(){
 			editRecord(userID);
-		} , false);
+		}, false);
 		
 		displayData.appendChild(sceneThumb);
 	
@@ -3890,8 +3928,6 @@ if (window.IDBTransaction){
 				scene.userID = key;
 				currentScene.imgURL = dataURL;
 				data = scene;
-				console.log('shapeSelection: ', currentScene, currentScene.name);
-				console.log('currentScene: ', currentScene.imgURL);
 				var name = prompt("add or update this scene's name", currentScene.name);				
 				data.name = name;
 				data.imgURL = currentScene.imgURL;

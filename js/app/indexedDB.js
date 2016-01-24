@@ -136,6 +136,9 @@ if (window.IDBTransaction){
 					}
 				}
 			}
+			scene.canvas = {};
+			scene.canvas.width = shapeSelection.canvas.width;
+			scene.canvas.height = shapeSelection.canvas.height;
 		return scene;
 	}
 
@@ -164,8 +167,7 @@ if (window.IDBTransaction){
 						for(var i = 0; i < scenes.length; i++){
 							appendTable(i);
 						}
-						console.log('All entries displayed.');
-						console.log('scenes: ', scenes);	
+						console.log('All entries displayed.');	
 					}
 				};
 			}
@@ -197,24 +199,31 @@ if (window.IDBTransaction){
 		updateButton.setAttribute('class', 'browser');
 		
 		sceneThumb.addEventListener('click', function(){
-			clearAll(wallConfig);
+			
+			clearAll(wallConfig);			
+			//
 			if(i !== null){			
 				currentScene = loadShapes_idb(scenes[i]);
+				if(scenes[i].shapes){
+					shifter(shapeSelection.canvas, scenes[i].canvas, currentScene.shapes);
+				}
 			}else if(i === null){
-				currentScene = loadShapes_idb(scene);				
+				currentScene = loadShapes_idb(scene);
+				shifter(shapeSelection.canvas, scene.canvas, currentScene.shapes);				
 			}
-		} , false);		
+			wallMaker();
+		}, false);		
 		
 		
 		
 		
 		deleteButton.addEventListener('click', function(){
 			deleteData(userID);
-		} , false);
+		}, false);
 		
 		updateButton.addEventListener('click', function(){
 			editRecord(userID);
-		} , false);
+		}, false);
 		
 		displayData.appendChild(sceneThumb);
 	
@@ -291,8 +300,6 @@ if (window.IDBTransaction){
 				scene.userID = key;
 				currentScene.imgURL = dataURL;
 				data = scene;
-				console.log('shapeSelection: ', currentScene, currentScene.name);
-				console.log('currentScene: ', currentScene.imgURL);
 				var name = prompt("add or update this scene's name", currentScene.name);				
 				data.name = name;
 				data.imgURL = currentScene.imgURL;

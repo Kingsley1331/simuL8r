@@ -56,32 +56,6 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 		});
 		$scope.getAll();
 	}
-	//positions all elements retrieved from the database relative to the bottom of the canvas
-	function shifter(currentCanvas, dbCanvas, shapes){
-		var width = dbCanvas.width;
-		var height = dbCanvas.height;
-		var innerHeight = window.innerHeight;
-		var innerWidth = window.innerWidth;
-		
-		if(dbCanvas.width <= innerWidth && currentCanvas.width > innerWidth ){
-			setCanvasSize(canvas, innerWidth, innerHeight);
-			setCanvasSize(bufferCanvas, innerWidth, innerHeight);	
-			currentCanvas.height = innerHeight;
-		}
-		
-		var heightDiff = currentCanvas.height - dbCanvas.height;
-		if(heightDiff > 0){
-			for(var e in shapes){
-				var len = shapes[e][2].length;
-				for(var i = 0; i < len; i++){
-					shapes[e][2][i].Y += heightDiff;
-				}
-			}
-		}else if(heightDiff < 0){	
-			setCanvasSize(canvas, width, height);
-			setCanvasSize(bufferCanvas, width, height);			
-		}
-	}
 	
 	function shapeLoader(response, id){
 		try {
@@ -107,10 +81,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			var canvas = shapeSelection.canvas;
 			var dbCanvas = response.canvas;
 			var shapes = response.shapes;
-			console.log('canvas: ', canvas);
-			console.log('response: ', response);
-			console.log('dbCanvas: ', dbCanvas);
-			if(response.canvas){
+			if(dbCanvas){
 				shifter(canvas, dbCanvas, shapes);
 			}
 			//loadShapes(response);
@@ -133,8 +104,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 		console.log('updateScene: ', $scope.simulation);			
 				$http.put('/scenes/' + id, $scope.simulation)
 				.success(function(response){
-					console.log('update ', response);
-					
+					console.log('update ', response);					
 					$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
 					var thumbnailUrl = $scope.currentThumbnail[response._id];
 					//$scope.saveThumbnail(thumbnailUrl);

@@ -306,6 +306,37 @@ function rotater2(center_x, center_y, point_x, point_y, angle){
 	return [x_change, y_change];
 }
 
+//positions all elements retrieved from the database relative to the bottom of the canvas
+function shifter(currentCanvas, dbCanvas, shapes){
+	var width = dbCanvas.width;
+	var height = dbCanvas.height;
+	var innerHeight = window.innerHeight;
+	var innerWidth = window.innerWidth;
+	
+	if(dbCanvas.width <= innerWidth && currentCanvas.width > innerWidth ){
+		setCanvasSize(canvas, innerWidth, innerHeight);
+		setCanvasSize(bufferCanvas, innerWidth, innerHeight);	
+		currentCanvas.height = innerHeight;
+	}
+	
+	var heightDiff = currentCanvas.height - dbCanvas.height;
+	console.log('currentCanvas.height ', currentCanvas.height);	
+	console.log('dbCanvas.height ', dbCanvas.height);	
+	console.log('heightDiff ', heightDiff);	
+	
+	if(heightDiff > 0){
+		for(var e in shapes){		
+			var len = shapes[e][2].length;
+			for(var i = 0; i < len; i++){
+				shapes[e][2][i].Y += heightDiff;
+			}
+		}
+	}else if(heightDiff < 0){	
+		setCanvasSize(canvas, width, height);
+		setCanvasSize(bufferCanvas, width, height);			
+	}
+}
+
 function wallMaker(){
 	var wallCollisionRadius = 0;
 	wallArray = [];
@@ -2216,7 +2247,6 @@ function loadShapes(sim){
 }
 
 function loadShapes_idb(sim){
-console.log('loading!!!');
 	for(key in sim.shapes){
 		for(var i = 0; i < sim.shapes[key].length; i++){ //populate sim with shapes from e.g circleArray			
 			shapeSelection.shapes[key][2][i] = {};
@@ -2258,7 +2288,6 @@ console.log('loading!!!');
 			}
 		}
 	}
-	console.log('load shapeSelection: ', shapeSelection);
 	shapeSelection.name = sim.name;
 	shapeSelection.imgURL = sim.imgURL;
 	return shapeSelection;
