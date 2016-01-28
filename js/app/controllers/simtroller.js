@@ -213,6 +213,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 		id = getQueryVariable('id');
 		console.log('loadSelectedScene id', id);
 		if(id){
+			$scope.currentScene = id;
 			$scope.select(id);
 		}
 	}
