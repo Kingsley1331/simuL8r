@@ -51,8 +51,8 @@
 </table>
 
 <div class='view-table' id='selected_user' ng-show='showUser'>
-	<span id='selectedUserfirstUsername' class='selectedUserDetails' style='font-size: 1.8em;'>{{selectedUser[0].local.username || selectedUser[0].google.name}}'s profile</span><br><br>
-	<span class='selectedUserDetails' ><img id='selectedUserImage' width='200' ng-src='{{selectedUser[0].local.profilePic}}'/></span><br>
+	<span class='selectedUserDetails selectedUserUsername'>{{selectedUser[0].local.username || selectedUser[0].google.name}}'s profile</span><br><br>
+	<span class='selectedUserDetails'><img id='selectedUserImage' width='200' ng-src='{{selectedUser[0].local.profilePic}}'/></span><br>
 	<span id='selectedUserfirstName' class='selectedUserDetails'>first name: {{selectedUser[0].local.lastname}}</span>
 	<span id='selectedUserLastName' class='selectedUserDetails'>last name: {{selectedUser[0].local.firstname}}</span>
 	<span id='selectedUserEmail' class='selectedUserDetails'>Email: {{selectedUser[0].local.email}}</span>

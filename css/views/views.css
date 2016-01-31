@@ -159,10 +159,42 @@ background-color: #45494A;
 	top: -50px;
 }
 
-#selectedUserfirstUsername{
+.selectedUserUsername{
 	position: relative;
 	top: 10px;
+	font-size: 1.8em;'
 }
 #selectedUserImage{
 	border-radius: 10px;
+}
+
+#userProfileTable{
+	position: relative;
+	left: 315px;
+	top: -330px;
+}
+
+#profileTable, #deleteButton{
+	position: relative;
+	top: -130px;
+}
+
+#profileUser{
+	width: 1500px;
+}
+
+.profile-align{
+	position: relative;
+	left: 20px;
+}
+
+#profilePagePic{
+	position: relative;
+	top: 20px;
+	border-radius: 10px;
+}
+
+#profile-pic-btn{
+	position: relative;
+	top: 20px;
 }
