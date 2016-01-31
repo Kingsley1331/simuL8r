@@ -59,9 +59,13 @@
 
 .table-pic{
 	border-radius: 5px;
-	opacity: 1;
 	z-index: 10000;
 }
+
+img.table-pic:hover{
+	box-shadow: 4px 4px 10px black;
+}
+
 #profilePic{
 	border-radius: 10px;	
 }

@@ -7,7 +7,7 @@
 		<th>profile pic</th>
 		<th>username</th>
 		<th>email</th>
-		<th colspan='3'>
+		<th colspan='2'>
             <div class="input-group">
               <input ng-model='searchQuery' type="text" name="q" class="form-control" placeholder="Search...">
               <span class="input-group-btn">
@@ -21,7 +21,6 @@
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
 		<td class='button'><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>
-		<td class='button'><button type="button" class="btn btn-success">update</button></td>
 		<td class='button'><button type="button" class="btn btn-danger" ng-click="remove(user._id)">delete</button></td>
 	</tr>
 </table>
