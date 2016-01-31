@@ -1,4 +1,4 @@
-<h1>Welcome {{currentUser.local.username || currentUser.google.name}} <img id='profilePic' width='150' ng-src='{{currentUser.local.profilePic}}'/></h1>
+<div id='welcome'><h1>Welcome {{currentUser.local.username || currentUser.google.name}}!</h1></div>
 <!--<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show users</span><span ng-show='showUsers'>hide users</span></button><br></br>-->
 <table id="users" class='view-table'  ng-show='showUsers'>
 	<div ng-click='showAllUsers(true)' class='tab' id='usersTab'>users</div>
@@ -30,8 +30,8 @@
 <table id="scenes" class='view-table' style="width:25%" ng-show='showScenes'>
 	<tr>
 		<th colspan='3'>
-			<div ng-model='searchScene' class="input-group" id='userSearch'>
-			  <input type="text" name="q" class="form-control" placeholder="Search...">
+			<div class="input-group" id='userSearch'>
+			  <input ng-model='searchScene' type="text" name="q" class="form-control" placeholder="Search...">
 			  <span class="input-group-btn">
 				<button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
 			  </span>
@@ -40,29 +40,34 @@
 	</tr>
 	<tr>
 		<th>username</th>
-		<th>name</th>
-		<th>thumbnail</th>
+		<th>name</th>	
+		<th>thumbnail</th>		
 	</tr>
-	<tr ng-repeat="scene in scenes | filter:searchScene">
-		<td ng-click='getSelectedScene(scene._id)' ><img class='table-pic' width='75' ng-src='{{scene.imageUrl}}'/></td>	
+	<tr ng-repeat="scene in scenes | filter:{name:searchScene}">
 		<td>{{userNames[scene.userID]}}</td>
-		<td>{{scene.name}}</td>
+		<td>{{scene.name}}</td>		
+		<td ng-click='getSelectedScene(scene._id)' ><img class='table-pic' width='75' ng-src='{{scene.imageUrl}}'/></td>	
 	</tr>
 </table>
 
-<div id='selected_user' ng-show='showUser'>
-	<span style='font-weight:bold; font-size: 1.8em;'>{{selectedUser[0].local.username || selectedUser[0].google.name}}</span><br>
-	<img width='200' ng-src='{{selectedUser[0].local.profilePic}}'/><br>
-	Email: {{selectedUser[0].local.email}}
-<button id="selectedUserScenesButton" type="button" class="btn btn-primary" ng-click="getSelectUserScenes(selectedUser[0]._id)"><span ng-show='!showSelectedUserScenes'>see {{selectedUser[0].local.username || selectedUser[0].google.name}}'s scenes</span><span ng-show='showSelectedUserScenes'>hide scenes</span></button><br></br>
-<table id="selectedUserTable" style="width:25%" ng-show='showSelectedUserScenes'>
-	<tr>
-		<th>name</th>
-		<th>thumbnail</th>
-	</tr>
-	<tr ng-repeat="scene in selectedUserScenes">
-		<td>{{scene.name}}</td>
-		<td ng-click='getSelectedScene(scene._id)'><img width='75' ng-src='{{scene.imageUrl}}'/></td>
-	</tr>
-</table>
+<div class='view-table' id='selected_user' ng-show='showUser'>
+	<span id='selectedUserfirstUsername' class='selectedUserDetails' style='font-size: 1.8em;'>{{selectedUser[0].local.username || selectedUser[0].google.name}}'s profile</span><br><br>
+	<span class='selectedUserDetails' ><img id='selectedUserImage' width='200' ng-src='{{selectedUser[0].local.profilePic}}'/></span><br>
+	<span id='selectedUserfirstName' class='selectedUserDetails'>first name: {{selectedUser[0].local.lastname}}</span>
+	<span id='selectedUserLastName' class='selectedUserDetails'>last name: {{selectedUser[0].local.firstname}}</span>
+	<span id='selectedUserEmail' class='selectedUserDetails'>Email: {{selectedUser[0].local.email}}</span>
+	<table id="selectedUserTable" width='40%' ng-show='showSelectedUserScenes'>
+		<tr>
+			<th>name</th>
+			<th>thumbnail</th>
+			<th width='170'>date created</th>
+			<th width='170'>last modified</th>
+		</tr>
+		<tr ng-repeat="scene in selectedUserScenes">
+			<td>{{scene.name}}</td>
+			<td ng-click='getSelectedScene(scene._id)'><img class='table-pic' width='100' ng-src='{{scene.imageUrl}}'/></td>
+			<th></th>
+			<th></th>
+		</tr>
+	</table>
 </div>

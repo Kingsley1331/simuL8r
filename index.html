@@ -65,7 +65,7 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.css">
 	<link rel="stylesheet" href="css/views/views.css">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
@@ -272,7 +272,7 @@
           <!-- Sidebar user panel (optional) -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img ng-src='{{currentUser.local.profilePic}}' class="img-circle" alt="User Image">
+              <img id='user-image' ng-src='{{currentUser.local.profilePic}}' alt="User Image">
             </div>
             <div class="pull-left info">
               <p>{{currentUser.google.name || currentUser.local.username}}</p>

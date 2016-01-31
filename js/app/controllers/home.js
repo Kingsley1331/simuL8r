@@ -1,18 +1,19 @@
 app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	console.log('HomeCtrl');
 	$rootScope.loggedin = true;
-	$scope.showUsers = false;
+	$scope.showUsers = true;
 	$scope.showUser = false;
-	$scope.users = {};
+	$scope.users = [];
 	$scope.selectedUser = {};
 	
 	$scope.showScenes = false;
 	$scope.showSelectedUserScenes = false;
-	$scope.scenes = {};
+	$scope.scenes = [];
+	$scope.scenesNames = [{name:'blue bar'}, {name:'red'}, {name:'panda'}, {name:'bunny'}, {name:'dolphin'}];
 	$scope.selectedUserScenes = {};
 	$scope.selectedScene = {};
 	$scope.userNames = {};	
-	
+		
 	$scope.getUsers = function(){
 		$http.get('/users').success(function(users){
 		console.log('users: ', users);
@@ -28,13 +29,15 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		});
 	}
 	
-	$scope.showAllUsers = function(deletingUser){
+	$scope.getUsers();
+	
+	
+	$('#usersTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+	$scope.showAllUsers = function(){
 		$scope.showSelectedUserScenes = false;
 		console.log('getting users');
 		$scope.getUsers();
-		if(deletingUser){
-			$scope.showUsers = !$scope.showUsers;
-		}
+		$scope.showUsers = true;
 		$scope.showUser = false;
 		$scope.showScenes = false;
 		$('#usersTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
@@ -42,13 +45,13 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	}
 
 	$scope.showAllScenes = function(){
-		$scope.getUsers();
+		//$scope.getUsers();
 		$http.get('/scenes')
 		.success(function(response){
 			console.log('getAllScenes ', response);
 			$scope.scenes = response;
-		});
-		$scope.showScenes = !$scope.showScenes;	
+		});	
+		$scope.showScenes = true;
 		$scope.showUsers = false;
 		$('#scenesTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
 		$('#usersTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});		
@@ -80,7 +83,8 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 				//alert('selectedUser has changed');
 		   });*/
 			$scope.showUsers = false;
-			$scope.showUser = true;			 
+			$scope.showUser = true;	
+			$scope.getSelectUserScenes(id);		
 			console.log('$scope.selectedUser: ', $scope.selectedUser);
 		});
 	}
