@@ -1,4 +1,4 @@
-<h1>sign up</h1>
+<!--<h1>sign up</h1>
 		<div class="account-wall">
 			<div class='container'>
 				<div class='row'>
@@ -9,22 +9,20 @@
 							<input type='email' name='email' class='form-control' placeholder='Email' ng-model='user.email'/>
 							<input type='text' name='firstName' class='form-control' placeholder='First Name' ng-model='user.firstname'/>
 							<input type='text' name='lastName' class='form-control' placeholder='Last Name' ng-model='user.lastname' /><br>
-							<!--<input type="file" name="profilePic"/><br></br>-->
 							<button class='btn btn-lg btn-primary btn-block' type='submit' ng-click='signup(user)'> sign up </button>
 						</form>
 						<form id="uploadForm1" enctype="multipart/form-data" action="/uploadProfile" method="post">
-							<!--<input type="hidden" id="username" value="blahblah" name="usernameData"/>-->
 							<input type="hidden" id="userid" value="#" name="id"/>
 							<input type="file" name="profilePic"/>
 							<input type="submit" value="Upload Image" name="submitter">
 						</form>
 						<br>
-						<!--<a href='/auth/facebook' class = 'btn btn-block btn-social btn-facebook' style="padding-left:20px">
+						<a href='/auth/facebook' class = 'btn btn-block btn-social btn-facebook' style="padding-left:20px">
 							<i class = 'fa fa-facebook' style='position: relative'>
 								<span style="position: relative; left:35px">Sign in with Facebook</span>
 							</i>
 						</a>
-						<br>-->
+						<br>
 						<a href='/auth/google' class = 'btn btn-block btn-social btn-google' style="padding-left:20px">
 							<i class = 'fa fa-google-plus' style='position: relative'>
 								<span style="position: relative; left:25px">Sign in with Google</span>
@@ -35,4 +33,74 @@
 				</div>
 			</div>
 		</div>
-	</body>
+	</body>-->
+	
+	
+	
+	
+<head>
+    <title>Sign up</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="css/main_form.css">	
+    <link type="text/css" rel="stylesheet" href="css/pace.css">	
+	<style>
+		.col-lg-4 {
+			 float: none;
+			 margin-left: auto;
+			 margin-right: auto;
+		}
+	</style>		
+</head>
+<body>
+	<div class="col-lg-4">
+		<div class="panel panel-green">
+			<div class="panel-heading">
+				Registration form</div>
+			<div class="panel-body pan">
+				<form enctype="multipart/form-data">
+				<div class="form-body pal">
+					<div class="form-group">
+						<div class="input-icon right">
+							<i class="fa fa-user"></i>
+							<input id="inputName" type="text"  name='username' placeholder="Username" class="form-control" ng-model='user.username' /></div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+							<i class="fa fa-envelope"></i>
+							<input id="inputEmail" type='email' name='email' placeholder="Email address" class="form-control" ng-model='user.email' /></div>
+					</div>
+					<div class="form-group">
+						<div class="input-icon right">
+							<i class="fa fa-lock"></i>
+							<input id="inputPassword" type="password" type='password' name='password' placeholder="Password" class="form-control" placeholder='Password' ng-model='user.password'/></div>
+					</div>
+					<!--<div class="form-group">
+						<div class="input-icon right">
+							<i class="fa fa-lock"></i>
+							<input id="inputConfirmPassword" type="password" placeholder="Confirm Password" class="form-control" /></div>
+					</div>-->
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<input id="inputFirstName" type="text" name='firstName' placeholder="First Name" class="form-control" ng-model='user.firstname'/></div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<input id="inputLastName" type="text" name='lastName' placeholder="Last Name" class="form-control" ng-model='user.lastname'/></div>
+						</div>
+					</div>
+				</div>
+				<div class="form-actions text-right pal">
+					<button type="submit" class="btn btn-primary" ng-click='signup(user)'>Submit</button>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+    <script src="js/lib/PACE/pace.min.js"></script>
+</body>
+	

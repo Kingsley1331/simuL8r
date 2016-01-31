@@ -2,7 +2,7 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 	$scope.user = {};
 	$scope.user.username = 'Kingsley';
 	$scope.user.password = '12345';
-
+	console.log('login');
 	$scope.login = function(user){
 		console.log(user);
 		$http.post('/login', user)

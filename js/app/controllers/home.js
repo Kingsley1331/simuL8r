@@ -35,7 +35,10 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		if(deletingUser){
 			$scope.showUsers = !$scope.showUsers;
 		}
-		$scope.showUser = false;	
+		$scope.showUser = false;
+		$scope.showScenes = false;
+		$('#usersTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+		$('#scenesTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
 	}
 
 	$scope.showAllScenes = function(){
@@ -45,7 +48,10 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 			console.log('getAllScenes ', response);
 			$scope.scenes = response;
 		});
-		$scope.showScenes = !$scope.showScenes;		
+		$scope.showScenes = !$scope.showScenes;	
+		$scope.showUsers = false;
+		$('#scenesTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+		$('#usersTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});		
 	}	
 	
 	$scope.remove = function(id){
@@ -92,4 +98,28 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.getSelectedScene = function(id){
 		location.replace('/simuL8r?id=' + id);		
 	}
+	
+	var usersTab = $('#usersTab');
+	var scenesTab = $('#scenesTab');
+	
+	function toggleTabs(tab){
+		tab.mouseenter(function(){
+			tab.css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+		});	
+		tab.mouseleave(function(){
+			if(tab == usersTab){
+				if(!$scope.showUsers){
+					tab.css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
+				}
+			}else if(tab == scenesTab){
+				if(!$scope.showScenes){
+					tab.css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
+				}				
+			}
+		});			
+	}
+	
+	toggleTabs(usersTab);
+	toggleTabs(scenesTab);
+		
 });
