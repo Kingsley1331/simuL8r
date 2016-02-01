@@ -25,16 +25,34 @@
 	</tr>
 	<tr>
 		<td colspan='5'>
-		<center>
-			<ul class='nav-list'>
-			<li ng-click='pageTurner(false)'>prev</li>
-				<li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page])'>{{pagesArray[page] + 1}}</li>
-				<li ng-click='pageTurner(true)'>next</li>				
-			</ul>
+			<!--<center>
+				<ul class='nav-list'>
+					<li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1)' class='pages'>{{pagesArray[page] + 1}}</li>		
+				</ul>
+			</center>-->
+			<center>
+				<div class="container">  
+				  <ul class="pagination">
+					  <li ng-click='pageTurner(false)' id='prev'><a href="#/home">«</a></li>
+					  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1)' class="{{(pagesArray[page] + 1==1)?'active':''}}"><a href="#/home">{{pagesArray[page] + 1}}</a></li>
+					  <!--<li><a href="#/home">{{currentUserPageNumber}}</a></li>-->
+					  <li ng-click='pageTurner(true)' id='next'><a href="#/home">»</a></li>
+				  </ul>
+				</div>
 			</center>
 		</td>
 	</tr>
+	<!--i ng-click='pageTurner(false)' id='prev' class='pager'>prev</li>
+	<li ng-click='pageTurner(true)' id='next' class='pager'>next</li>-->
 </table>
+<button id='pageNumber'>1</button>
+
+
+
+
+
+
+
 
 <!--<button id="scenesButton" type="button" class="btn btn-primary" ng-click='showAllScenes()'><span ng-show='!showScenes'>show scenes</span><span ng-show='showScenes'>hide scenes</span></button><br></br>-->
 <table id="scenes" class='view-table' style="width:25%" ng-show='showScenes'>

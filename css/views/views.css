@@ -78,24 +78,54 @@ img.table-pic:hover{
 hr{
 	color: #B8C7CE;
 }
-
+/*
 .nav-list{
     list-style-type: none;
     margin: 0;
     padding: 0;	
 }
 
-.nav-list > li{
+.pages{
 	display: inline;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
-.nav-list > li:hover{
+.nav-list > .pages:hover{
 	color: lightgreen;
-	font-size: 2em;
+	font-size: 35px;
 	text-decoration: underline;
 }
+
+.nav-list > #prev:hover, .nav-list > #next:hover{
+	color: lightgreen;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+.nav-list > li:nth-child(2){
+	color: lightgreen;
+	font-size: 35px;
+	text-decoration: underline;	
+}
+
+#prev{
+	position: relative;
+	left: -80px;
+	top: 60px;
+}
+
+#next{
+	position: relative;
+	left: 80px;
+	top: -55px;
+}
+
+.pager{
+}
+
+.pageNav:hover{background-color:black !important;}
+*/
 
 .btn-flat{
 	background-color: #45494A;

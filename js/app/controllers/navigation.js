@@ -24,5 +24,5 @@ app.controller('NavCtrl', function($scope, $rootScope, $http, $location){
 		if($location.url() === '/home'){
 			$('#home-view').addClass('active');
 		}
-	}, 100);	
+	}, 500);	
 })

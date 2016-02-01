@@ -42,6 +42,29 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		$scope.numberOfPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
 		var firstUserIndex = (pageNumber - 1) * $scope.userPageSize;
 		$scope.currentUserPage.splice(0, firstUserIndex);
+		$('#pageNumber').html(pageNumber);
+		$('.pages').css({
+			'color': 'white',
+			'font-size': '20px', 
+			'text-decoration': 'none'
+		});
+		
+		$('.pages').click(function(){
+				$(this).css({
+					'color': 'lightgreen',
+					'font-size': '35px', 
+					'text-decoration': 'underline'
+				});
+			});
+			
+		$(document).ready(function(){
+			$('.pagination > li').click(function(){
+				$('.pagination > li').removeClass('active');
+				$(this).addClass('active');
+				$('#prev').removeClass('active');
+				$('#next').removeClass('active');				
+			});
+		});	
 	}	
 	
 	$scope.pageNavigator = function(){
