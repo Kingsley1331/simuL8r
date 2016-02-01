@@ -48,6 +48,7 @@
 #users th{
 	padding-top: 50px;
 }
+
 #userSearch{
 	padding-top: 20px;
 }
@@ -78,8 +79,26 @@ hr{
 	color: #B8C7CE;
 }
 
+.nav-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;	
+}
+
+.nav-list > li{
+	display: inline;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.nav-list > li:hover{
+	color: lightgreen;
+	font-size: 2em;
+	text-decoration: underline;
+}
+
 .btn-flat{
-background-color: #45494A;
+	background-color: #45494A;
 }
 
 #welcome{
@@ -128,9 +147,6 @@ background-color: #45494A;
 	width: 1500px;
 }
 
-#selectedUserTable > tr > td{
-	width: 1500px;
-}
 
 #selectedUserTable > tr > td{
 	width: 600px;

@@ -16,12 +16,23 @@
             </div>			
 		</th>		
 	</tr>
-	<tr ng-repeat="user in users | filter:searchQuery" ng-if='user.google.name != currentUser.google.name || user.local.username != currentUser.local.username'>
+	<tr ng-repeat="user in currentUserPage | filter:searchQuery | limitTo:userPageSize" ng-if='user.google.name != currentUser.google.name || user.local.username != currentUser.local.username'>
 		<td><img class='table-pic' img width='75' ng-src='{{user.local.profilePic}}'/></td>		
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
 		<td class='button'><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>
 		<td class='button'><button type="button" class="btn btn-danger" ng-click="remove(user._id)">delete</button></td>
+	</tr>
+	<tr>
+		<td colspan='5'>
+		<center>
+			<ul class='nav-list'>
+			<li ng-click='pageTurner(false)'>prev</li>
+				<li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page])'>{{pagesArray[page] + 1}}</li>
+				<li ng-click='pageTurner(true)'>next</li>				
+			</ul>
+			</center>
+		</td>
 	</tr>
 </table>
 

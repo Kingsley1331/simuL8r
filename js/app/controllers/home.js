@@ -14,10 +14,52 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.selectedScene = {};
 	$scope.userNames = {};	
 		
+	$scope.userPageSize = 3;
+	$scope.currentUserPageNumber = 1;	
+	$scope.currentUserPage = [];
+	$scope.pagesArray = [];
+	$scope.numberOfUsers = 0;
+	$scope.numberOfPages = 1;
+	
+	$scope.pageTurner = function(bool){
+		if(bool === true){
+			if($scope.currentUserPageNumber < $scope.numberOfPages){
+				$scope.currentUserPageNumber++;
+			}
+		}else if(bool === false){
+			if($scope.currentUserPageNumber > 1){
+				$scope.currentUserPageNumber--;
+			}
+		}
+		$scope.paginator($scope.currentUserPageNumber);
+	}
+	
+	$scope.paginator = function(pageNumber){	
+		$scope.numberOfUsers = $scope.users.length;
+		for(var j = 0; j < $scope.numberOfUsers; j++){
+			$scope.currentUserPage[j] = $scope.users[j];
+		}		
+		$scope.numberOfPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
+		var firstUserIndex = (pageNumber - 1) * $scope.userPageSize;
+		$scope.currentUserPage.splice(0, firstUserIndex);
+	}	
+	
+	$scope.pageNavigator = function(){
+		console.log('navigating');
+		for(var i = 0; i < $scope.numberOfPages; i++){
+			$scope.pagesArray[i] = i;
+		}
+		//$('.nav-list > li').css('display', 'inline');
+	}
+	
 	$scope.getUsers = function(){
 		$http.get('/users').success(function(users){
-		console.log('users: ', users);
-		$scope.users = users;
+			console.log('users: ', users);
+			$scope.users = users;
+			$scope.numberOfUsers = users.length;
+			for(var j = 0; j < $scope.numberOfUsers; j++){
+				$scope.currentUserPage[j] = $scope.users[j];
+			}
 			for(var i = 0; i < users.length; i++){
 				if(users[i].local){
 					$scope.userNames[users[i]._id] = users[i].local.username;
@@ -26,12 +68,13 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 					$scope.userNames[users[i]._id] = users[i].google.name;
 				}
 			}
+			$scope.numberOfPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
+			$scope.pageNavigator();
 		});
 	}
 	
 	$scope.getUsers();
-	
-	
+		
 	$('#usersTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
 	$scope.showAllUsers = function(){
 		$scope.showSelectedUserScenes = false;
@@ -124,6 +167,5 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	}
 	
 	toggleTabs(usersTab);
-	toggleTabs(scenesTab);
-		
+	toggleTabs(scenesTab);	
 });
