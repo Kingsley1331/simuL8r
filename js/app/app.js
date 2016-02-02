@@ -28,6 +28,10 @@ app.config(function($routeProvider){
 		templateUrl: 'views/demos.html',
 		controller: 'DemosCtrl'
 	})
+	.when('/simuL8r', {
+		templateUrl: 'views/simuL8r.html',
+		controller: 'SimCtrl'
+	})	
 	.otherwise({
 		redirectTo: '/home'
 	})

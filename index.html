@@ -79,6 +79,14 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+	
+	
+	
+    <!-- ####################################################################simuL8r################################################################ -->
+	<link type="text/css" rel="stylesheet" href="css/main.css"></link>
+	<link type="text/css" rel="stylesheet" href="js/lib/PACE/themes/blue/pace-theme-center-atom.css"></link>	
+	
+	
   </head>
   <!--
   BODY TAG OPTIONS:
@@ -100,7 +108,7 @@
   |               | sidebar-mini                            |
   |---------------------------------------------------------|
   -->
-  <body  ng-app='simuL8r' class='hold-transition skin-green sidebar-mini'>
+  <body ng-app='simuL8r' class='hold-transition skin-green sidebar-mini'>
     <div class="wrapper" ng-controller='NavCtrl'>
 
       <!-- Main Header -->
@@ -300,6 +308,7 @@
             <li id='profile-view'><a href="#profile"><i class="fa fa-user"></i> <span>profile</span></a></li>
 			<li id='demos-view'><a href="#demos"><i class="fa fa-flask"></i> <span>demos</span></a></li>
 			<li id='sim-view'><a href="/simuL8r"><i class="fa fa-steam-square"></i> <span>make a scene!</span></a></li>
+			<li id='sim-view'><a href="#simuL8r"><i class="fa fa-steam-square"></i> <span>simulate!</span></a></li>
             <li class="treeview">
               <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
@@ -404,6 +413,16 @@
 	<script type="text/javascript" src='js/app/controllers/demos.js'></script>
 	<script type="text/javascript" src='js/app/controllers/profile.js'></script>	
 	<script src="js/AdminLTE/app.min.js"></script>
+
+    <!-- ####################################################################simuL8r################################################################ -->
+	
+	<script type="text/javascript" src="js/app/controllers/simuL8r.js"></script>
+	<script type="text/javascript" src="js/lib/PACE/pace.min.js"></script>
+	<script type="text/javascript" src='simuL8r.js'></script>
+	<script type="text/javascript" src='settings.js'></script>
+	<!--<script type="text/javascript" data-pace-options='{"ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>-->	
+	
+	
   </body>	
 
 </html>

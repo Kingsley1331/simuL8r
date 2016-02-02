@@ -57,5 +57,5 @@ function startFrames(frame__rate){
 	}
 }
 
-applySettings.addEventListener('click', displaySettings);
-showOptions.addEventListener('click', showSettings);
+//applySettings.addEventListener('click', displaySettings);
+//showOptions.addEventListener('click', showSettings);

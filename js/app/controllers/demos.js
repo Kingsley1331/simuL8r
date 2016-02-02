@@ -1,6 +1,7 @@
 app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
 	console.log('DemosCtrl');
 	$rootScope.loggedin = true;
+	console.log('$rootScope.currentUser ', $rootScope.currentUser);
 	$scope.showUsers = false;
 	$scope.showUser = false;
 	$scope.users = {};
