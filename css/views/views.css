@@ -248,3 +248,60 @@ hr{
 	position: relative;
 	top: 20px;
 }
+
+
+/***** simuL8r *****/
+
+canvas {
+    position: absolute;
+    z-index: 0;
+}
+
+.navbar-inverse {
+	position: relative;
+    top: 200px;
+    z-index: 10;
+}
+
+.shapes {
+    border-right: 1px solid #404040;
+    width: 60px;
+    height: 50px;
+    float: left;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: black;
+    background: -webkit-linear-gradient(bottom, black , #404040);
+    background: -o-linear-gradient(bottom, black , #404040);
+    background: -moz-linear-gradient(bottom, black , #404040 );
+    background: linear-gradient(to bottom, #404040, black);
+    cursor: pointer;
+    z-index: 0;
+}
+
+.icons {
+    width: 30px;
+    margin-top: 10px;
+}
+
+#PickColor{
+	width:80px;
+	height:80px;
+	position:relative;
+	top:50px;
+	left:8px;
+	border: 1px solid grey;
+	/*visibility:hidden;*/
+	visibility:visible;
+	z-index:+1;
+	-webkit-box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
+	box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+#ChangeColour{
+	position:relative;
+	top:0px;
+	left:9px;
+}

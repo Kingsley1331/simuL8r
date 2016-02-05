@@ -1,10 +1,7 @@
-<!--<body id = 'body' onload = 'init()' ng-controller='SimCtrl'>-->
-
-<!--<div id = 'wrapper' >-->
 
 <div id = 'bar'>
-
-<!--<div id = 'tipsSee'> See Tips </div> --> <div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div><div id = 'showOptions'> show Options </div><div id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</div>
+<!--
+<div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div><div id = 'showOptions'> show Options </div><div id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</div>
 
 <div class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector();}else{shapeSelector(); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></div>
 
@@ -17,9 +14,7 @@
 <div class = 'shapes' id = 'triangle' onmouseover = "hover(triangle);" onmouseout = "leave(triangles, triangle);" onclick = "if(triangles){shapeSelector();}else{shapeSelector(); triangles = true; shapeSelection.shapes.triangle[0] = true;} gradient(triangle);"><img class = 'icons' src = 'images/shapes/triangle.png'></img></div>
 
 <div class = 'shapes' id = 'customShape' onmouseover = "hover(customShape);" onmouseout = "leave(shapes, customShape);" onclick = "if(shapes){shapeSelector();}else{shapeSelector(); shapes = true;} gradient(customShape);"><img class = 'icons' src = 'images/shapes/custom.png'></img></div>
-	<!--<ul id = 'curveList'>
-		<li id='line' class='item' onclick='curveListStyle(); if(line){shapeSelector();}else{shapeSelector(); line = true;}'>line</li>
-	</ul>-->
+
 
 
 <div class = 'shapes' id = 'Re-Size' onmouseover = "hover(ReSize);" onmouseout = "leave(reSize, ReSize);" onclick = "if(reSize){shapeSelector();}else{shapeSelector(); reSize = true;} gradient(ReSize);"><img class = 'icons' src = 'images/resize.png'></img></div>
@@ -78,6 +73,113 @@
 <div class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector();}else{shapeSelector(); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></div>
 
 <div class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector();}else{shapeSelector(); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></img></div>
+-->
+
+
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#simuL8r">Home</a></li>
+
+      <li class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector();}else{shapeSelector(); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></li> 
+      <li class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector();}else{shapeSelector(); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></li>
+	  <li class = 'shapes' id = 'circle' onmouseover = "hover(circle);" onmouseout = "leave(circles, circle);" onclick = " if(circles){shapeSelector();}else{shapeSelector();  circles = true; shapeSelection.shapes.circle[0] = true;} gradient(circle);"><img class = 'icons' src = 'images/shapes/circle.png'></img></li> 
+      <li class = 'shapes' id = 'square' onmouseover = "hover(square);" onmouseout = "leave(squares, square);" onclick = "if(squares){shapeSelector();}else{shapeSelector(); squares = true; shapeSelection.shapes.square[0] = true;} gradient(square);"><img class = 'icons' src = 'images/shapes/square.png'></li>
+      <li class = 'shapes' id = 'triangle' onmouseover = "hover(triangle);" onmouseout = "leave(triangles, triangle);" onclick = "if(triangles){shapeSelector();}else{shapeSelector(); triangles = true; shapeSelection.shapes.triangle[0] = true;} gradient(triangle);"><img class = 'icons' src = 'images/shapes/triangle.png'></li> 
+      <li class = 'shapes' id = 'customShape' onmouseover = "hover(customShape);" onmouseout = "leave(shapes, customShape);" onclick = "if(shapes){shapeSelector();}else{shapeSelector(); shapes = true;} gradient(customShape);"><img class = 'icons' src = 'images/shapes/custom.png'></img></li> 
+      <li class = 'shapes' id = 'Re-Size' onmouseover = "hover(ReSize);" onmouseout = "leave(reSize, ReSize);" onclick = "if(reSize){shapeSelector();}else{shapeSelector(); reSize = true;} gradient(ReSize);"><img class = 'icons' src = 'images/resize.png'></li>
+      <li class = 'shapes' id = 'Re-Shape' onmouseover = "hover(ReShape);" onmouseout = "leave(reShape, ReShape);" onclick = "if(reShape){ shapeSelector();}else{shapeSelector(); reShape = true;} gradient(ReShape);"><img id = 'ReShaper' class = 'icons' src = 'images/shapes/reshape.png'></img><a href="#/simuL8r"></li> 
+      <li class = 'shapes' id = 'Rotate' onmouseover = "hover(Rotate);" onmouseout = "leave(rotate, Rotate);" onclick = "if(rotate){shapeSelector();}else{shapeSelector(); rotateListStyle(); rotate = true;} gradient(Rotate); resetRotate();"><img class = 'icons' src = 'images/rotate.png'></img><a href="#/simuL8r"></a>		
+			<!--<ul id = 'rotateList'>
+				<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
+				<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
+				<li id='reverseX' class='item'>ReverseX</li>
+				<li id='reverseY' class='item'>ReverseY</li>
+			</ul>-->
+			
+			<div class="dropdown">
+			  <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				Dropdown
+				<span class="caret"></span>
+			  </button>-->
+			  <ul id='rotateList' class="dropdown-menu" aria-labelledby="dropdownMenu1">
+				<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
+				<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
+				<li id='reverseX' class='item'>ReverseX</li>
+				<li id='reverseY' class='item'>ReverseY</li>
+			  </ul>
+			</div>
+			
+	  </li> 
+      <li class = 'shapes' id = 'ChangeColour'  onmouseover = "hover(ChangeColour);" onmouseout = "leave(colourChange, ChangeColour);" onclick = " if(colourChange){shapeSelector(); PickColor.style.visibility = 'invisible';}else{shapeSelector(); colourChange = true; PickColor.style.visibility = 'visible';} gradient(ChangeColour); colours.lightblue[1] = true;"><img class = 'icons' src = 'images/colour-wheel.png'></img>
+	  <li id = 'PickColor'>
+	  <div class="dropdown">
+		 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			<li>
+				<table id = 'board'>
+					<tr>
+						<td><div id = 'transparent' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.transparent[1] = true;'></div></td>
+						<td><div id = 'blue' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.blue[1] = true;'></div></td>
+						<td><div id = 'red' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.red[1] = true;'></div></td>
+						<td><div id = 'yellow' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.yellow[1] = true;'></div></td>
+					</tr>
+					<tr>
+						<td><div id = 'green' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.green[1] = true;'></div></td>
+						<td><div id = 'white' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.white[1] = true;'></div></td>
+						<td><div id = 'black' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.black[1] = true;'></div></td>
+						<td><div id = 'lightblue' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.lightblue[1] = true;'></div></td>
+					</tr>
+					<tr>
+						<td><div id = 'lightgreen' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.lightgreen[1] = true;'></div></td>
+						<td><div id = 'orange' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.orange[1] = true;'></div></td>
+						<td><div id = 'purple' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.purple[1] = true;'></div></td>
+						<td><div id = 'violet' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.violet[1] = true;'></div></td>
+					</tr>
+					<tr>
+						<td><div id = 'beige' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.beige[1] = true;'></div></td>
+						<td><div id = 'aqua' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.aqua[1] = true;'></div></td>
+						<td><div id = 'grey' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.grey[1] = true;'></div></td>
+						<td><div id = 'pink' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.pink[1] = true;'></div></td>
+					</tr>
+				</table>
+			</li>
+		 </ul>
+		 </div>
+	 </li>
+	 
+<!--	 
+<div class="dropdown">
+ <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Dropdown
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><a href="#">Action</a></li>
+  </ul>
+</div>-->
+
+
+	 </li>
+	 
+	 <li class = 'shapes' id = 'pencil_id' onmouseover = "hover(pencil_id); "onmouseout = "leave(pencils, pencil_id);" onclick = " if(pencils){shapeSelector();}else{shapeSelector(); pencilStyle(); pencils = true; shapeSelection.shapes.pencil[0] = true;} gradient(pencil_id); pencilCursor();"><img class = 'icons' src = 'images/pencil.png'></img>
+		<!--ul id = 'pencilList'>
+			<li id='shapes' class='item'>Shapes</li>
+			<li id='strokes' class='item'>Strokes</li>
+		</ul>-->
+	</li>    
+	 <li class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector();}else{shapeSelector(); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></li> 
+     <li class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector();}else{shapeSelector(); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></li> 	  
+   </div>
+
+   </ul>
+  </div>
+</nav>
+
+
+
+
+
 
 <table id='sceneTable' ng-show='showSceneTable'>
 	<tr>
@@ -108,35 +210,8 @@
 
 <img id="canvasImg" alt = "Right click to save me!">
 
-<!--
-<div id = "tips">
-
-<div id='tipsRemove' onclick = "//tips.style.visibility = 'hidden';">Remove Tips</div>
 
 
-
-<center><div id ='tipsTitle'><h2>Tips</h2></div></center><p>
-
-<div id = 'tipsWrapper'>
-	<div class = 'tipsDiv'><img class = 'tipsImg' src = 'images/shapes/custom.png'></img></div>
-	<p class = 'tipsPara'>To make your own shapes select the icon above, and then click on different parts of the canvas, complete the shape by clicking on the small green circle which appears when you hover over the start of the first line.</p>
-	<hr><p>
-
-	<div class = 'tipsDiv'><img class = 'tipsImg' src = 'images/erase.png'></img></div>
-	<p class = 'tipsPara'>After selecting the 'delete' icon simply click on the shape that you wish to remove.</p>
-	<hr><p>
-
-	<div class = 'tipsDiv'><img id='tipsReshaper' class = 'tipsImg' src = 'images/shapes/reshape.png'></img></div>
-	<p class = 'tipsPara'>After selecting the icon above, hover over any of the corners and all of them will be highlighted by small grey circles, simply drag an drop the corners to re-shape. (only works for the shapes you create) </p>
-	<hr><p>
-
-	<div class = 'tipsDiv'><img class = 'tipsImg' src = 'images/rotate.png'></img></div>
-	<p class = 'tipsPara'>Select the icon above and the click on the shape you wish to rotate, then move the red triangular slider to rotate it.</p>
-	<hr><p>
-
-	<div class = 'tipsDiv'><img class = 'tipsImg' src = 'images/save.png'></img></div>
-	<p class = 'tipsPara'> Firstly Select the icon above, and then to save your work; right-click the little image that appears in the top left corner.</p>
-</div>-->
 
 </div>
 <div id='bp'>
