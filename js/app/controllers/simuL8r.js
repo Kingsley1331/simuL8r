@@ -229,5 +229,49 @@ app.controller('SimCtrl', function($scope, $http, $window, $rootScope){
 	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
 	
 	$scope.findCurrentUser();
+	
+	function rotateOptions(id, options){
+		$(id).click(function(){
+			event.stopPropagation();
+			resetRotate();
+			$(id).css('color', 'white');
+			$(id).css('text-decoration', 'underline');
+			options = true;
+		});
+	}
 
+	$(document).ready(function(){
+		$('#reverseX').click(function(){
+			event.stopPropagation();
+			resetRotate();
+			$('#reverseX').css('color', 'white');
+			$('#reverseX').css('text-decoration', 'underline');
+			reversingX = true;
+		});
+		$('#reverseY').click(function(){
+			event.stopPropagation();
+			resetRotate();
+			$('#reverseY').css('color', 'white');
+			$('#reverseY').css('text-decoration', 'underline');
+			reversingY = true;
+		});
+		$('#rotate90').click(function(){
+			event.stopPropagation();
+			resetRotate();
+			$('#rotate90').css('color', 'white');
+			$('#rotate90').css('text-decoration', 'underline');
+			rotating90 = true;
+		});
+		$('#rotate180').click(function(){
+			event.stopPropagation();
+			resetRotate();
+			$('#rotate180').css('color', 'white');
+			$('#rotate180').css('text-decoration', 'underline');
+			rotating180 = true;
+		});
+	});
+	
+	/************************************************** indexedDB ******************************************************************/
+	
+	
 });

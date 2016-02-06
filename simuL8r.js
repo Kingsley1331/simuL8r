@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-02-02 **/ 
+/** simuL8r - v1.0.0 - 2016-02-05 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -173,6 +173,7 @@ $(document).ready(function(){
 
 
 function resetRotate(){
+	//alert('resetRotate');
 	$('#reverseX').css('color', '#A3FFA3');
 	$('#reverseY').css('color', '#A3FFA3');
 	$('#rotate90').css('color', '#A3FFA3');
@@ -202,6 +203,7 @@ $(document).ready(function(){
 		reversingY = true;
 	});
 	$('#rotate90').click(function(){
+		//alert('rotating90');
 		resetRotate();
 		$('#rotate90').css('color', 'white');
 		$('#rotate90').css('text-decoration', 'underline');
@@ -213,7 +215,7 @@ $(document).ready(function(){
 		$('#rotate180').css('text-decoration', 'underline');
 		rotating180 = true;
 	});
-})
+});
 
 function pencilStyle(){
 	if(!pencils){
@@ -507,7 +509,7 @@ function options(){
 	customShape = document.getElementById('customShape');
 	curve = document.getElementById('line');
 	pencil_id = document.getElementById('pencil_id');
-	PickColor = document.getElementById('PickColor');
+	//PickColor = document.getElementById('PickColor');
 	Copy = document.getElementById('copy');
 	Physics = document.getElementById('physics');
 }
@@ -2137,7 +2139,7 @@ function shapeSelector(){
 	backgroundGradient('#physics');
 
 	image.style.visibility = 'hidden';
-	PickColor.style.visibility = 'hidden';
+	//PickColor.style.visibility = 'hidden';
 	$('#pencilList').css('display', 'none');
 	$('#rotateList').css('display', 'none');
 	pencilCursor();

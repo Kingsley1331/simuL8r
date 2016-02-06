@@ -1,8 +1,6 @@
 
 <div id = 'bar'>
 <!--
-<div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div><div id = 'showOptions'> show Options </div><div id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</div>
-
 <div class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector();}else{shapeSelector(); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></div>
 
 <div class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector();}else{shapeSelector(); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></div>
@@ -80,7 +78,7 @@
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#simuL8r">Home</a></li>
+      <!--<li class="active"><a href="#simuL8r">Home</a></li>-->
 
       <li class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector();}else{shapeSelector(); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></li> 
       <li class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector();}else{shapeSelector(); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></li>
@@ -89,8 +87,8 @@
       <li class = 'shapes' id = 'triangle' onmouseover = "hover(triangle);" onmouseout = "leave(triangles, triangle);" onclick = "if(triangles){shapeSelector();}else{shapeSelector(); triangles = true; shapeSelection.shapes.triangle[0] = true;} gradient(triangle);"><img class = 'icons' src = 'images/shapes/triangle.png'></li> 
       <li class = 'shapes' id = 'customShape' onmouseover = "hover(customShape);" onmouseout = "leave(shapes, customShape);" onclick = "if(shapes){shapeSelector();}else{shapeSelector(); shapes = true;} gradient(customShape);"><img class = 'icons' src = 'images/shapes/custom.png'></img></li> 
       <li class = 'shapes' id = 'Re-Size' onmouseover = "hover(ReSize);" onmouseout = "leave(reSize, ReSize);" onclick = "if(reSize){shapeSelector();}else{shapeSelector(); reSize = true;} gradient(ReSize);"><img class = 'icons' src = 'images/resize.png'></li>
-      <li class = 'shapes' id = 'Re-Shape' onmouseover = "hover(ReShape);" onmouseout = "leave(reShape, ReShape);" onclick = "if(reShape){ shapeSelector();}else{shapeSelector(); reShape = true;} gradient(ReShape);"><img id = 'ReShaper' class = 'icons' src = 'images/shapes/reshape.png'></img><a href="#/simuL8r"></li> 
-      <li class = 'shapes' id = 'Rotate' onmouseover = "hover(Rotate);" onmouseout = "leave(rotate, Rotate);" onclick = "if(rotate){shapeSelector();}else{shapeSelector(); rotateListStyle(); rotate = true;} gradient(Rotate); resetRotate();"><img class = 'icons' src = 'images/rotate.png'></img><a href="#/simuL8r"></a>		
+      <li class = 'shapes' id = 'Re-Shape' onmouseover = "hover(ReShape);" onmouseout = "leave(reShape, ReShape);" onclick = "if(reShape){ shapeSelector();}else{shapeSelector(); reShape = true;} gradient(ReShape);"><img id = 'ReShaper' class = 'icons' src = 'images/shapes/reshape.png'></img></li> 
+      <li class = 'shapes' id = 'Rotate' onmouseover = "hover(Rotate);" onmouseout = "leave(rotate, Rotate);" onclick = "if(rotate){shapeSelector();}else{shapeSelector(); rotateListStyle(); rotate = true;} gradient(Rotate); resetRotate();"><img class = 'icons' src = 'images/rotate.png'></img>		
 			<!--<ul id = 'rotateList'>
 				<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
 				<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
@@ -106,14 +104,14 @@
 			  <ul id='rotateList' class="dropdown-menu" aria-labelledby="dropdownMenu1">
 				<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
 				<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
-				<li id='reverseX' class='item'>ReverseX</li>
-				<li id='reverseY' class='item'>ReverseY</li>
+				<li id='reverseX' class='item'>mirror</li>
+				<li id='reverseY' class='item'>upside down</li>
 			  </ul>
 			</div>
 			
 	  </li> 
       <li class = 'shapes' id = 'ChangeColour'  onmouseover = "hover(ChangeColour);" onmouseout = "leave(colourChange, ChangeColour);" onclick = " if(colourChange){shapeSelector(); PickColor.style.visibility = 'invisible';}else{shapeSelector(); colourChange = true; PickColor.style.visibility = 'visible';} gradient(ChangeColour); colours.lightblue[1] = true;"><img class = 'icons' src = 'images/colour-wheel.png'></img>
-	  <li id = 'PickColor'>
+	  <!--<li id = 'PickColor'>
 	  <div class="dropdown">
 		 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 			<li>
@@ -146,7 +144,7 @@
 			</li>
 		 </ul>
 		 </div>
-	 </li>
+	 </li>-->
 	 
 <!--	 
 <div class="dropdown">
@@ -170,6 +168,10 @@
 	</li>    
 	 <li class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector();}else{shapeSelector(); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></li> 
      <li class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector();}else{shapeSelector(); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></li> 	  
+   
+   <li><div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div></li>
+   <li><div id = 'showOptions'> show Options </div></li>
+   <li><div id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</div></li>
    </div>
 
    </ul>
