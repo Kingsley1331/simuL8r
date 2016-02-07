@@ -20,6 +20,7 @@ var mousePos;
 var selectedShape = [];
 var frame_Rate = 100;
 var playScenes;
+var selectedColour = '';
 
 var shapeSelection = {
 						name: 'untitled',
@@ -508,7 +509,7 @@ function options(){
 	customShape = document.getElementById('customShape');
 	curve = document.getElementById('line');
 	pencil_id = document.getElementById('pencil_id');
-	//PickColor = document.getElementById('PickColor');
+	PickColor = document.getElementById('PickColor');
 	Copy = document.getElementById('copy');
 	Physics = document.getElementById('physics');
 }
@@ -638,14 +639,15 @@ function drag(){
 				shapeSelection.shapes[key][2][i].velocity = [0, 0];
 				if(!pencils) {canvas.style.cursor = cursor_grab;}
 				//if(physics){
+					//shapeSelection.shapes[key][2][i].lineWidth = 4;
 					selectedShape[0] = shapeSelection.shapes[key][2][i];
 					selectedShape[1] = key;
 					console.log('selectedShape: ', selectedShape)
 				//}
-				if(selectedShape[0] && selectedShape[1] !== 'wall'){
+				/*if(selectedShape[0] && selectedShape[1] !== 'wall'){
 					//selectedShape[0].velocity = [2, 2];
 					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
-				}			
+				}*/		
 			}
 		}
 	}
@@ -656,6 +658,7 @@ function selected(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			shapeSelection.shapes[key][2][i].selected = false; 
+			//shapeSelection.shapes[key][2][i].lineWidth = 0.7;			
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(shapeSelection.shapes[key][2][i].vertices[0][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[0][1] + shapeSelection.shapes[key][2][i].Y);
 			
@@ -665,15 +668,8 @@ function selected(){
 			if(bufferCtx.isPointInPath(mousePos.x, mousePos.y) && !select){
 				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) >= 10){
 					shapeSelection.shapes[key][2][i].selected = true;
-					select = true;
-					/*if(physics){
-						selectedShape[0] = shapeSelection.shapes[key][2][i];
-						selectedShape[1] = key;
-					}
-					if(selectedShape[0] && selectedShape[1] !== 'wall'){
-						selectedShape[0].velocity = [10, 10];
-						console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
-					}*/					
+					//shapeSelection.shapes[key][2][i].lineWidth = 4;
+					select = true;				
 				}
 			}
 		}
@@ -2198,13 +2194,18 @@ function colourPicker(){
 	colours['grey'][1] = false;
 	colours['pink'][1] = false;
 }
-
+/*
 function chooseColour(){
 	for(colour in colours){
 		if(colours[colour][1]){
 			return colours[colour][0];
 		}
 	}
+}*/
+
+function chooseColour(){
+	console.log('############################################################## displayData', selectedColour)
+	return selectedColour;
 }
 
 wallConfig = {clearWall: false};

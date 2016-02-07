@@ -17,7 +17,7 @@
 		</th>		
 	</tr>
 	<tr ng-repeat="user in currentUserPage | filter:searchQuery | limitTo:userPageSize" ng-if='user.google.name != currentUser.google.name || user.local.username != currentUser.local.username'>
-		<td><img class='table-pic' img width='75' ng-src='{{user.local.profilePic}}'/></td>		
+		<td><img class='table-pic' img width='75' ng-src='{{user.local.profilePic || defaultPic}}'/></td>		
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
 		<td class='button'><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>
@@ -74,7 +74,7 @@
 	<tr ng-repeat="scene in scenes | filter:{name:searchScene}">
 		<td>{{userNames[scene.userID]}}</td>
 		<td>{{scene.name}}</td>		
-		<td ng-click='getSelectedScene(scene._id)' ><img class='table-pic' width='75' ng-src='{{scene.imageUrl}}'/></td>	
+		<td ng-click='getSelectedScene(scene._id)' ><img class='table-pic' width='75' ng-src='{{scene.imageUrl || defaultPic}}'/></td>	
 	</tr>
 </table>
 

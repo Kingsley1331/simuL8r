@@ -5,6 +5,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.showUser = false;
 	$scope.users = [];
 	$scope.selectedUser = {};
+	$rootScope.defaultPic = 'http://www.kingsleygames.co.uk/Apps/php_&_mysql/Targets/profiles/Default/Default.jpg';
 	
 	$scope.showScenes = false;
 	$scope.showSelectedUserScenes = false;

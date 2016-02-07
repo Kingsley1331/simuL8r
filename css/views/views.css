@@ -288,18 +288,18 @@ canvas {
 }
 
 #PickColor{
-	width:80px;
-	height:80px;
-	position:relative;
-	top:50px;
-	left:8px;
+	width: 80px;
+	height: 80px;
+	position: relative;
+	top: 12px;
+	left: 8px;
 	border: 1px solid grey;
 	/*visibility:hidden;*/
 	visibility:visible;
-	z-index:+1;
-	-webkit-box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
-	box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
+	z-index: 1;
+	-webkit-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
 }
 
 #ChangeColour{
@@ -329,16 +329,16 @@ canvas {
 	font-size:14px;
 	position: absolute;
 	top: 8px;
-	left: 180px;	
+	left: 190px;	
     font-family: verdana;	
 }
 
 #showOptions{
-	left: 50px;
+	left: 325px; 
 }
 
 #refresh{
-	left: 325px;
+	left: 50px;
 }
 
 #sceneTable{
