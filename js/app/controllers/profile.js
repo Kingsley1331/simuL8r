@@ -39,7 +39,9 @@ app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
 	}	
 
 	$scope.getSelectedScene = function(id){
-		location.replace('/simuL8r?id=' + id);		
+		clearAll(wallConfig);
+		$scope.simulation = shapeSelection;		
+		location.replace('#/simuL8r?id=' + id);		
 	}
 	
 	$scope.getUserScenes($rootScope.currentUser._id);

@@ -1,4 +1,4 @@
-(function() {
+/*(function indexedDB_func() {
 	console.log('indexedDB');
 	var scenes = [];
 	var display = true;
@@ -123,7 +123,7 @@ if (window.IDBTransaction){
 						shapes:{square: squareArray, circle: circleArray, triangle: triangleArray,.....}
 			}	
 	**/
-	function loadDatabase(scene){
+	/*function loadDatabase(scene){
 		scene.shapes = {};	
 		for(key in shapeSelection.shapes){ // for each shape category
 				scene.shapes[key] = []; // this line initialises the shapeArray 
@@ -331,4 +331,4 @@ if (window.IDBTransaction){
 			request.onerror = function() { console.log('drop failed') };
 		}
 	}
-})();
+})();*/

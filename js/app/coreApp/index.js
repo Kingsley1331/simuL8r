@@ -114,7 +114,7 @@ function getQueryVariable(variable){
 	}
 	return false;
 }
-
+/*
 function checkParameters(){
 	if(getQueryVariable('bp') == 1){
 		showBlueprint.on = true;
@@ -126,7 +126,7 @@ function checkParameters(){
 	if(getQueryVariable('g')){
 		gravity = getQueryVariable('g');
 	}
-}
+}*/
 
 function circleMaker(){
 	var points = 50;
@@ -426,7 +426,7 @@ var canvasReadyEvent = new CustomEvent("canvasReady", {
 
 function init(){
 	//displayData();
-	checkParameters();
+	//checkParameters();
 	var arrow_keys_handler = function(e) {
     switch(e.keyCode){
 		case 32: if(physics == true){

@@ -166,7 +166,9 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	}	
 	
 	$scope.getSelectedScene = function(id){
-		location.replace('/simuL8r?id=' + id);		
+		clearAll(wallConfig);
+		$scope.simulation = shapeSelection;		
+		location.replace('#/simuL8r?id=' + id);		
 	}
 	
 	var usersTab = $('#usersTab');

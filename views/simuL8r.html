@@ -169,9 +169,12 @@
 	 <li class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector();}else{shapeSelector(); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></li> 
      <li class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector();}else{shapeSelector(); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></li> 	  
    
-   <li><div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div></li>
-   <li><div id = 'showOptions'> show Options </div></li>
-   <li><div id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</div></li>
+   <!--<li><div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div></li>-->
+   <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </button></li>
+   <li><button type='button' class='btn btn-info'  id = 'showOptions'> show Options </button></li>
+   <!--<li><div id = 'showOptions'> show Options </div></li>-->
+   <li><button type='button' class='btn btn-info'  id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</button></li>
+   <!--<li><div id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</div></li>-->
    </div>
 
    </ul>

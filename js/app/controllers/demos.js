@@ -92,7 +92,8 @@ app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
 	
 	$scope.getSelectedScene = function(id){
 		//location.replace('/simuL8r?id=' + id);
-		var path ='/simuL8r?id=' + id;
+		//var path ='/simuL8r?id=' + id;
+		var path ='#/simuL8r?id=' + id;
 		$window.location.href = path;	
 	}
 	
