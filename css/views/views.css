@@ -358,6 +358,21 @@ canvas {
 	width: 75px;
 	border-radius: 5px;
 }
+#thumbnail{
+	background-color: black;
+}
+
+.scene-name{
+	color: black;
+}
+
+#scene-title{
+	position:absolute;
+	left: 50%;
+	top: -10px;
+	color: white;
+	display: none;
+}
 
 #settings{
 	position:absolute;

@@ -510,7 +510,7 @@ function options(){
 	customShape = document.getElementById('customShape');
 	curve = document.getElementById('line');
 	pencil_id = document.getElementById('pencil_id');
-	PickColor = document.getElementById('PickColor');
+	//PickColor = document.getElementById('PickColor');
 	Copy = document.getElementById('copy');
 	Physics = document.getElementById('physics');
 }
@@ -2098,14 +2098,25 @@ function backgroundGradient(icon){
 	$(icon).css({'background-image': 'linear-gradient(to bottom, #404040 ,black)'});
 }
 
-function shapeSelector(){
+function shapeSelector(id){
+	if(id==='navigation-bar'){
+		colourChange = false;
+		backgroundGradient('#ChangeColour');
+		return;
+	}
+	
+	if(id && id === 'ChangeColour'){
+		colourChange = true;
+	}else if(id !== 'ChangeColour'){
+		colourChange = false;
+	}
+	
 	shapeSelection.shapes.circle[0] = false;
 	shapeSelection.shapes.square[0] = false;
 	shapeSelection.shapes.triangle[0] = false;
 	deletion = false;
 	reSize = false;
 	reShape = false; 
-	colourChange = false;
 	rotate = false;
 	shapes = false;
 	pencils = false;
@@ -2205,7 +2216,6 @@ function chooseColour(){
 }*/
 
 function chooseColour(){
-	console.log('############################################################## displayData', selectedColour)
 	return selectedColour;
 }
 

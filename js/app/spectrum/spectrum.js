@@ -803,7 +803,7 @@
 				selectedColour = displayColor;	
 				if(selectedShape[0]){
 					selectedShape[0].color = displayColor;	
-				}			
+				}		
             }
 
             if (opts.showPalette) {

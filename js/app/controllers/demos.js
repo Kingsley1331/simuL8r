@@ -1,5 +1,8 @@
 app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
-	console.log('DemosCtrl');
+	/** newscene function */
+	clearAll(wallConfig);
+	$scope.simulation = shapeSelection;
+	
 	$rootScope.loggedin = true;
 	console.log('$rootScope.currentUser ', $rootScope.currentUser);
 	$scope.showUsers = false;
