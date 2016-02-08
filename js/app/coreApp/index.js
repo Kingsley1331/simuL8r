@@ -1131,7 +1131,7 @@ function CustomShape(){
 	this.stretchRadius = 50;
 	this.onObject = false;
 	this.dragging = false;
-	this.colour = 'lightblue';
+	this.colour = '#6d9eeb';
 	this.expand = false;
 	this.h_expand = false;
 	this.v_expand = false;

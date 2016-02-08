@@ -701,7 +701,7 @@ showOptions.addEventListener('click', showSettings);
 
 /******************************************* spectrum.js boilerplate code *********************************************/
 
-$("#full").spectrum({
+$("#ChangeColour").spectrum({
     color: "#ECC",
     showInput: true,
     className: "full-spectrum",

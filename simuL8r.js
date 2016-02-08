@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-02-07 **/ 
+/** simuL8r - v1.0.0 - 2016-02-08 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -1132,7 +1132,7 @@ function CustomShape(){
 	this.stretchRadius = 50;
 	this.onObject = false;
 	this.dragging = false;
-	this.colour = 'lightblue';
+	this.colour = '#6d9eeb';
 	this.expand = false;
 	this.h_expand = false;
 	this.v_expand = false;
