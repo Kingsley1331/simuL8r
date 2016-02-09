@@ -29,20 +29,21 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 				console.log(' before: currentUserPageNumber ', $scope.currentUserPageNumber);
 				$scope.currentUserPageNumber++;
 				console.log(' after: currentUserPageNumber ', $scope.currentUserPageNumber);
-				return;
+				//return;
 			}
 		}else if(bool === false){
 			if($scope.currentUserPageNumber > 1){
 				$scope.currentUserPageNumber--;
 				console.log('currentUserPageNumber ', $scope.currentUserPageNumber);
-				return;
+				//return;
 			}
 		}
-		//$scope.paginator($scope.currentUserPageNumber);
+		$scope.paginator($scope.currentUserPageNumber);
 	}
 	
 	$scope.paginator = function(pageNumber){
-			console.log('paginator');
+		console.log('paginator');
+		$scope.currentUserPageNumber = pageNumber;
 		$scope.numberOfUsers = $scope.users.length;
 		for(var j = 0; j < $scope.numberOfUsers; j++){
 			$scope.currentUserPage[j] = $scope.users[j];
@@ -73,7 +74,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		pages.click(function(){
 			pages.each(function(index){
 				
-		if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){		
+		//if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){		
 				console.log('---------------------------------------------------------------------------------------');
 				console.log('each', $(this).attr('id'));
 				if($(this).attr('id') == $scope.currentUserPageNumber){
@@ -82,7 +83,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 					$(this).removeClass('active');
 				}
 				
-		}	
+		//}	
 				
 			});			
 			if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){
@@ -92,7 +93,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 			$('#prev').removeClass('active');
 			$('#next').removeClass('active');		
 		});		
-}, 0);
+}, 500);
 
 
 				
