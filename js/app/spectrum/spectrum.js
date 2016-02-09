@@ -799,7 +799,8 @@
             // Update the text entry input as it changes happen
             if (opts.showInput) {
                 textInput.val(displayColor); 
-				console.log('displayColor ', displayColor);	
+				console.log('displayColor ', displayColor);
+				/** we appear to be setting the colour twice below **/
 				selectedColour = displayColor;	
 				if(selectedShape[0]){
 					selectedShape[0].color = displayColor;	

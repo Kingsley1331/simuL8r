@@ -33,10 +33,11 @@
 			<center>
 				<div class="container">  
 				  <ul class="pagination">
-					  <li ng-click='pageTurner(false)' id='prev'><a href="#/home">«</a></li>
-					  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1)' class="{{(pagesArray[page] + 1==1)?'active':''}}"><a href="#/home">{{pagesArray[page] + 1}}</a></li>
-					  <!--<li><a href="#/home">{{currentUserPageNumber}}</a></li>-->
-					  <li ng-click='pageTurner(true)' id='next'><a href="#/home">»</a></li>
+					  <li ng-click='pageTurner(false);' id='prev'><a href="#/home">«</a></li>
+					  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1);' id="{{pagesArray[page] + 1}}" ng-class="{{(pagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{pagesArray[page] + 1}}</a></li>
+					  <!--<li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1); trackPage(page);' class="{{(pagesArray[page] + 1==1)?'active':''}}"><a href="#/home">{{pagesArray[page] + 1}}</a></li>
+					  <li><a href="#/home">{{currentUserPageNumber}}</a></li>-->
+					  <li ng-click='pageTurner(true);' id='next'><a href="#/home">»</a></li>
 				  </ul>
 				</div>
 			</center>

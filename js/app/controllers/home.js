@@ -23,19 +23,26 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.numberOfPages = 1;
 	
 	$scope.pageTurner = function(bool){
+		console.log('pageTurner');
 		if(bool === true){
 			if($scope.currentUserPageNumber < $scope.numberOfPages){
+				console.log(' before: currentUserPageNumber ', $scope.currentUserPageNumber);
 				$scope.currentUserPageNumber++;
+				console.log(' after: currentUserPageNumber ', $scope.currentUserPageNumber);
+				return;
 			}
 		}else if(bool === false){
 			if($scope.currentUserPageNumber > 1){
 				$scope.currentUserPageNumber--;
+				console.log('currentUserPageNumber ', $scope.currentUserPageNumber);
+				return;
 			}
 		}
-		$scope.paginator($scope.currentUserPageNumber);
+		//$scope.paginator($scope.currentUserPageNumber);
 	}
 	
-	$scope.paginator = function(pageNumber){	
+	$scope.paginator = function(pageNumber){
+			console.log('paginator');
 		$scope.numberOfUsers = $scope.users.length;
 		for(var j = 0; j < $scope.numberOfUsers; j++){
 			$scope.currentUserPage[j] = $scope.users[j];
@@ -44,36 +51,55 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		var firstUserIndex = (pageNumber - 1) * $scope.userPageSize;
 		$scope.currentUserPage.splice(0, firstUserIndex);
 		$('#pageNumber').html(pageNumber);
-		$('.pages').css({
+		/*$('.pages').css({
 			'color': 'white',
 			'font-size': '20px', 
 			'text-decoration': 'none'
-		});
-		
+		});		
 		$('.pages').click(function(){
 				$(this).css({
 					'color': 'lightgreen',
 					'font-size': '35px', 
 					'text-decoration': 'underline'
 				});
-			});
-			
-		$(document).ready(function(){
-			$('.pagination > li').click(function(){
-				$('.pagination > li').removeClass('active');
-				$(this).addClass('active');
-				$('#prev').removeClass('active');
-				$('#next').removeClass('active');				
-			});
-		});	
-	}	
+			});	*/		
+		}	
 	
+
+	/** pagination **/
+	setTimeout(function(){
+		var pages = $('.pagination > li');	
+		$('#1').addClass('active');	
+		pages.click(function(){
+			pages.each(function(index){
+				
+		if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){		
+				console.log('---------------------------------------------------------------------------------------');
+				console.log('each', $(this).attr('id'));
+				if($(this).attr('id') == $scope.currentUserPageNumber){
+					$(this).addClass('active');					
+				}else{
+					$(this).removeClass('active');
+				}
+				
+		}	
+				
+			});			
+			if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){
+				pages.removeClass('active');
+			}		
+			$(this).addClass('active');
+			$('#prev').removeClass('active');
+			$('#next').removeClass('active');		
+		});		
+}, 0);
+
+
+				
 	$scope.pageNavigator = function(){
-		console.log('navigating');
 		for(var i = 0; i < $scope.numberOfPages; i++){
 			$scope.pagesArray[i] = i;
 		}
-		//$('.nav-list > li').css('display', 'inline');
 	}
 	
 	$scope.getUsers = function(){
