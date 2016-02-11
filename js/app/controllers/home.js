@@ -223,7 +223,10 @@ $scope.addPageEventListeners = function(){
 				$scope.currentScenePage[j] = $scope.scenes[j];
 			}
 			$scope.numberOfScenePages = Math.ceil($scope.numberOfScenes / $scope.scenePageSize);
-			$scope.scenesPageNavigator();	
+			$scope.scenesPageNavigator();
+			setTimeout(function(){
+				$scope.addPageEventListeners();
+			}, 500);			
 		});	
 		$scope.showScenes = bool;
 		$scope.showUsers = !bool;
@@ -279,7 +282,7 @@ $scope.addPageEventListeners = function(){
 			$scope.selU_numberOfScenePages = Math.ceil($scope.selU_numberOfScenes / $scope.selU_scenePageSize);
 			$scope.selU_scenesPageNavigator();	
 			setTimeout(function(){
-				$scope.addPageEventListeners()
+				$scope.addPageEventListeners();
 			}, 500);
 		});
 		$scope.showSelectedUserScenes = !$scope.showSelectedUserScenes;
