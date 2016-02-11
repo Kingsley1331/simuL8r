@@ -13,95 +13,126 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.scenesNames = [{name:'blue bar'}, {name:'red'}, {name:'panda'}, {name:'bunny'}, {name:'dolphin'}];
 	$scope.selectedUserScenes = {};
 	$scope.selectedScene = {};
-	$scope.userNames = {};	
-		
-	$scope.userPageSize = 3;
+	$scope.userNames = {};
+	
+		/***********************************************************start pagination ******************************************************************/
+	$scope.userPageSize = 5;
 	$scope.currentUserPageNumber = 1;	
 	$scope.currentUserPage = [];
-	$scope.pagesArray = [];
+	$scope.userPagesArray = [];
 	$scope.numberOfUsers = 0;
-	$scope.numberOfPages = 1;
+	$scope.numberOfUserPages = 1;
 	
-	$scope.pageTurner = function(bool){
-		console.log('pageTurner');
+	$scope.scenePageSize = 5;
+	$scope.currentScenePageNumber = 1;	
+	$scope.currentScenePage = [];
+	$scope.scenePagesArray = [];
+	$scope.numberOfScenes = 0;
+	$scope.numberOfScenePages = 1;	
+	
+	$scope.userPageTurner = function(bool){
 		if(bool === true){
-			if($scope.currentUserPageNumber < $scope.numberOfPages){
-				console.log(' before: currentUserPageNumber ', $scope.currentUserPageNumber);
+			if($scope.currentUserPageNumber < $scope.numberOfUserPages){
 				$scope.currentUserPageNumber++;
-				console.log(' after: currentUserPageNumber ', $scope.currentUserPageNumber);
-				//return;
 			}
 		}else if(bool === false){
 			if($scope.currentUserPageNumber > 1){
 				$scope.currentUserPageNumber--;
-				console.log('currentUserPageNumber ', $scope.currentUserPageNumber);
-				//return;
 			}
 		}
-		$scope.paginator($scope.currentUserPageNumber);
+		$scope.userPaginator($scope.currentUserPageNumber);
 	}
 	
-	$scope.paginator = function(pageNumber){
-		console.log('paginator');
+	$scope.scenePageTurner = function(bool){
+		if(bool === true){
+			if($scope.currentScenePageNumber < $scope.numberOfScenePages){
+				$scope.currentScenePageNumber++;
+			}
+		}else if(bool === false){
+			if($scope.currentScenePageNumber > 1){
+				$scope.currentScenePageNumber--;
+			}
+		}
+		$scope.scenePaginator($scope.currentScenePageNumber);
+	}	
+		
+	
+	$scope.userPaginator = function(pageNumber){
 		$scope.currentUserPageNumber = pageNumber;
 		$scope.numberOfUsers = $scope.users.length;
 		for(var j = 0; j < $scope.numberOfUsers; j++){
 			$scope.currentUserPage[j] = $scope.users[j];
 		}		
-		$scope.numberOfPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
+		$scope.numberOfUserPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
 		var firstUserIndex = (pageNumber - 1) * $scope.userPageSize;
-		$scope.currentUserPage.splice(0, firstUserIndex);
-		$('#pageNumber').html(pageNumber);
-		/*$('.pages').css({
-			'color': 'white',
-			'font-size': '20px', 
-			'text-decoration': 'none'
-		});		
-		$('.pages').click(function(){
-				$(this).css({
-					'color': 'lightgreen',
-					'font-size': '35px', 
-					'text-decoration': 'underline'
-				});
-			});	*/		
-		}	
+		$scope.currentUserPage.splice(0, firstUserIndex);	
+	}	
 	
+	$scope.scenePaginator = function(pageNumber){
+		console.log('pageNumber ', pageNumber);
+		$scope.currentScenePageNumber = pageNumber;
+		$scope.numberOfScenes = $scope.scenes.length;
+		for(var j = 0; j < $scope.numberOfScenes; j++){
+			$scope.currentScenePage[j] = $scope.scenes[j];
+		}		
+		$scope.numberOfScenePages = Math.ceil($scope.numberOfScenes / $scope.scenePageSize);
+		var firstSceneIndex = (pageNumber - 1) * $scope.scenePageSize;
+		console.log('firstSceneIndex ', firstSceneIndex)
+		$scope.currentScenePage.splice(0, firstSceneIndex);
+		console.log('currentScenePage ', $scope.currentScenePage.length);
+	}	
 
-	/** pagination **/
+
 	setTimeout(function(){
-		var pages = $('.pagination > li');	
-		$('#1').addClass('active');	
-		pages.click(function(){
-			pages.each(function(index){
-				
-		//if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){		
-				console.log('---------------------------------------------------------------------------------------');
-				console.log('each', $(this).attr('id'));
+		$scope.addPageEventListeners()
+	}, 500);
+
+
+$scope.addPageEventListeners = function(){
+	var pages = $('.pagination > li');	
+	$('#1').addClass('active');	
+	$('#1_scene').addClass('active');	
+	pages.click(function(){
+		pages.each(function(index){
+			if($(this).hasClass('li_user')){
 				if($(this).attr('id') == $scope.currentUserPageNumber){
 					$(this).addClass('active');					
 				}else{
 					$(this).removeClass('active');
 				}
-				
-		//}	
-				
-			});			
-			if($(this).attr('id') != 'prev' && $(this).attr('id') != 'next'){
-				pages.removeClass('active');
-			}		
-			$(this).addClass('active');
-			$('#prev').removeClass('active');
-			$('#next').removeClass('active');		
-		});		
-}, 500);
+			}else if($(this).hasClass('li_scene')){
+					if($(this).attr('id') == $scope.currentScenePageNumber + '_scene'){
+					$(this).addClass('active');					
+				}else{
+					$(this).removeClass('active');
+				}
+			}			
+		});			
+		$(this).addClass('active');
+		$('#prev').removeClass('active');
+		$('#next').removeClass('active');
+		$('#Sprev').removeClass('active');
+		$('#Snext').removeClass('active');						
+	});	
+}
 
 
 				
-	$scope.pageNavigator = function(){
-		for(var i = 0; i < $scope.numberOfPages; i++){
-			$scope.pagesArray[i] = i;
+	$scope.usersPageNavigator = function(){
+		for(var i = 0; i < $scope.numberOfUserPages; i++){
+			$scope.userPagesArray[i] = i;
 		}
 	}
+	
+	$scope.scenesPageNavigator = function(){
+		for(var i = 0; i < $scope.numberOfScenePages; i++){
+			$scope.scenePagesArray[i] = i;
+		}
+	}	
+		
+		/***********************************************************end pagination ******************************************************************/	
+	
+	
 	
 	$scope.getUsers = function(){
 		$http.get('/users').success(function(users){
@@ -119,8 +150,8 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 					$scope.userNames[users[i]._id] = users[i].google.name;
 				}
 			}
-			$scope.numberOfPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
-			$scope.pageNavigator();
+			$scope.numberOfUserPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
+			$scope.usersPageNavigator();
 		});
 	}
 	
@@ -138,18 +169,33 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		$('#scenesTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
 	}
 
-	$scope.showAllScenes = function(){
+	$scope.showAllScenes = function(bool){
 		//$scope.getUsers();
 		$http.get('/scenes')
 		.success(function(response){
 			console.log('getAllScenes ', response);
 			$scope.scenes = response;
+			$scope.numberOfScenes = response.length;
+			for(var j = 0; j < $scope.numberOfScenes; j++){
+				$scope.currentScenePage[j] = $scope.scenes[j];
+			}
+			console.log('numberOfScenes', $scope.numberOfScenes);
+			console.log('scenePageSize', $scope.scenePageSize);
+			$scope.numberOfScenePages = Math.ceil($scope.numberOfScenes / $scope.scenePageSize);
+			$scope.scenesPageNavigator();	
 		});	
-		$scope.showScenes = true;
-		$scope.showUsers = false;
-		$('#scenesTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
-		$('#usersTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});		
+		$scope.showScenes = bool;
+		$scope.showUsers = !bool;
+		if(bool === true){
+			$('#scenesTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+			$('#usersTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});	
+		}else{
+			$('#usersTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+			$('#scenesTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
+		}	
 	}	
+	$scope.showAllScenes();
+
 	
 	$scope.remove = function(id){
 		var deleteUser = confirm('Are you sure you want to delete this user');

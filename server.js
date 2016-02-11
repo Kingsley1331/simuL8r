@@ -65,7 +65,7 @@ app.post('/uploadProfile', function(req, res){
 	});		
     // Listen for 'finish' event and redirect to the main app
     req.busboy.on('finish', function(field){
-		res.redirect('/simuL8r');
+		res.redirect('/#/home');
         //res.json({ 
            // status: 'ok',
            // file: filename

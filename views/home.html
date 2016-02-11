@@ -2,13 +2,13 @@
 <!--<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show users</span><span ng-show='showUsers'>hide users</span></button><br></br>-->
 <table id="users" class='view-table'  ng-show='showUsers'>
 	<div ng-click='showAllUsers(true)' class='tab' id='usersTab'>users</div>
-	<div ng-click='showAllScenes()' class='tab' id='scenesTab'>scenes</div>	  
+	<div ng-click='showAllScenes(true)' class='tab' id='scenesTab'>scenes</div>	  
 	<tr>
 		<th>profile pic</th>
 		<th>username</th>
 		<th>email</th>
 		<th colspan='2'>
-            <div class="input-group">
+            <div class="input-group" id='userSearch'>
               <input ng-model='searchQuery' type="text" name="q" class="form-control" placeholder="Search...">
               <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
@@ -16,7 +16,7 @@
             </div>			
 		</th>		
 	</tr>
-	<tr ng-repeat="user in currentUserPage | filter:searchQuery | limitTo:userPageSize" ng-if='user.google.name != currentUser.google.name || user.local.username != currentUser.local.username'>
+	<tr ng-repeat="user in currentUserPage | filter:searchQuery | limitTo:userPageSize"'>
 		<td><img class='table-pic' img width='75' ng-src='{{user.local.profilePic || defaultPic}}'/></td>		
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
@@ -25,26 +25,17 @@
 	</tr>
 	<tr>
 		<td colspan='5'>
-			<!--<center>
-				<ul class='nav-list'>
-					<li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1)' class='pages'>{{pagesArray[page] + 1}}</li>		
-				</ul>
-			</center>-->
 			<center>
 				<div class="container">  
 				  <ul class="pagination">
-					  <li ng-click='pageTurner(false);' id='prev'><a href="#/home">«</a></li>
-					  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1);' id="{{pagesArray[page] + 1}}" ng-class="{{(pagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{pagesArray[page] + 1}}</a></li>
-					  <!--<li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1); trackPage(page);' class="{{(pagesArray[page] + 1==1)?'active':''}}"><a href="#/home">{{pagesArray[page] + 1}}</a></li>
-					  <li><a href="#/home">{{currentUserPageNumber}}</a></li>-->
-					  <li ng-click='pageTurner(true);' id='next'><a href="#/home">»</a></li>
+					  <li ng-click="userPageTurner(false, '{{currentUserPageNumber}}');" id='prev'><a href="#/home">«</a></li>
+					  <li ng-repeat='page in userPagesArray' ng-click='userPaginator(userPagesArray[page] + 1);' id="{{userPagesArray[page] + 1}}" class='li_user' ng-class="{{(userPagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{userPagesArray[page] + 1}}</a></li>
+					  <li ng-click='userPageTurner(true);' id='next'><a href="#/home">»</a></li>
 				  </ul>
 				</div>
 			</center>
 		</td>
 	</tr>
-	<!--i ng-click='pageTurner(false)' id='prev' class='pager'>prev</li>
-	<li ng-click='pageTurner(true)' id='next' class='pager'>next</li>-->
 </table>
 
 
@@ -53,7 +44,7 @@
 <table id="scenes" class='view-table' style="width:25%" ng-show='showScenes'>
 	<tr>
 		<th colspan='3'>
-			<div class="input-group" id='userSearch'>
+			<div class="input-group" id='sceneSearch'>
 			  <input ng-model='searchScene' type="text" name="q" class="form-control" placeholder="Search...">
 			  <span class="input-group-btn">
 				<button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
@@ -66,11 +57,27 @@
 		<th>name</th>	
 		<th>thumbnail</th>		
 	</tr>
-	<tr ng-repeat="scene in scenes | filter:{name:searchScene}">
+	<!--<tr ng-repeat="scene in scenes | filter:{name:searchScene}">-->
+	<tr ng-repeat="scene in currentScenePage | filter:{name:searchScene} | limitTo:scenePageSize">
 		<td>{{userNames[scene.userID]}}</td>
 		<td>{{scene.name}}</td>		
 		<td ng-click='getSelectedScene(scene._id)' ><img class='table-pic' width='75' ng-src='{{scene.imageUrl || defaultPic}}'/></td>	
 	</tr>
+	<tr>
+		<td colspan='5'>
+			<center>
+				<div class="container">  
+				  <ul class="pagination">
+					  <li ng-click="scenePageTurner(false);" id='Sprev'><a href="#/home">«</a></li>
+					  <li ng-repeat='page in scenePagesArray' ng-click='scenePaginator(scenePagesArray[page] + 1);'class='li_scene' id="{{scenePagesArray[page] + 1 +'_scene'}}" ng-class="{{(scenePagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{scenePagesArray[page] + 1}}</a></li>
+					  <li ng-click='scenePageTurner(true);' id='Snext'><a href="#/home">»</a></li>
+				  </ul>
+				</div>
+			</center>
+		</td>
+	</tr>	
+	
+	
 </table>
 
 <div class='view-table' id='selected_user' ng-show='showUser'>
