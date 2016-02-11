@@ -3,6 +3,71 @@ app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
 	$rootScope.loggedin = true;
 	$scope.userScenes = {};	
 	$scope.showUserScenes = true;	
+	
+		/***********************************************************start pagination ******************************************************************/
+	$scope.pageSize = 5;
+	$scope.currentPageNumber = 1;	
+	$scope.currentPage = [];
+	$scope.pagesArray = [];
+	$scope.numberOfScenes = 0;
+	$scope.numberOfPages = 1;	
+	
+	$scope.pageTurner = function(bool){
+		if(bool === true){
+			if($scope.currentPageNumber < $scope.numberOfPages){
+				$scope.currentPageNumber++;
+			}
+		}else if(bool === false){
+			if($scope.currentPageNumber > 1){
+				$scope.currentPageNumber--;
+			}
+		}
+		$scope.paginator($scope.currentPageNumber);
+	}
+		
+	$scope.paginator = function(pageNumber){
+		$scope.currentPageNumber = pageNumber;
+		$scope.numberOfScenes = $scope.userScenes.length;
+		for(var j = 0; j < $scope.numberOfScenes; j++){
+			$scope.currentPage[j] = $scope.userScenes[j];
+		}		
+		$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
+		var firstUserIndex = (pageNumber - 1) * $scope.pageSize;
+		$scope.currentPage.splice(0, firstUserIndex);	
+	}	
+		
+	setTimeout(function(){
+		$scope.addPageEventListeners()
+	}, 500);
+
+
+$scope.addPageEventListeners = function(){
+	var pages = $('.pagination > li');	
+	$('#1').addClass('active');	
+	pages.click(function(){
+		pages.each(function(index){
+			if($(this).hasClass('li_user')){
+				if($(this).attr('id') == $scope.currentPageNumber){
+					$(this).addClass('active');					
+				}else{
+					$(this).removeClass('active');
+				}
+			}		
+		});			
+		$(this).addClass('active');
+		$('#prev').removeClass('active');
+		$('#next').removeClass('active');		
+	});	
+}
+	$scope.pageNavigator = function(){
+		for(var i = 0; i < $scope.numberOfPages; i++){
+			$scope.pagesArray[i] = i;
+		}
+	}				
+		
+		/***********************************************************end pagination ******************************************************************/		
+	
+
 	$scope.remove = function(id){
 		var deleteUser = confirm('Are you sure you want to delete your account?');
 		//alert(deleteUser);
@@ -34,6 +99,14 @@ app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
 		.success(function(response){
 			console.log('userScenes ', response);
 			$scope.userScenes = response;
+			
+			$scope.numberOfScenes = response.length;
+			for(var j = 0; j < $scope.numberOfScenes; j++){
+				$scope.currentPage[j] = $scope.userScenes[j];
+			}			
+			
+			$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
+			$scope.pageNavigator();
 		});
 		//$scope.showUserScenes = !$scope.showUserScenes;
 	}	

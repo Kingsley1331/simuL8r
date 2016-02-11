@@ -45,11 +45,24 @@
 			<th width='170'>date created</th>
 			<th width='170'>last modified</th>
 		</tr>
-		<tr ng-repeat="scene in userScenes">
+		<tr ng-repeat="scene in currentPage | limitTo:pageSize">
 			<td>{{scene.name}}</td>
 			<td ng-click='getSelectedScene(scene._id)'><img class='table-pic' width='75' ng-src='{{scene.imageUrl}}'/></td>
 			<th></th>
 			<th></th>
+		</tr>
+		<tr>
+			<td colspan='5'>
+				<center>
+					<div class="container">  
+					  <ul class="pagination">
+						  <li ng-click="pageTurner(false);" id='prev'><a href="#/profile">«</a></li>
+						  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1);' id="{{pagesArray[page] + 1}}" class='li_user' ng-class="{{(pagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/profile">{{pagesArray[page] + 1}}</a></li>
+						  <li ng-click='pageTurner(true);' id='next'><a href="#/profile">»</a></li>
+					  </ul>
+					</div>
+				</center>
+			</td>
 		</tr>
 	</table>
 </div>

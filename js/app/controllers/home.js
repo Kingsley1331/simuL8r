@@ -30,6 +30,13 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.numberOfScenes = 0;
 	$scope.numberOfScenePages = 1;	
 	
+	$scope.selU_scenePageSize = 5;
+	$scope.selU_currentScenePageNumber = 1;	
+	$scope.selU_currentScenePage = [];
+	$scope.selU_scenePagesArray = [];
+	$scope.selU_numberOfScenes = 0;
+	$scope.selU_numberOfScenePages = 1;		
+	
 	$scope.userPageTurner = function(bool){
 		if(bool === true){
 			if($scope.currentUserPageNumber < $scope.numberOfUserPages){
@@ -56,6 +63,19 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		$scope.scenePaginator($scope.currentScenePageNumber);
 	}	
 		
+	$scope.selU_scenePageTurner = function(bool){
+		if(bool === true){
+			if($scope.selU_currentScenePageNumber < $scope.selU_numberOfScenePages){
+				$scope.selU_currentScenePageNumber++;
+			}
+		}else if(bool === false){
+			if($scope.selU_currentScenePageNumber > 1){
+				$scope.selU_currentScenePageNumber--;
+			}
+		}
+		$scope.selU_scenePaginator($scope.selU_currentScenePageNumber);
+	}
+
 	
 	$scope.userPaginator = function(pageNumber){
 		$scope.currentUserPageNumber = pageNumber;
@@ -69,7 +89,6 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	}	
 	
 	$scope.scenePaginator = function(pageNumber){
-		console.log('pageNumber ', pageNumber);
 		$scope.currentScenePageNumber = pageNumber;
 		$scope.numberOfScenes = $scope.scenes.length;
 		for(var j = 0; j < $scope.numberOfScenes; j++){
@@ -77,12 +96,20 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		}		
 		$scope.numberOfScenePages = Math.ceil($scope.numberOfScenes / $scope.scenePageSize);
 		var firstSceneIndex = (pageNumber - 1) * $scope.scenePageSize;
-		console.log('firstSceneIndex ', firstSceneIndex)
 		$scope.currentScenePage.splice(0, firstSceneIndex);
-		console.log('currentScenePage ', $scope.currentScenePage.length);
 	}	
 
-
+	$scope.selU_scenePaginator = function(pageNumber){
+		$scope.selU_currentScenePageNumber = pageNumber;
+		$scope.selU_numberOfScenes = $scope.selectedUserScenes.length;
+		for(var j = 0; j < $scope.selU_numberOfScenes; j++){
+			$scope.selU_currentScenePage[j] = $scope.selectedUserScenes[j];
+		}		
+		$scope.selU_numberOfScenePages = Math.ceil($scope.selU_numberOfScenes / $scope.selU_scenePageSize);
+		var firstSceneIndex = (pageNumber - 1) * $scope.selU_scenePageSize;
+		$scope.selU_currentScenePage.splice(0, firstSceneIndex);
+	}
+	
 	setTimeout(function(){
 		$scope.addPageEventListeners()
 	}, 500);
@@ -91,7 +118,8 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 $scope.addPageEventListeners = function(){
 	var pages = $('.pagination > li');	
 	$('#1').addClass('active');	
-	$('#1_scene').addClass('active');	
+	$('#1_scene').addClass('active');
+	$('#1selU_scene').addClass('active');	
 	pages.click(function(){
 		pages.each(function(index){
 			if($(this).hasClass('li_user')){
@@ -106,13 +134,21 @@ $scope.addPageEventListeners = function(){
 				}else{
 					$(this).removeClass('active');
 				}
+			}else if($(this).hasClass('selU_scene')){
+					if($(this).attr('id') == $scope.selU_currentScenePageNumber + 'selU_scene'){
+					$(this).addClass('active');					
+				}else{
+					$(this).removeClass('active');
+				}
 			}			
 		});			
 		$(this).addClass('active');
 		$('#prev').removeClass('active');
 		$('#next').removeClass('active');
 		$('#Sprev').removeClass('active');
-		$('#Snext').removeClass('active');						
+		$('#Snext').removeClass('active');	
+		$('#selU_prev').removeClass('active');
+		$('#selU_next').removeClass('active');		
 	});	
 }
 
@@ -129,6 +165,13 @@ $scope.addPageEventListeners = function(){
 			$scope.scenePagesArray[i] = i;
 		}
 	}	
+		
+	$scope.selU_scenesPageNavigator = function(){
+		for(var i = 0; i < $scope.selU_numberOfScenePages; i++){
+			$scope.selU_scenePagesArray[i] = i;
+		}
+		console.log('selU_scenePagesArray ', $scope.selU_scenePagesArray);
+	}			
 		
 		/***********************************************************end pagination ******************************************************************/	
 	
@@ -179,8 +222,6 @@ $scope.addPageEventListeners = function(){
 			for(var j = 0; j < $scope.numberOfScenes; j++){
 				$scope.currentScenePage[j] = $scope.scenes[j];
 			}
-			console.log('numberOfScenes', $scope.numberOfScenes);
-			console.log('scenePageSize', $scope.scenePageSize);
 			$scope.numberOfScenePages = Math.ceil($scope.numberOfScenes / $scope.scenePageSize);
 			$scope.scenesPageNavigator();	
 		});	
@@ -217,11 +258,6 @@ $scope.addPageEventListeners = function(){
 			//console.log('selected user', response);
 			console.log(response);
 			$scope.selectedUser = response;
-			
-			/*$scope.$watch('selectedUser', function(){
-				$scope.selectedUser = response;
-				//alert('selectedUser has changed');
-		   });*/
 			$scope.showUsers = false;
 			$scope.showUser = true;	
 			$scope.getSelectUserScenes(id);		
@@ -235,9 +271,20 @@ $scope.addPageEventListeners = function(){
 		.success(function(response){
 			console.log('getSelectUserScenes ', response);
 			$scope.selectedUserScenes = response;
+			
+			$scope.selU_numberOfScenes = response.length;
+			for(var j = 0; j < $scope.selU_numberOfScenes; j++){
+				$scope.selU_currentScenePage[j] = $scope.selectedUserScenes[j];
+			}
+			$scope.selU_numberOfScenePages = Math.ceil($scope.selU_numberOfScenes / $scope.selU_scenePageSize);
+			$scope.selU_scenesPageNavigator();	
+			setTimeout(function(){
+				$scope.addPageEventListeners()
+			}, 500);
 		});
 		$scope.showSelectedUserScenes = !$scope.showSelectedUserScenes;
 	}	
+	
 	
 	$scope.getSelectedScene = function(id){
 		clearAll(wallConfig);

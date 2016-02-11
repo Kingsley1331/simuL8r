@@ -28,7 +28,7 @@
 			<center>
 				<div class="container">  
 				  <ul class="pagination">
-					  <li ng-click="userPageTurner(false, '{{currentUserPageNumber}}');" id='prev'><a href="#/home">«</a></li>
+					  <li ng-click="userPageTurner(false);" id='prev'><a href="#/home">«</a></li>
 					  <li ng-repeat='page in userPagesArray' ng-click='userPaginator(userPagesArray[page] + 1);' id="{{userPagesArray[page] + 1}}" class='li_user' ng-class="{{(userPagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{userPagesArray[page] + 1}}</a></li>
 					  <li ng-click='userPageTurner(true);' id='next'><a href="#/home">»</a></li>
 				  </ul>
@@ -76,8 +76,6 @@
 			</center>
 		</td>
 	</tr>	
-	
-	
 </table>
 
 <div class='view-table' id='selected_user' ng-show='showUser'>
@@ -93,11 +91,24 @@
 			<th width='170'>date created</th>
 			<th width='170'>last modified</th>
 		</tr>
-		<tr ng-repeat="scene in selectedUserScenes">
+		<tr ng-repeat="scene in selU_currentScenePage | limitTo:selU_scenePageSize">
 			<td>{{scene.name}}</td>
 			<td ng-click='getSelectedScene(scene._id)'><img class='table-pic' width='100' ng-src='{{scene.imageUrl}}'/></td>
 			<th></th>
 			<th></th>
+		</tr>
+		<tr>
+			<td colspan='5'>
+				<center>
+					<div class="container">  
+					  <ul class="pagination">
+						  <li ng-click="selU_scenePageTurner(false);" id='selU_prev'><a href="#/home">«</a></li>
+						  <li ng-repeat='page in selU_scenePagesArray' ng-click='selU_scenePaginator(selU_scenePagesArray[page] + 1);'class='selU_scene' id="{{selU_scenePagesArray[page] + 1 +'selU_scene'}}" ng-class="{{(selU_scenePagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{selU_scenePagesArray[page] + 1}}</a></li>
+						  <li ng-click='selU_scenePageTurner(true);' id='selU_next'><a href="#/home">»</a></li>
+					  </ul>
+					</div>
+				</center>
+			</td>
 		</tr>
 	</table>
 </div>
