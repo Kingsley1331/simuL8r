@@ -4,6 +4,78 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	console.log('$rootScope.currentUser ', $rootScope.currentUser);
 	$rootScope.loggedin = true;
 	$rootScope.currentUser;
+	$scope.IDBscenes = [];
+	
+	
+		/***********************************************************start pagination ******************************************************************/
+	$scope.pageSize = 5;
+	$scope.currentPageNumber = 1;	
+	$scope.currentPage = [];
+	$scope.pagesArray = [];
+	$scope.numberOfScenes = 0;
+	$scope.numberOfPages = 1;	
+	
+	$scope.pageTurner = function(bool){
+		if(bool === true){
+			if($scope.currentPageNumber < $scope.numberOfPages){
+				$scope.currentPageNumber++;
+			}
+		}else if(bool === false){
+			if($scope.currentPageNumber > 1){
+				$scope.currentPageNumber--;
+			}
+		}
+		$scope.paginator($scope.currentPageNumber);
+
+	}
+		
+	$scope.paginator = function(pageNumber){
+		$scope.currentPageNumber = pageNumber;
+		$scope.numberOfScenes = $scope.scenes.length;
+		for(var j = 0; j < $scope.numberOfScenes; j++){
+			$scope.currentPage[j] = $scope.scenes[j];
+		}		
+		$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
+		var firstUserIndex = (pageNumber - 1) * $scope.pageSize;
+		$scope.currentPage.splice(0, firstUserIndex);	
+		console.log('currentPage', $scope.currentPage);
+	}	
+		
+	setTimeout(function(){
+		$scope.addPageEventListeners()
+	}, 500);
+
+
+$scope.addPageEventListeners = function(){
+	var pages = $('.pagination > li');	
+	$('#1').addClass('active');	
+	pages.click(function(){
+		pages.each(function(index){
+			if($(this).hasClass('li_user')){
+				if($(this).attr('id') == $scope.currentPageNumber){
+					$(this).addClass('active');					
+				}else{
+					$(this).removeClass('active');
+				}
+			}		
+		});			
+		$(this).addClass('active');
+		$('#prev').removeClass('active');
+		$('#next').removeClass('active');		
+	});	
+}
+	$scope.pageNavigator = function(){
+		for(var i = 0; i < $scope.numberOfPages; i++){
+			$scope.pagesArray[i] = i;
+		}
+		console.log('pagesArray ', $scope.pagesArray)
+	}				
+		
+		/***********************************************************end pagination ******************************************************************/		
+		
+	
+	
+	
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
 		if(user !== '0'){
@@ -143,6 +215,17 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		.success(function(response){
 			console.log('getAll ', response);
 			$scope.scenes = response;
+					
+			$scope.numberOfScenes = response.length;
+			for(var j = 0; j < $scope.numberOfScenes; j++){
+				$scope.currentPage[j] = $scope.scenes[j];
+			}
+			
+			$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
+			$scope.pageNavigator();	
+			setTimeout(function(){
+				$scope.addPageEventListeners()
+			}, 500);
 		});
 	}
 	
@@ -461,13 +544,17 @@ if (window.IDBTransaction){
 				objectStore.openCursor().onsuccess = function(event){
 					var cursor = event.target.result;
 					if (cursor){
-						console.log('Cursor data', cursor.value);
-						console.log('event: ', event);
+						//console.log('Cursor data', cursor.value);
+						//console.log('event: ', event);
 						scenes.push(cursor.value);
+						$scope.IDBscenes.push(cursor.value);
 						cursor.continue();
 					}else{
+						console.log('scenes ', scenes);
+						//$scope.IDBscenes = scenes;
+						console.log('IDBscenes ', $scope.IDBscenes);
 						for(var i = 0; i < scenes.length; i++){
-							appendTable(i);
+							//appendTable(i);
 						}
 						console.log('All entries displayed.');	
 					}
@@ -703,7 +790,6 @@ showOptions.addEventListener('click', showSettings);
 
 
 showColourPallet = function(){
-	console.log('###################################################################################################################showColourPallet');
 	$("#ChangeColour").spectrum({
 		color: "#ECC",
 		showInput: true,

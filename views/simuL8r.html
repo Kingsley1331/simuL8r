@@ -111,53 +111,6 @@
 			
 	  </li> 
       <li class = 'shapes' id = 'ChangeColour' ng-click='showColourPallet();' onmouseover = "hover(ChangeColour);" onmouseout = "leave(colourChange, ChangeColour);" onclick = " if(colourChange){shapeSelector(this.id); /*PickColor.style.visibility = 'invisible';*/}else{shapeSelector(this.id); colourChange = true; /*PickColor.style.visibility = 'visible';*/} gradient(ChangeColour); colours.lightblue[1] = true;"><img class = 'icons' src = 'images/colour-wheel.png'></img>
-	  <!--<Span id='PickColor'><input type='text' id="full"></Span>
-	  <li id = 'PickColor'>
-	  <div class="dropdown">
-		 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-			<li>
-				<table id = 'board'>
-					<tr>
-						<td><div id = 'transparent' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.transparent[1] = true;'></div></td>
-						<td><div id = 'blue' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.blue[1] = true;'></div></td>
-						<td><div id = 'red' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.red[1] = true;'></div></td>
-						<td><div id = 'yellow' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.yellow[1] = true;'></div></td>
-					</tr>
-					<tr>
-						<td><div id = 'green' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.green[1] = true;'></div></td>
-						<td><div id = 'white' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.white[1] = true;'></div></td>
-						<td><div id = 'black' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.black[1] = true;'></div></td>
-						<td><div id = 'lightblue' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.lightblue[1] = true;'></div></td>
-					</tr>
-					<tr>
-						<td><div id = 'lightgreen' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.lightgreen[1] = true;'></div></td>
-						<td><div id = 'orange' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.orange[1] = true;'></div></td>
-						<td><div id = 'purple' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.purple[1] = true;'></div></td>
-						<td><div id = 'violet' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.violet[1] = true;'></div></td>
-					</tr>
-					<tr>
-						<td><div id = 'beige' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.beige[1] = true;'></div></td>
-						<td><div id = 'aqua' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.aqua[1] = true;'></div></td>
-						<td><div id = 'grey' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.grey[1] = true;'></div></td>
-						<td><div id = 'pink' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.pink[1] = true;'></div></td>
-					</tr>
-				</table>
-			</li>
-		 </ul>
-		 </div>
-	 </li>-->
-	 
-<!--	 
-<div class="dropdown">
- <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    Dropdown
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-    <li><a href="#">Action</a></li>
-  </ul>
-</div>-->
-
 
 	 </li>
 	 
@@ -170,7 +123,6 @@
 	 <li class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector(this.id);}else{shapeSelector(this.id); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></li> 
      <li class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector(this.id);}else{shapeSelector(this.id); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></li> 	  
    
-   <!--<li><div id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </div></li>-->
    <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable();'> {{scenesVisibility}} </button></li>
    <li><button type='button' class='btn btn-info'  id = 'showOptions'> show Options </button></li>
    <!--<li><div id = 'showOptions'> show Options </div></li>-->
@@ -183,32 +135,81 @@
 </nav>
 
 
-
-
-
-
-<table id='sceneTable' ng-show='showSceneTable'>
+<table class='view-table' id='sceneTable' ng-show='showSceneTable'>
 	<tr>
 		<th>Current User: {{currentUser.google.name || currentUser.local.username}}</th>
-		<th><button><a href='/#home'>home</a></button></th>
+		<th><button type="button" class="btn btn-success"><a href='/#home'>home</a></button></th>
 	</tr>
 	<tr>
-		<td><button ng-click='getAll();'>get all</button></td>
-		<td><button ng-click='removeAllScenes();'>remove all</button></td>
-		<td><button ng-click='create();'>save scene</button></td>
-		<td><button ng-click='newScene();'>new scene</button></td>
-		<td><button id='browserSave' class='browser'>save</button></td>
-		<td><button id='webData' class='browser'>display</button></td>
-		<td><button id='removeAllScenes' class='browser'>remove all</button></td>
+		<td><button type="button" class="btn btn-success" ng-click='getAll();'>get all</button></td>
+		<td><button type="button" class="btn btn-success" ng-click='removeAllScenes();'>remove all</button></td>
+		<td><button type="button" class="btn btn-success" ng-click='create();'>save scene</button></td>
+		<td><button type="button" class="btn btn-success" ng-click='newScene();'>new scene</button></td>
+		<td><button type="button" class="btn btn-success" id='browserSave' class='browser'>save</button></td>
+		<td><button type="button" class="btn btn-success" id='webData' class='browser'>display</button></td>
+		<td><button type="button" class="btn btn-success" id='removeAllScenes' class='browser'>remove all</button></td>
 	</tr>
-	<tr ng-repeat='scene in scenes'>
+	<tr ng-repeat='scene in currentPage | limitTo:pageSize'>
 		<td>{{scene.name}}</td>
-		<!--<td ng-click='retrieve(scene._id);'><img class='thumbnail' ng-src='images/thumbnails/{{scene._id}}.png' id = 'thumbnail'/></td>-->
-		<td ng-click='retrieve(scene._id);'><img class='thumbnail' ng-src='{{scene.imageUrl}}' id = 'thumbnail'/></td>
-		<td><button ng-click='updateScene(scene._id);'>update</button></td>
-		<td><button ng-click='remove(scene._id);'>delete</button></td>
+		<td ng-click='retrieve(scene._id);'><img class='table-pic' ng-src='{{scene.imageUrl}}' id = 'thumbnail'/></td>
+		<td><button type="button" class="btn btn-info" ng-click='updateScene(scene._id);'>update</button></td>
+		<td><button type="button" class="btn btn-danger" ng-click='remove(scene._id);'>delete</button></td>
 	</tr>
+	<tr>
+		<td colspan='5'>
+			<center>
+				<div class="container">  
+				  <ul class="pagination">
+					  <li ng-click="pageTurner(false);" id='prev'><a href="#/simuL8r">«</a></li>
+					  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1);' id="{{pagesArray[page] + 1}}" class='li_user' ng-class="{{(pagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/simuL8r">{{pagesArray[page] + 1}}</a></li>
+					  <li ng-click='pageTurner(true);' id='next'><a href="#/simuL8r">»</a></li>
+				  </ul>
+				</div>
+			</center>
+		</td>
+	</tr>	
 </table>
+
+
+
+
+<!--<table class='view-table' id='indexedDBTable' ng-show='showSceneTable'>-->
+<!--<table class='view-table' id='sceneTable' ng-show='showSceneTable'>
+	<tr>
+		<th>Current User: {{currentUser.google.name || currentUser.local.username}}</th>
+		<th><button type="button" class="btn btn-success"><a href='/#home'>home</a></button></th>
+	</tr>
+	<tr>
+		<td><button type="button" class="btn btn-success" id='browserSave' class='browser'>save {{IDBscenes[0].name}}</button></td>
+		<td><button type="button" class="btn btn-success" id='webData' class='browser'>display</button></td>
+		<td><button type="button" class="btn btn-success" id='removeAllScenes' class='browser'>remove all</button></td>
+	</tr>-->
+	<!--<tr ng-repeat='scene in IDBcurrentPage | limitTo:pageSize'>-->
+	<!--<tr ng-repeat='scene in IDBscenes'>scenes
+		<td>{{scene.name}}</td>
+
+		<td ng-click='retrieve(scene._id);'><img class='table-pic' ng-src='{{scene.imageUrl}}' id = 'thumbnail'/></td>
+		<td><button type="button" class="btn btn-info" ng-click='updateScene(scene._id);'>update</button></td>
+		<td><button type="button" class="btn btn-danger" ng-click='remove(scene._id);'>delete</button></td>
+	</tr>
+	<tr>
+		<td colspan='5'>
+			<center>
+				<div class="container">  
+				  <ul class="pagination">
+					  <li ng-click="pageTurner(false);" id='prev'><a href="#/simuL8r">«</a></li>
+					  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1);' id="{{pagesArray[page] + 1}}" class='li_user' ng-class="{{(pagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/simuL8r">{{pagesArray[page] + 1}}</a></li>
+					  <li ng-click='pageTurner(true);' id='next'><a href="#/simuL8r">»</a></li>
+				  </ul>
+				</div>
+			</center>
+		</td>
+	</tr>	
+</table>-->
+
+
+
+
 <canvas id = 'canvas' onclick = 'shapeSelect()'></canvas>
 
 

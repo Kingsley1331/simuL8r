@@ -341,21 +341,21 @@ canvas {
 	left: 50px;
 }
 
-#sceneTable{
+#sceneTable, #indexedDBTable{
 	/*color: white;*/
 	position:absolute;
 	left: 230px;
 	top: 50px;
 	z-index: 3;
-	background-color:lightblue;
-	padding: 10px;
+	/*background-color:lightblue;*/
+	/*padding: 10px;
 	border-radius: 5px;
-	border: 1px solid black;
+	border: 1px solid black;*/
 	
 }
 
 #thumbnail, #sceneThumbnail{
-	width: 75px;
+	width: 120px;
 	border-radius: 5px;
 }
 #thumbnail{
