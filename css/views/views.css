@@ -351,6 +351,10 @@ canvas {
 	/*padding: 10px;
 	border-radius: 5px;
 	border: 1px solid black;*/
+}
+
+#indexedDBTable{
+	top: 550px;	
 	
 }
 

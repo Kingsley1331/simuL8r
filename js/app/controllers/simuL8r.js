@@ -383,8 +383,9 @@ $scope.addPageEventListeners = function(){
 	
 	/************************************************** indexedDB ******************************************************************/
 	
-(function indexedDB_func() {
+//(function indexedDB_func() {
 	console.log('indexedDB');
+	$scope.scenery = [{name:'one'},{name:'two'},{name:'three'}];
 	var scenes = [];
 	var display = true;
 	var sceneTable = document.getElementById('sceneTable');
@@ -451,17 +452,17 @@ if (window.IDBTransaction){
 		console.log('Object store created');
 	};
 
-	var browserSave = document.getElementById('browserSave');
-	browserSave.addEventListener('click', addData , false);
+	/*var browserSave = document.getElementById('browserSave');
+	//browserSave.addEventListener('click', addData , false);
 	
 	var webData = document.getElementById('webData');
 	webData.addEventListener('click', displayData , false);
 	
 	var removeAllScenes = document.getElementById('removeAllScenes');
-	removeAllScenes.addEventListener('click', removeAll , false);
+	removeAllScenes.addEventListener('click', removeAll , false);*/
 	
 	
-	function addData(){		
+	 $scope.addData = function(){		
 		// open a read/write db transaction, ready for adding the data
 		//var transaction = db.transaction(["scenes"], "readwrite");
 		 var transaction = db.transaction(["scenes"], "readwrite");
@@ -484,7 +485,8 @@ if (window.IDBTransaction){
 		var objectStore = transaction.objectStore("scenes");
 		var scene = {};
 		
-		scene = loadDatabase(scene);
+		//scene = loadDatabase(scene);
+		scene = $scope.loadDatabase();
 		// add our newItem object to the object store
 		scene.userID = Math.floor(10000000000 * Math.random());
 		var name = prompt('please choose a name for this scene', 'untitled');
@@ -496,7 +498,10 @@ if (window.IDBTransaction){
 		objectStoreRequest.onsuccess = function(event) {
 			// report the success of our new item going into the database
 			console.log('New scene added to database');		
-			appendTable(null, scene.userID, scene, scene.imgURL);			
+			//appendTable(null, scene.userID, scene, scene.imgURL);	
+			setTimeout(function(){
+				displayData();
+			}, 300);			
 		};
 	}	
 	
@@ -508,7 +513,9 @@ if (window.IDBTransaction){
 						shapes:{square: squareArray, circle: circleArray, triangle: triangleArray,.....}
 			}	
 	**/
-	function loadDatabase(scene){
+	//function loadDatabase(scene){
+	$scope.loadDatabase = function(){
+		var scene = {};
 		scene.shapes = {};	
 		for(key in shapeSelection.shapes){ // for each shape category
 				scene.shapes[key] = []; // this line initialises the shapeArray 
@@ -547,7 +554,7 @@ if (window.IDBTransaction){
 						//console.log('Cursor data', cursor.value);
 						//console.log('event: ', event);
 						scenes.push(cursor.value);
-						$scope.IDBscenes.push(cursor.value);
+						//$scope.IDBscenes.push(cursor.value);
 						cursor.continue();
 					}else{
 						console.log('scenes ', scenes);
@@ -556,6 +563,8 @@ if (window.IDBTransaction){
 						for(var i = 0; i < scenes.length; i++){
 							//appendTable(i);
 						}
+						$scope.IDBscenes = scenes;/*[{name:'one'},{name:'two'},{name:'three'}];*/
+						console.log('IDBscenes ', $scope.IDBscenes);
 						console.log('All entries displayed.');	
 					}
 				};
@@ -563,6 +572,8 @@ if (window.IDBTransaction){
 			display = false;
 		}
 	}
+	
+	displayData();
 	
 	function appendTable(i, id, scene, imgURL){
 		if(i !== null){
@@ -606,13 +617,13 @@ if (window.IDBTransaction){
 		
 		
 		
-		deleteButton.addEventListener('click', function(){
+		/*deleteButton.addEventListener('click', function(){
 			deleteData(userID);
 		}, false);
 		
 		updateButton.addEventListener('click', function(){
 			editRecord(userID);
-		}, false);
+		}, false);*/
 		
 		displayData.appendChild(sceneThumb);
 	
@@ -646,8 +657,21 @@ if (window.IDBTransaction){
 		sceneTable.appendChild(tr);
 	}
 
+      $scope.retrieveIDBscene = function(scene){
+			clearAll(wallConfig);						
+				currentScene = loadShapes_idb(scene);
+				if(scene.shapes){
+					shifter(shapeSelection.canvas, scene.canvas, currentScene.shapes);
+				}
+				currentScene = loadShapes_idb(scene);
+				shifter(shapeSelection.canvas, scene.canvas, currentScene.shapes);				
+			wallMaker();
+	   }
+	
+	
+	
 
-	function deleteData(id){
+	$scope.deleteData = function(id){
 		var request = indexedDB.open('test');
 		var deleteScene = confirm('Are you sure you want to delete this scene?');
 		if(deleteScene){
@@ -668,11 +692,12 @@ if (window.IDBTransaction){
 		}
 	}
 	
-	function editRecord(key){
+	 $scope.editRecord = function(key){
 		var request = indexedDB.open('test');
 		
 		var scene = {};
-		scene = loadDatabase(scene);	
+		//scene = loadDatabase(scene);
+		scene = $scope.loadDatabase();
 		request.onsuccess = function(e){
 			var idb = e.target.result;
 			var objectStore = idb.transaction('scenes', IDBTransaction.READ_WRITE).objectStore('scenes');
@@ -712,7 +737,7 @@ if (window.IDBTransaction){
 		};
 	}
 	
-	function removeAll(){
+	 $scope.IDB_removeAll = function(){
 		var deleteScene = confirm('Are you sure you want to delete all scenes?');
 		if(deleteScene){
 			var request = indexedDB.deleteDatabase('test');
@@ -720,7 +745,7 @@ if (window.IDBTransaction){
 			request.onerror = function() { console.log('drop failed') };
 		}
 	}
-})();
+//})();
 
 /******************************************* settings *********************************************/
 var velocity_x = document.getElementById('vx');
