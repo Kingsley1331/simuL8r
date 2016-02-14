@@ -1,6 +1,7 @@
 <div class='view-table' id='profileUser'>
 	<span id='profilename' class='selectedUserDetails selectedUserUsername'>{{currentUser.local.username || currentUser.google.name}}</span><br>
-	<img class='profile-align' width='300' ng-src='{{currentUser.local.profilePic}}'id='profilePagePic'/><br><br>
+	<!--<img class='profile-align' width='300' ng-src='{{currentUser.local.profilePic}}'id='profilePagePic'/><br><br>-->
+	<img class='profile-align' width='300' ng-src='http://s3.amazonaws.com/simassets/images/profile/569bc218e786436c2fe06df6.jpeg' id='profilePagePic'/><br><br>
 	<button id='profile-pic-btn' class='btn btn-info profile-align disabled'>change profile pic</button>
 	<table id='userProfileTable'>
 		<tr>
