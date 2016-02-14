@@ -5,6 +5,11 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$rootScope.loggedin = true;
 	$rootScope.currentUser;
 	$scope.IDBscenes = [];
+	$scope.showRemote = true;
+	$scope.showLocal = false;
+	/*$scope.selectRemote = function(){
+		if(){}
+	}*/
 	
 	
 		/***********************************************************start pagination ******************************************************************/
@@ -14,6 +19,14 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.pagesArray = [];
 	$scope.numberOfScenes = 0;
 	$scope.numberOfPages = 1;	
+
+	$scope.pageSize_i = 5;
+	$scope.currentPageNumber_i = 1;	
+	$scope.currentPage_i = [];
+	$scope.pagesArray_i = [];
+	$scope.numberOfScenes_i = 0;
+	$scope.numberOfPages_i = 1;		
+	
 	
 	$scope.pageTurner = function(bool){
 		if(bool === true){
@@ -26,9 +39,22 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 			}
 		}
 		$scope.paginator($scope.currentPageNumber);
-
 	}
-		
+	
+	$scope.pageTurner_i = function(bool){
+		if(bool === true){
+			if($scope.currentPageNumber_i < $scope.numberOfPages_i){
+				$scope.currentPageNumber_i++;
+			}
+		}else if(bool === false){
+			if($scope.currentPageNumber_i > 1){
+				$scope.currentPageNumber_i--;
+			}
+		}
+		$scope.paginator_i($scope.currentPageNumber_i);
+		console.log('currentPageNumber_i ', $scope.currentPageNumber_i);
+	}
+	
 	$scope.paginator = function(pageNumber){
 		$scope.currentPageNumber = pageNumber;
 		$scope.numberOfScenes = $scope.scenes.length;
@@ -39,6 +65,22 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		var firstUserIndex = (pageNumber - 1) * $scope.pageSize;
 		$scope.currentPage.splice(0, firstUserIndex);	
 		console.log('currentPage', $scope.currentPage);
+	}		
+	
+		
+	$scope.paginator_i = function(pageNumber){
+		$scope.currentPageNumber_i = pageNumber;
+		$scope.numberOfScenes_i = $scope.IDBscenes.length;
+		for(var j = 0; j < $scope.numberOfScenes_i; j++){
+			$scope.currentPage_i[j] = $scope.IDBscenes[j];
+		}		
+		$scope.numberOfPages_i = Math.ceil($scope.numberOfScenes_i / $scope.pageSize_i);
+		var firstUserIndex = (pageNumber - 1) * $scope.pageSize_i;
+		$scope.currentPage_i.splice(0, firstUserIndex);	
+		/*console.log('numberOfScenes_i', $scope.numberOfScenes_i);
+		console.log('pageSize_i', $scope.pageSize_i);
+		console.log('currentPage_i', $scope.currentPage_i);
+		console.log('numberOfPages_i', $scope.numberOfPages_i);*/
 	}	
 		
 	setTimeout(function(){
@@ -49,6 +91,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 $scope.addPageEventListeners = function(){
 	var pages = $('.pagination > li');	
 	$('#1').addClass('active');	
+	$('#1_i').addClass('active');	
 	pages.click(function(){
 		pages.each(function(index){
 			if($(this).hasClass('li_user')){
@@ -57,24 +100,75 @@ $scope.addPageEventListeners = function(){
 				}else{
 					$(this).removeClass('active');
 				}
-			}		
+			}else if($(this).hasClass('li_IDBscene')){
+					if($(this).attr('id') == $scope.currentPageNumber_i + '_i'){
+					$(this).addClass('active');					
+				}else{
+					$(this).removeClass('active');
+				}
+			}			
 		});			
 		$(this).addClass('active');
 		$('#prev').removeClass('active');
-		$('#next').removeClass('active');		
+		$('#next').removeClass('active');
+		$('#prev_i').removeClass('active');
+		$('#next_i').removeClass('active');		
 	});	
 }
 	$scope.pageNavigator = function(){
 		for(var i = 0; i < $scope.numberOfPages; i++){
 			$scope.pagesArray[i] = i;
 		}
-		console.log('pagesArray ', $scope.pagesArray)
+		console.log('pagesArray ', $scope.pagesArray);
+		console.log('numberOfPages ', $scope.numberOfPages);
 	}				
+		
+	$scope.pageNavigator_i = function(){
+		for(var i = 0; i < $scope.numberOfPages_i; i++){
+			$scope.pagesArray_i[i] = i;
+		}
+		console.log('pagesArray_i ', $scope.pagesArray_i);
+		console.log('************************************************************************numberOfPages_i2 ', $scope.numberOfPages_i);
+	}		
+		
 		
 		/***********************************************************end pagination ******************************************************************/		
 		
+		/*********************************************************** start tabs ******************************************************************/		
+	var remoteTab = $('#remote');
+	var localTab = $('#local');
+	/*** put this into a service ***/
+	function toggleTabs(tab){
+		tab.mouseenter(function(){
+			tab.css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+		});	
+		tab.mouseleave(function(){
+			if(tab == remoteTab){
+				if(!$scope.showRemote){
+					tab.css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
+				}
+			}else if(tab == localTab){
+				if(!$scope.showLocal){
+					tab.css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
+				}				
+			}
+		});			
+	}
 	
+	toggleTabs(remoteTab);
+	toggleTabs(localTab);	
+
+	$scope.setTabs = function(tab){
+		if(tab === 'remote'){
+			$('#remote').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+			$('#local').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});	
+		}else if(tab === 'local'){
+			$('#local').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
+			$('#remote').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
+		}	
+	}
 	
+		/*********************************************************** end tabs ******************************************************************/		
 	
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
@@ -209,7 +303,7 @@ $scope.addPageEventListeners = function(){
 		$scope.getAll();
 	}
 		
-	$scope.getAll = function(){
+	$scope.getAll = function(bool){
 		$scope.simulation = shapeSelection;
 		$http.get('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
@@ -226,7 +320,7 @@ $scope.addPageEventListeners = function(){
 			setTimeout(function(){
 				$scope.addPageEventListeners()
 			}, 500);
-		});
+		});	
 	}
 	
 	$scope.removeAllScenes = function(){
@@ -310,7 +404,7 @@ $scope.addPageEventListeners = function(){
 	$scope.loadSelectedScene = function(){
 		var searchObject = $location.search();
 		id = searchObject.id;
-		console.log('loadSelectedScene id', id);
+		//console.log('loadSelectedScene id', id);
 		if(id){
 			$scope.currentScene = id;
 			$scope.select(id);
@@ -383,9 +477,7 @@ $scope.addPageEventListeners = function(){
 	
 	/************************************************** indexedDB ******************************************************************/
 	
-//(function indexedDB_func() {
 	console.log('indexedDB');
-	$scope.scenery = [{name:'one'},{name:'two'},{name:'three'}];
 	var scenes = [];
 	var display = true;
 	var sceneTable = document.getElementById('sceneTable');
@@ -420,8 +512,8 @@ if (window.IDBTransaction){
 		// store the result of opening the database in the db variable. This is used a lot below
 		db = DBOpenRequest.result;
 		
-		// Run the displayData() function to populate the task list with all the to-do list data already in the IDB
-		//displayData();
+		// Run the getAll_i() function to populate the task list with all the to-do list data already in the IDB
+		//getAll_i();
 	};
 	
 	
@@ -469,8 +561,8 @@ if (window.IDBTransaction){
 		// report on the success of opening the transaction
 		 transaction.oncomplete = function(){
 			console.log('Transaction completed: database modification finished');
-			// update the display of data to show the newly added item, by running displayData() again.
-			//displayData(); 
+			// update the display of data to show the newly added item, by running getAll_i() again.
+			//getAll_i(); 
 		};
 
 		transaction.onerror = function(){
@@ -500,7 +592,7 @@ if (window.IDBTransaction){
 			console.log('New scene added to database');		
 			//appendTable(null, scene.userID, scene, scene.imgURL);	
 			setTimeout(function(){
-				displayData();
+				$scope.getAll_i();
 			}, 300);			
 		};
 	}	
@@ -535,10 +627,10 @@ if (window.IDBTransaction){
 	}
 
 	
-	function displayData(){
+	 $scope.getAll_i = function(bool){
 		if(display){
-			console.log('sceneTable.children.length', sceneTable.children.length);
-			console.log('sceneTable.childNodes.length', sceneTable.childNodes.length);
+			//console.log('sceneTable.children.length', sceneTable.children.length);
+			//console.log('sceneTable.childNodes.length', sceneTable.childNodes.length);
 			for(var i = 3; i < sceneTable.children.length; i++){
 				sceneTable.removeChild(sceneTable.childNodes[i]);
 			}			
@@ -563,17 +655,28 @@ if (window.IDBTransaction){
 						for(var i = 0; i < scenes.length; i++){
 							//appendTable(i);
 						}
-						$scope.IDBscenes = scenes;/*[{name:'one'},{name:'two'},{name:'three'}];*/
+						$scope.IDBscenes = scenes;
 						console.log('IDBscenes ', $scope.IDBscenes);
-						console.log('All entries displayed.');	
+						console.log('All entries displayed.');
+						
+						$scope.numberOfScenes_i = $scope.IDBscenes.length;
+						for(var j = 0; j < $scope.numberOfScenes_i; j++){
+							$scope.currentPage_i[j] = $scope.IDBscenes[j];
+						}
+						
+						$scope.numberOfPages_i = Math.ceil($scope.numberOfScenes_i / $scope.pageSize_i);
+						$scope.pageNavigator_i();
+						setTimeout(function(){
+							$scope.addPageEventListeners()
+						}, 500);
 					}
-				};
+				};	
 			}
 			display = false;
 		}
 	}
 	
-	displayData();
+	//$scope.getAll_i();
 	
 	function appendTable(i, id, scene, imgURL){
 		if(i !== null){
@@ -745,7 +848,7 @@ if (window.IDBTransaction){
 			request.onerror = function() { console.log('drop failed') };
 		}
 	}
-//})();
+
 
 /******************************************* settings *********************************************/
 var velocity_x = document.getElementById('vx');

@@ -200,7 +200,6 @@ $scope.addPageEventListeners = function(){
 	
 	$scope.getUsers();
 		
-	$('#usersTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
 	$scope.showAllUsers = function(){
 		$scope.showSelectedUserScenes = false;
 		console.log('getting users');
@@ -295,9 +294,10 @@ $scope.addPageEventListeners = function(){
 		location.replace('#/simuL8r?id=' + id);		
 	}
 	
+	
 	var usersTab = $('#usersTab');
 	var scenesTab = $('#scenesTab');
-	
+	/*** put this into a service ***/
 	function toggleTabs(tab){
 		tab.mouseenter(function(){
 			tab.css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
