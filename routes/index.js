@@ -5,6 +5,7 @@ var Users = require('./../models/users');
 var fs = require('fs');
 var busboy = require('connect-busboy');
 
+
 function deleteFile(path){
 	fs.unlink(path, function(err){
 	   if(err){
@@ -48,9 +49,19 @@ function decodeBase64Image(dataString) {
   response.data = new Buffer(matches[2], 'base64');
   return response;
 }
+/*
+var S3FS = require('s3fs');
+var multiparty = require('connect-multiparty');
+var multipartyMiddleware = multiparty();
+var s3fsImpl = new S3FS('simuL8rTestBucket', {
+	accessKeyId: 'AKIAITLZEFHI35W4CQ7Q',
+	secretAccessKey: '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'
+});
 
+s3fsImpl.create();*/
 
 module.exports = function(passport){
+	//router.use(multipartyMiddleware);
 	
 	router.get('/users', function(req, res){ //server listens for get request from client
 		//var userID = req.params.userID;
@@ -261,7 +272,7 @@ module.exports = function(passport){
 			}
 		});*/
 	});
-	
+	/*
 	router.post('/uploadProfile', function(req, res){
 		var path = '/images/profiles/',
 			filename = '';
@@ -277,7 +288,22 @@ module.exports = function(passport){
 				file: filename
 			});
 		});
-	});
+	});*/
+
+	/*
+	router.post('/testupload', function(req, res){
+		var file = req.files.file;
+		console.log('req.files ', req.files);
+		var stream = fs.createReadStream(file.path);
+		return s3fsImpl.writeFile(file.originalFilename, stream).then(function(){
+			fs.unlink(file.path, function(err){
+				if(err){
+					console.error(err);
+				}
+			})
+			res.redirect('/');
+		});
+	});*/
 	
 	/* Handle Registration POST */
 	router.post('/signup', passport.authenticate('signup', {

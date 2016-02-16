@@ -24,6 +24,31 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
   extended: true
 }));
 
+var S3FS = require('s3fs');
+var multiparty = require('connect-multiparty');
+var multipartyMiddleware = multiparty();
+var s3fsImpl = new S3FS('simuL8rTestBucket2', {
+	accessKeyId: 'AKIAITLZEFHI35W4CQ7Q',
+	secretAccessKey: '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'
+});
+
+s3fsImpl.create();
+
+//app.use(multipartyMiddleware);
+
+app.post('/testupload', function(req, res){
+	var file = req.files.file;
+	var stream = fs.createReadStream(file.path);
+	return s3fsImpl.writeFile(file.originalFilename, stream).then(function(){
+		fs.unlink(file.path, function(err){
+			if(err){
+				console.error(err);
+			}
+		})
+		res.redirect('/');
+	});
+});
+
 app.get('/',function(req,res){
       res.sendfile("main.html");
 });
@@ -38,11 +63,12 @@ var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', startServer);
 
+/*
 app.post('/uploadProfile', function(req, res){
 	var path = './images/profiles/',
 		filename = '';
 	// Upload file
-	req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {	
+	req.busboy.on('field', function(key, value, keyTruncated, valueTruncated){	
 		req.busboy.on('file', function(field, file, name, encoding, mimetype){
 			var pos = mimetype.indexOf('/');
 			mimetype = '.' + mimetype.slice(pos + 1);
@@ -71,7 +97,76 @@ app.post('/uploadProfile', function(req, res){
            // file: filename
        // });
     });
+});*/
+
+
+
+
+app.post('/uploadProfile', function(req, res){
+	var path = './images/profiles/',
+		filename = '';
+		value1 = '';
+		mimetype1 = '';
+		
+	// Upload file
+	req.busboy.on('field', function(key, value, keyTruncated, valueTruncated){	
+		req.busboy.on('file', function(field, file, name, encoding, mimetype){
+			var pos = mimetype.indexOf('/');
+			mimetype = '.' + mimetype.slice(pos + 1);
+			console.log('key: ', key, 'value: ', value);
+			value1 = value;
+			mimetype1 = mimetype;
+			
+			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
+				User.findById(value, function(err, user){// value is the user id that was passed into the form
+				if (err){ 
+					console.log('Error#############',err);
+				}
+				user.local.profilePic = 'images/profiles/' + value + mimetype;
+				
+				user.save(function(err) {
+				if (err){
+					console.log(err);
+				};
+					//res.send(user);
+				});
+			});
+		});	
+	});		
+    // Listen for 'finish' event and redirect to the main app
+    req.busboy.on('finish', function(field){
+		
+		res.redirect('/#/home');
+		
+		console.log('path', path);
+		console.log('value1', value1);
+		console.log('mimetype1', mimetype1);
+		
+		var stream = fs.createReadStream(path + value1 + mimetype1);
+		return s3fsImpl.writeFile(value1 + mimetype1, stream).then(function(){
+			fs.unlink(path + value1 + mimetype1, function(err){
+				if(err){
+					console.error(err);
+				}
+			})
+			res.redirect('/');
+		});	
+		
+		
+		
+		
+		
+        //res.json({ 
+           // status: 'ok',
+           // file: filename
+       // });
+    });
 });
+
+
+
+
+
 
 // Configuring Passport
 // TODO - Why Do we need this key ?
