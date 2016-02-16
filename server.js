@@ -131,7 +131,8 @@ app.post('/uploadProfile', function(req, res){
 				if (err){ 
 					console.log('Error#############',err);
 				}
-				user.local.profilePic = 'images/profiles/' + value + mimetype;
+				//user.local.profilePic = 'images/profiles/' + value + mimetype;
+				user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				
 				user.save(function(err) {
 				if (err){
