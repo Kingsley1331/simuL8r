@@ -24,13 +24,17 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
   extended: true
 }));
 
-
+/*
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;*/
+
+var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
+var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
 
-console.log('AWS_ACCESS_KEY ', AWS_ACCESS_KEY);
-console.log('AWS_SECRET_KEY ', AWS_SECRET_KEY);
+console.log('AWS_ACCESS_KEY_ID ', AWS_ACCESS_KEY_ID);
+console.log('AWS_SECRET_KEY ', AWS_SECRET_ACCESS_KEY);
 console.log('S3_BUCKET ', S3_BUCKET);
 
 var S3FS = require('s3fs');
