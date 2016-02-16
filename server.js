@@ -24,18 +24,27 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
   extended: true
 }));
 
+
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;
+
+console.log('AWS_ACCESS_KEY ', AWS_ACCESS_KEY);
+console.log('AWS_SECRET_KEY ', AWS_SECRET_KEY);
+console.log('S3_BUCKET ', S3_BUCKET);
+
 var S3FS = require('s3fs');
 var multiparty = require('connect-multiparty');
 var multipartyMiddleware = multiparty();
 var s3fsImpl = new S3FS('simuL8rTestBucket2', {
-	accessKeyId: 'AKIAITLZEFHI35W4CQ7Q',
-	secretAccessKey: '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'
+	accessKeyId: AWS_ACCESS_KEY,
+	secretAccessKey: AWS_SECRET_KEY
 });
 
 s3fsImpl.create();
 
 //app.use(multipartyMiddleware);
-
+/*
 app.post('/testupload', function(req, res){
 	var file = req.files.file;
 	var stream = fs.createReadStream(file.path);
@@ -47,7 +56,7 @@ app.post('/testupload', function(req, res){
 		})
 		res.redirect('/');
 	});
-});
+});*/
 
 app.get('/',function(req,res){
       res.sendfile("main.html");
@@ -141,25 +150,15 @@ app.post('/uploadProfile', function(req, res){
 		console.log('path', path);
 		console.log('value1', value1);
 		console.log('mimetype1', mimetype1);
-		
+		// send image to AWS S3
 		var stream = fs.createReadStream(path + value1 + mimetype1);
-		return s3fsImpl.writeFile(value1 + mimetype1, stream).then(function(){
+		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
 			fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
 				}
 			})
-			res.redirect('/');
 		});	
-		
-		
-		
-		
-		
-        //res.json({ 
-           // status: 'ok',
-           // file: filename
-       // });
     });
 });
 
