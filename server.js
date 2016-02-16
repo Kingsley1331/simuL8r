@@ -24,18 +24,14 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
   extended: true
 }));
 
-/*
-var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET;*/
-
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
 
+/*
 console.log('AWS_ACCESS_KEY_ID ', AWS_ACCESS_KEY_ID);
 console.log('AWS_SECRET_KEY ', AWS_SECRET_ACCESS_KEY);
-console.log('S3_BUCKET ', S3_BUCKET);
+console.log('S3_BUCKET ', S3_BUCKET);*/
 
 var S3FS = require('s3fs');
 var multiparty = require('connect-multiparty');
@@ -157,6 +153,7 @@ app.post('/uploadProfile', function(req, res){
 		// send image to AWS S3
 		var stream = fs.createReadStream(path + value1 + mimetype1);
 		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
+			console.log('##############################################################################################################################################################SUCCESS!');
 			fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
