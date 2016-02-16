@@ -41,8 +41,8 @@ var S3FS = require('s3fs');
 var multiparty = require('connect-multiparty');
 var multipartyMiddleware = multiparty();
 var s3fsImpl = new S3FS('simuL8rTestBucket2', {
-	accessKeyId: AWS_ACCESS_KEY,
-	secretAccessKey: AWS_SECRET_KEY
+	accessKeyId: AWS_ACCESS_KEY_ID,
+	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
 s3fsImpl.create();
