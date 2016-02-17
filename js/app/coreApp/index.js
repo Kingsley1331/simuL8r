@@ -322,11 +322,7 @@ function shifter(currentCanvas, dbCanvas, shapes){
 		currentCanvas.height = innerHeight;
 	}
 	
-	var heightDiff = currentCanvas.height - dbCanvas.height;
-	console.log('currentCanvas.height ', currentCanvas.height);	
-	console.log('dbCanvas.height ', dbCanvas.height);	
-	console.log('heightDiff ', heightDiff);	
-	
+	var heightDiff = currentCanvas.height - dbCanvas.height;	
 	if(heightDiff > 0){
 		for(var e in shapes){		
 			var len = shapes[e][2].length;
@@ -383,7 +379,7 @@ function wallMaker(){
 			wallGen();
 			wallArray[i].vertices = [[-canvas.width/2, -2000], [canvas.width/2, -2000], [canvas.width/2, 9 + 1000], [-canvas.width/2, 9 + 1000], [-canvas.width/2, -2000]];
 			wallArray[i].X = canvas.width/2;
-			wallArray[i].Y = 40 - 1000;
+			wallArray[i].Y = 40 - 1050;
 			wallArray[i].colour = 'red';
 			wallArray[i].setOuterRadius = function(){
 												return wallCollisionRadius;
@@ -400,6 +396,9 @@ function setCanvasSize(canvas, width, height){
 		width: width,
 		height: height
 	};	
+	$('#navigation-bar').css({'width': width});
+	$('.main-sidebar').css({'height': height + 100 + 'px'});
+	$('#barnav').css({'width': width});
 }
 // customEvent Polyfill
 (function () {
@@ -451,10 +450,11 @@ function init(){
 	mousePos = 0;
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
+	//alert(window.innerWidth - 230 + 'px');
 	
 	
 	
-	setCanvasSize(canvas, window.innerWidth, window.innerHeight);
+	setCanvasSize(canvas, window.innerWidth -230, window.innerHeight - 100);
 	window.onresize = function(event) {
 		/*canvas = document.getElementById('canvas');
 		context = canvas.getContext('2d');*/

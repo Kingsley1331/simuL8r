@@ -109,6 +109,7 @@
   |---------------------------------------------------------|
   -->
   <body class='hold-transition skin-green sidebar-mini'>
+	<div id='barnav'></div>  
     <div class="wrapper" ng-controller='NavCtrl'>
 
       <!-- Main Header -->
@@ -121,7 +122,6 @@
           <!-- logo for regular state and mobile devices -->
           <span class="logo-lg"><b>simuL8r</b></span>
         </a>
-
         <!-- Header Navbar -->
         <nav class="navbar navbar-static-top" role="navigation">
 		<h3 id='scene-title'> scene title</h3>
@@ -223,7 +223,7 @@
                 </ul>
               </li>
               <!-- User Account Menu -->
-			  <li ng-if='loggedin'><a href='#logout' ng-click='logout()'><i class="fa fa-sign-out"></i> logout</a></li>
+			  <li ng-if='loggedin' id='user-loggedin'><a href='#logout' ng-click='logout()'><i class="fa fa-sign-out"></i> logout</a></li>
               <li class="dropdown user user-menu" ng-if='loggedin'>
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -266,7 +266,7 @@
               </li>
               <!-- Control Sidebar Toggle Button -->
               <li ng-show='loggedin'>
-                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                <a href="#" data-toggle="control-sidebar" id="settings-gears"><i class="fa fa-gears"></i></a>
               </li>
             </ul>
           </div>

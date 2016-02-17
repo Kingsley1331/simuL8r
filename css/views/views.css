@@ -1,3 +1,26 @@
+body{
+	overflow: scroll;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+
+/***  temporarily hidden elements ***/
+#settings-gears, .control-sidebar, .treeview, .sidebar-toggle{
+	display: none;
+}
+
+#barnav{
+	position:absolute;
+	top: 0px;
+	left: 230px;
+	background-color: #484848;
+	height: 50px;
+	width: 0px;
+}
+
 .content-wrapper{
 	background-image: url('../../images/bg-images/13.jpg');
 	/*background-size: 100% 100%;
@@ -275,13 +298,15 @@ hr{
 
 canvas {
     position: absolute;
-	top: 0;
+	top: 100px;
+	left: 230px;
     z-index: 0;
 }
 
 .navbar-inverse {
 	position: absolute;
     top: 50px;
+	left: 230px;
 	width: 100%;
     z-index: 100;
 	background-color:black;

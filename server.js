@@ -23,7 +23,7 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
-
+/*
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
@@ -41,22 +41,7 @@ var s3fsImpl = new S3FS(S3_BUCKET, {
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-s3fsImpl.create();
-
-//app.use(multipartyMiddleware);
-/*
-app.post('/testupload', function(req, res){
-	var file = req.files.file;
-	var stream = fs.createReadStream(file.path);
-	return s3fsImpl.writeFile(file.originalFilename, stream).then(function(){
-		fs.unlink(file.path, function(err){
-			if(err){
-				console.error(err);
-			}
-		})
-		res.redirect('/');
-	});
-});*/
+s3fsImpl.create();*/
 
 app.get('/',function(req,res){
       res.sendfile("main.html");
@@ -71,43 +56,6 @@ mongoose.connect(databaseConfig.url);
 var db = mongoose.connection;
 db.on('error', console.error);
 db.once('open', startServer);
-
-/*
-app.post('/uploadProfile', function(req, res){
-	var path = './images/profiles/',
-		filename = '';
-	// Upload file
-	req.busboy.on('field', function(key, value, keyTruncated, valueTruncated){	
-		req.busboy.on('file', function(field, file, name, encoding, mimetype){
-			var pos = mimetype.indexOf('/');
-			mimetype = '.' + mimetype.slice(pos + 1);
-			console.log('key: ', key, 'value: ', value);
-			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
-				User.findById(value, function(err, user){// value is the user id that was passed into the form
-				if (err){ 
-					console.log('Error#############',err);
-				}
-				user.local.profilePic = 'images/profiles/' + value + mimetype;
-				
-				user.save(function(err) {
-				if (err){
-					console.log(err);
-				};
-					//res.send(user);
-				});
-			});
-		});	
-	});		
-    // Listen for 'finish' event and redirect to the main app
-    req.busboy.on('finish', function(field){
-		res.redirect('/#/home');
-        //res.json({ 
-           // status: 'ok',
-           // file: filename
-       // });
-    });
-});*/
-
 
 app.post('/uploadProfile', function(req, res){
 	var path = './images/profiles/',
@@ -143,21 +91,17 @@ app.post('/uploadProfile', function(req, res){
 	});		
     // Listen for 'finish' event and redirect to the main app
     req.busboy.on('finish', function(field){
-		
 		res.redirect('/#/home');
 		
-		console.log('path', path);
-		console.log('value1', value1);
-		console.log('mimetype1', mimetype1);
 		// send image to AWS S3
-		var stream = fs.createReadStream(path + value1 + mimetype1);
+		/*var stream = fs.createReadStream(path + value1 + mimetype1);
 		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
 			fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
 				}
 			})
-		});	
+		});*/	
     });
 });
 
