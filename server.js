@@ -155,11 +155,11 @@ app.post('/uploadProfile', function(req, res){
 		var stream = fs.createReadStream(path + value1 + mimetype1);
 		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
 			console.log('##############################################################################################################################################################SUCCESS!');
-			fs.unlink(path + value1 + mimetype1, function(err){
+			/*fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
 				}
-			})
+			})*/
 		});	
     });
 });
