@@ -109,8 +109,6 @@ app.post('/uploadProfile', function(req, res){
 });*/
 
 
-
-/*
 app.post('/uploadProfile', function(req, res){
 	var path = './images/profiles/',
 		filename = '';
@@ -160,65 +158,6 @@ app.post('/uploadProfile', function(req, res){
 				}
 			})
 		});	
-    });
-});*/
-
-
-app.post('/uploadProfile', function(req, res){
-	var path = './images/profiles/',
-		filename = '';
-		value1 = '';
-		mimetype1 = '';
-		
-	// Upload file
-	req.busboy.on('field', function(key, value, keyTruncated, valueTruncated){	
-		req.busboy.on('file', function(field, file, name, encoding, mimetype){
-			var pos = mimetype.indexOf('/');
-			mimetype = '.' + mimetype.slice(pos + 1);
-			console.log('key: ', key, 'value: ', value);
-			value1 = value;
-			mimetype1 = mimetype;
-			
-			
-		// send image to AWS S3
-		//var stream = fs.createReadStream(path + value1 + mimetype1);
-		var stream = fs.createReadStream(value1 + mimetype1);
-		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
-			fs.unlink(path + value1 + mimetype1, function(err){
-				if(err){
-					console.error(err);
-				}
-			})
-		});				
-			
-			
-			
-			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
-				User.findById(value, function(err, user){// value is the user id that was passed into the form
-				if (err){ 
-					console.log('Error#############',err);
-				}
-				//user.local.profilePic = 'images/profiles/' + value + mimetype;
-				user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
-				
-				user.save(function(err) {
-				if (err){
-					console.log(err);
-				};
-					//res.send(user);
-				});
-			});
-		});	
-	});		
-    // Listen for 'finish' event and redirect to the main app
-    req.busboy.on('finish', function(field){
-		
-		res.redirect('/#/home');
-		
-		console.log('path', path);
-		console.log('value1', value1);
-		console.log('mimetype1', mimetype1);
-
     });
 });
 
