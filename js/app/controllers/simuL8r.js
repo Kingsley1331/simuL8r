@@ -7,6 +7,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.IDBscenes = [];
 	$scope.showRemote = true;
 	$scope.showLocal = false;
+	$scope.sceneName = '';
 	/*$scope.selectRemote = function(){
 		if(){}
 	}*/
@@ -248,7 +249,7 @@ $scope.addPageEventListeners = function(){
 			delete response._id;
 			delete response.__v;
 			console.log('select ', response);
-			shapeSelection.name = response.name;
+			$scope.sceneName = shapeSelection.name = response.name;
 			var canvas = shapeSelection.canvas;
 			var dbCanvas = response.canvas;
 			var shapes = response.shapes;
