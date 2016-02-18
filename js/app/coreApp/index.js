@@ -400,6 +400,18 @@ function setCanvasSize(canvas, width, height){
 	$('.main-sidebar').css({'height': height + 100 + 'px'});
 	$('#barnav').css({'width': width});
 }
+/*
+function moveButons(){
+	$( document ).ready(function() {
+		$('#showScenes').css({'left': '-400px', 'top' : '15px'});
+		//$('showOptions')
+		//$('refresh')
+	});
+};
+
+
+moveButons();*/
+
 // customEvent Polyfill
 (function () {
 

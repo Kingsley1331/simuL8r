@@ -1,11 +1,16 @@
 body{
 	overflow: scroll;
 }
+.main-header{
+	z-index: 0;
+}
 
 ::-webkit-scrollbar { 
     display: none; 
 }
-
+#view-div{
+	height: 0px;
+}
 
 /***  temporarily hidden elements ***/
 #settings-gears, .control-sidebar, .treeview, .sidebar-toggle{
@@ -398,13 +403,49 @@ ul.nav.navbar-nav{
     font-family: verdana;	
 }
 
-#showOptions{
-	left: 325px; 
+
+
+@media only screen and (min-width: 1500px) {
+	#showScenes{
+		left: 190px;
+		top: 8px;	
+	}
+
+	#showOptions{
+		left: 325px; 
+		top: 8px;
+	}
+
+	#refresh{
+		left: 50px;
+		top: 8px;	
+	}
 }
 
-#refresh{
-	left: 50px;
+@media only screen and (max-width: 1500px) {
+	btn-info{
+		z-index: 1000
+	}
+	#showScenes{
+		left: -840px;
+		top: -41px;	
+	}
+
+	#showOptions{
+		left: -975px; 
+		top: -41px;
+	}
+
+	#refresh{
+		left: -711px;
+		top: -41px;	
+	}
 }
+
+
+
+
+
 
 #sceneTable, #indexedDBTable{
 	/*color: white;*/
