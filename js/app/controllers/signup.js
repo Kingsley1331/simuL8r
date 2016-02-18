@@ -18,7 +18,7 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.signup = function(user){
 		console.log(user);
 		$http.post('/signup', user)
-		.success(function(response){
+		.then(function(response){
 			console.log('response: ', response);
 			//var usernameVal = user.username;
 			var useridVal = response._id;
@@ -26,6 +26,8 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 			userId.setAttribute('value', useridVal);
 			$rootScope.currentUser = user;
 			uploader.submit();
+		}, function(err){
+			alert('The username ' + '"' + user.username +'"' + ' already exists please enter another one');
 		});
 	}
 });

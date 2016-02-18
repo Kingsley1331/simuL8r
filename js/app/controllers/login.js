@@ -6,7 +6,7 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 	$scope.login = function(user){
 		console.log(user);
 		$http.post('/login', user)
-		.success(function(response){
+		.then(function(response){
 			console.log('response: ', response);
 			$rootScope.currentUser = user;
 			$rootScope.loggedin = true;
@@ -15,6 +15,8 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 			//location.replace('/simuL8r');
 			location.replace('#/home');
 			//$location.url('/profile');
+		}, function(err){
+			alert(user.username + ' was not recognized, please try again.');
 		});
 	}
 });
