@@ -1,4 +1,4 @@
-app.controller('SignupCtrl', function($scope, $http, $rootScope){
+/*app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.user = {};
 	var uploader = document.getElementById('uploadForm1');
 	//var userObject = document.getElementById('username');
@@ -18,7 +18,7 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.signup = function(user){
 		console.log(user);
 		$http.post('/signup', user)
-		.then(function(response){
+		.success(function(response){
 			console.log('response: ', response);
 			//var usernameVal = user.username;
 			var useridVal = response._id;
@@ -26,8 +26,50 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 			userId.setAttribute('value', useridVal);
 			$rootScope.currentUser = user;
 			uploader.submit();
-		}, function(err){
-			alert('The username ' + '"' + user.username +'"' + ' already exists please enter another one');
 		});
 	}
+});*/
+
+app.controller('SignupCtrl', function($scope, $http, $rootScope){
+	$scope.user = {};
+	var uploader = document.getElementById('uploadForm1');
+	//var userObject = document.getElementById('username');
+	var userId = document.getElementById('userid');
+	console.log('uploader: ',uploader);
+	//console.log('userObject: ',userObject);
+	//userObject.setAttribute('value', 'usernameghgg');
+	//console.log('userObject1: ',userObject);
+	
+	$scope.user.username = 'Kingsley3';
+	$scope.user.password = '12345';
+	$scope.user.email = 'k@a3.com';
+	$scope.user.firstname = 'King';
+	$scope.user.lastname = 'Ankomah';
+	$scope.user.profilePic = 'profilePic'; 
+	$scope.newPassword = '';
+	
+	$scope.signup = function(user){
+		console.log(user);
+		
+		if($scope.newPassword === $scope.user.password){
+			
+			$http.post('/signup', user)
+			.then(function(response){
+				console.log('response: ', response);
+				//var usernameVal = user.username;
+				//var useridVal = response._id;
+				var useridVal = response.data._id;
+				console.log('useridVal: ', useridVal);
+				//userObject.setAttribute('value', usernameVal);
+				userId.setAttribute('value', useridVal);
+				$rootScope.currentUser = user;
+				uploader.submit();
+			}, function(err){
+				alert('The username ' + '"' + user.username +'"' + ' already exists please enter a different one');
+			});
+		
+		}
+		
+	}
 });
+

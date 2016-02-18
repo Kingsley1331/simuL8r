@@ -75,10 +75,11 @@ app.post('/uploadProfile', function(req, res){
 			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
 				User.findById(value, function(err, user){// value is the user id that was passed into the form
 				if (err){ 
-					console.log('Error#############',err);
+					console.log('Error#############', err);
+					//return;
 				}
-				//user.local.profilePic = 'images/profiles/' + value + mimetype;
-				user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
+				user.local.profilePic = 'images/profiles/' + value + mimetype;
+				//user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				
 				user.save(function(err) {
 				if (err){

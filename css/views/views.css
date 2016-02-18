@@ -539,3 +539,19 @@ ul.nav.navbar-nav{
 	text-align:center;
 }
 
+.hiddenInput{
+	display: none
+}
+
+#inputWarning{
+	color: red;
+}
+
+#inputSuccess{
+	color: green;
+}
+
+.inputStyle{
+	font-size: 20px;
+}
+
