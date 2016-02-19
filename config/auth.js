@@ -24,7 +24,8 @@ module.exports = {
 		//'callbackURL' : 'https://intense-atoll-8693.herokuapp.com/oauth2callback'
 		//'callbackURL' : 'https://intense-atoll-8693.herokuapp.com/auth/google/callback'
 		//'callbackURL' : 'http://localhost:5000/oauth2callback'
-		'callbackURL' : 'http://localhost:5000/auth/google/callback'
+		//'callbackURL' : 'http://localhost:5000/auth/google/callback'
+		'callbackURL' : 'https://intense-atoll-8693.herokuapp.com/auth/google/callback'
 	}
 }
 
