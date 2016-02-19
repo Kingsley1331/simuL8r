@@ -224,6 +224,7 @@
               </li>
               <!-- User Account Menu -->
 			  <li ng-if='loggedin' id='user-loggedin'><a href='#logout' ng-click='logout()'><i class="fa fa-sign-out"></i> logout</a></li>
+			  <li ng-if='!loggedin' id='user-loggedout'><a href='#login' ng-click='setNav()'><i class="fa fa-sign-in"></i> login</a></li>
               <li class="dropdown user user-menu" ng-if='loggedin'>
                 <!-- Menu Toggle Button -->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -276,10 +277,10 @@
       <aside class="main-sidebar">
 
         <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar" ng-if='loggedin'>
+        <section class="sidebar">
 
           <!-- Sidebar user panel (optional) -->
-          <div class="user-panel">
+          <div class="user-panel" ng-if='loggedin'>
             <div class="pull-left image">
               <img id='user-image' ng-src='{{currentUser.local.profilePic || defaultPic}}' alt="User Image">
             </div>
@@ -305,10 +306,10 @@
           <ul class="sidebar-menu">
             <li class="header">navigation</li>
             <!-- Optionally, you can add icons to the links -->
-            <li id='home-view'><a href="#home"><i class="fa fa-home"></i> <span>home</span></a></li>
-            <li id='profile-view'><a href="#profile"><i class="fa fa-user"></i> <span>profile</span></a></li>
-			<li id='demos-view'><a href="#demos"><i class="fa fa-flask"></i> <span>demos</span></a></li>
-			<li id='sim-view'><a href="/simuL8r"><i class="fa fa-steam-square"></i> <span>make a scene!</span></a></li>
+            <li id='home-view' ng-if='loggedin'><a href="#home"><i class="fa fa-home"></i> <span>home</span></a></li>
+            <li id='profile-view' ng-if='loggedin'><a href="#profile"><i class="fa fa-user"></i> <span>profile</span></a></li>
+			<li id='demos-view'><a href="#demos"><i class="fa fa-rocket"></i> <span>demos</span></a></li>
+			<!--<li id='sim-view'><a href="/simuL8r"><i class="fa fa-steam-square"></i> <span>make a scene!</span></a></li>-->
 			<li id='sim-view'><a href="#simuL8r"><i class="fa fa-steam-square"></i> <span>simulate!</span></a></li>
             <li class="treeview">
               <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>

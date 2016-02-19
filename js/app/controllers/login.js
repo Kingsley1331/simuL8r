@@ -15,6 +15,7 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 			//location.replace('/simuL8r');
 			location.replace('#/home');
 			//$location.url('/profile');
+			setTimeout($rootScope.setNav, 500);
 		}, function(err){
 			alert(user.username + ' was not recognized, please try again.');
 		});

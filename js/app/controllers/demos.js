@@ -3,7 +3,7 @@ app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
 	clearAll(wallConfig);
 	$scope.simulation = shapeSelection;
 	
-	$rootScope.loggedin = true;
+	//$rootScope.loggedin = true;
 	console.log('$rootScope.currentUser ', $rootScope.currentUser);
 	$scope.showUsers = false;
 	$scope.showUser = false;

@@ -1,5 +1,6 @@
 app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	console.log('HomeCtrl');
+	setTimeout($rootScope.setNav, 500);
 	$rootScope.loggedin = true;
 	$scope.showUsers = true;
 	$scope.showUser = false;

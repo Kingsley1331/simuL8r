@@ -9,8 +9,9 @@ app.controller('NavCtrl', function($scope, $rootScope, $http, $location){
 			$location.url('/home');
 		});
 	}
-	//navigation
-	setTimeout(function(){
+	
+	$rootScope.setNav = function(){
+		$('ul.sidebar-menu > li').removeClass('active');
 		$('ul.sidebar-menu > li').click(function(){
 			$('ul.sidebar-menu > li').removeClass('active');
 			$(this).addClass('active');	
@@ -24,5 +25,26 @@ app.controller('NavCtrl', function($scope, $rootScope, $http, $location){
 		if($location.url() === '/home'){
 			$('#home-view').addClass('active');
 		}
-	}, 500);	
+	}
+	
+	setTimeout($rootScope.setNav, 500);	
+	
+	
+	
+	//navigation
+	/*setTimeout(function setNav(){
+		$('ul.sidebar-menu > li').click(function(){
+			$('ul.sidebar-menu > li').removeClass('active');
+			$(this).addClass('active');	
+		});
+		if($location.url() === '/profile'){
+			$('#profile-view').addClass('active');
+		}
+		if($location.url() === '/demos'){
+			$('#demos-view').addClass('active');
+		}
+		if($location.url() === '/home'){
+			$('#home-view').addClass('active');
+		}
+	}, 500);*/	
 })

@@ -2,7 +2,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	init();
 	console.log('$rootScope.loggedin ', $rootScope.loggedin);
 	console.log('$rootScope.currentUser ', $rootScope.currentUser);
-	$rootScope.loggedin = true;
+	//$rootScope.loggedin = true;
 	$rootScope.currentUser;
 	$scope.IDBscenes = [];
 	$scope.showRemote = true;
@@ -175,8 +175,9 @@ $scope.addPageEventListeners = function(){
 		// User is Authenticated
 		if(user !== '0'){
 			return true;
-		}else{// User is Not Authenticated
-			location.replace('/');
+		}else if(typeof user == 'object'){// User is Not Authenticated
+			//location.replace('/');
+			$rootScope.loggedin=true;
 		}
 	});
 	
