@@ -555,3 +555,8 @@ ul.nav.navbar-nav{
 	font-size: 20px;
 }
 
+#registerButton, #loginButton{
+	position: relative;
+	left: 230px;
+}
+
