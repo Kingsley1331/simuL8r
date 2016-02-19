@@ -21,8 +21,10 @@ module.exports = {
 	'googleAuth' : {
 		'clientID' : '375596617957-d3n2uclct4bt64c5qij2vcv0lbq81qic.apps.googleusercontent.com',
 		'clientSecret' : 'Gm15Q7jBUr1nlPwyazQtRaK8',
-		'callbackURL' : 'https://intense-atoll-8693.herokuapp.com/oauth2/callback'
-		//'callbackURL' : 'http://localhost:5000/auth2/callback'
+		//'callbackURL' : 'https://intense-atoll-8693.herokuapp.com/oauth2callback'
+		//'callbackURL' : 'https://intense-atoll-8693.herokuapp.com/auth/google/callback'
+		//'callbackURL' : 'http://localhost:5000/oauth2callback'
+		'callbackURL' : 'http://localhost:5000/auth/google/callback'
 	}
 }
 
