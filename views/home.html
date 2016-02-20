@@ -79,11 +79,37 @@
 </table>
 
 <div class='view-table' id='selected_user' ng-show='showUser'>
-	<span class='selectedUserDetails selectedUserUsername'>{{selectedUser[0].local.username || selectedUser[0].google.name}}'s profile</span><br><br>
-	<span class='selectedUserDetails'><img id='selectedUserImage' width='200' ng-src='{{selectedUser[0].local.profilePic}}'/></span><br>
-	<span id='selectedUserfirstName' class='selectedUserDetails'>first name: {{selectedUser[0].local.lastname}}</span>
-	<span id='selectedUserLastName' class='selectedUserDetails'>last name: {{selectedUser[0].local.firstname}}</span>
-	<span id='selectedUserEmail' class='selectedUserDetails'>Email: {{selectedUser[0].local.email}}</span>
+<div id='selectedUserWrapper'>
+	<span class='selectedUserDetails selectedUserUsername'>{{selectedUser[0].local.username || selectedUser[0].google.name}}'s profile</span>
+	<span class='selectedUserDetails'><img id='selectedUserImage' ng-src='{{selectedUser[0].local.profilePic}}'/></span>
+	<table id='selectedUserDetailsTable'>	
+		<tr>
+			<td>
+				<span id='selectedUserfirstName1' class='selectedUserDetails'>first name: </span>
+			</td>
+			<td>
+				{{selectedUser[0].local.username}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span id='selectedUserLastName1' class='selectedUserDetails'>last name: </span>
+			</td>
+			<td>
+				{{selectedUser[0].local.lastname}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span id='selectedUserEmail1' class='selectedUserDetails'>Email: </span>
+			</td>
+			<td>
+				{{selectedUser[0].local.email}}
+			</td>
+		</tr>
+	</table>	
+</div>
+	
 	<table id="selectedUserTable" width='40%' ng-show='showSelectedUserScenes'>
 		<tr>
 			<th>name</th>

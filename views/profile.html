@@ -1,42 +1,43 @@
 <div class='view-table' id='profileUser'>
-	<span id='profilename' class='selectedUserDetails selectedUserUsername'>{{currentUser.local.username || currentUser.google.name}}</span><br>
-	<img class='profile-align' width='300' ng-src='{{currentUser.local.profilePic}}'id='profilePagePic'/><br><br>
-	<button id='profile-pic-btn' class='btn btn-info profile-align disabled'>change profile pic</button>
-	<table id='userProfileTable'>
-		<tr>
-			<td>
-				<span class='selectedUserDetails'>username: {{currentUser.local.username}}<span>
-			</td>
-			<td>
-				<button class='btn btn-success disabled'>edit</button>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<span class='selectedUserDetails'>name: {{currentUser.local.name}}<span>
-			</td>
-			<td>
-				<button class='btn btn-success disabled'>edit</button>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<span class='selectedUserDetails'>lastname: {{currentUser.local.lastname}}<span>
-			</td>
-			<td>
-				<button class='btn btn-success disabled'>edit</button>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<span class='selectedUserDetails'>Email: {{currentUser.local.email}}<span>
-			</td>
-			<td>
-				<button class='btn btn-success disabled'>edit</button>
-			</td>
-		</tr>
-	</table>		
-	
+	<div id='profileUserWrapper'>
+		<div id='profilename' class='selectedUserDetails selectedUserUsername'>{{currentUser.local.username || currentUser.google.name}}</div><br>
+		<img class='profile-align' ng-src='{{currentUser.local.profilePic}}'id='profilePagePic'/><br><br>
+		<button id='profile-pic-btn' class='btn btn-info profile-align disabled'>change profile pic</button>
+		<table id='userProfileTable'>
+			<tr>
+				<td>
+					<span class='selectedUserDetails'>username: {{currentUser.local.username}}<span>
+				</td>
+				<td>
+					<button class='btn btn-success disabled'>edit</button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class='selectedUserDetails'>name: {{currentUser.local.name}}<span>
+				</td>
+				<td>
+					<button class='btn btn-success disabled'>edit</button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class='selectedUserDetails'>lastname: {{currentUser.local.lastname}}<span>
+				</td>
+				<td>
+					<button class='btn btn-success disabled'>edit</button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class='selectedUserDetails'>Email: {{currentUser.local.email}}<span>
+				</td>
+				<td>
+					<button class='btn btn-success disabled'>edit</button>
+				</td>
+			</tr>
+		</table>		
+	</div>	
 	<button id='deleteButton' type="button" class="btn btn-danger profile-align" ng-click="remove(currentUser._id)">delete account</button>
 	<table id='profileTable' ng-show='showUserScenes'>
 		<tr>

@@ -230,6 +230,7 @@ $scope.addPageEventListeners = function(){
 		});	
 		$scope.showScenes = bool;
 		$scope.showUsers = !bool;
+		$scope.showUser = false;
 		if(bool === true){
 			$('#scenesTab').css({'background-color' : '#1e282c', 'border-bottom' : '2px solid #00c0ef'});
 			$('#usersTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});	

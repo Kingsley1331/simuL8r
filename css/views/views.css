@@ -181,11 +181,11 @@ hr{
 }
 
 #welcome{
-	width: 400px;
+	width: auto;
 	height: 60px;
 	text-align: center;
-	background-color: rgba(69, 73, 74, 0.7);
-	color: lightgreen;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: #00c0ef;
 	padding: 5px;
 	border-top-right-radius: 10px; 
 	border-bottom-right-radius: 10px;	
@@ -226,14 +226,13 @@ hr{
 	width: 1500px;
 }
 
-
 #selectedUserTable > tr > td{
 	width: 600px;
 }
 
 .selectedUserDetails{
-	padding-left: 20px;
-	padding-top: 20px;
+	/*padding-left: 20px;
+	padding-top: 20px;*/
 	color: lightblue;
 }
 
@@ -259,23 +258,55 @@ hr{
 }
 
 .selectedUserUsername{
-	position: relative;
-	top: 10px;
+	position: absolute;
+	left: 22px;
+	top: 5px;
 	font-size: 1.8em;'
 }
+#profileUserWrapper{
+	position: relative;
+	width: 800px;
+	height: 400px;
+	background-color: rgba(0, 0, 0, 0.4);
+	border-bottom-right-radius: 10px;	
+}
+
+#selectedUserWrapper{
+	position: relative;
+	width: 600px;
+	height: 300px;
+	background-color: rgba(0, 0, 0, 0.4);
+	border-bottom-right-radius: 10px;
+}
+
+#selectedUserDetailsTable{
+	position: absolute;
+	top: 80px;
+	left: 260px;
+}
+
 #selectedUserImage{
+	position: absolute;
 	border-radius: 10px;
+	left: 25px;
+	top: 80px;
+	height: 160px;
+	max-width: 240px;
 }
 
 #userProfileTable{
-	position: relative;
-	left: 315px;
-	top: -330px;
+	position: absolute;
+	left: 400px;
+	top: 80px;
+}
+
+#profilename{
+	left: 25px
 }
 
 #profileTable, #deleteButton{
 	position: relative;
-	top: -130px;
+	top: 100px;
 }
 
 #profileUser{
@@ -288,14 +319,18 @@ hr{
 }
 
 #profilePagePic{
-	position: relative;
-	top: 20px;
+	position: absolute;
+	top: 70px;
+	left: 25px;
 	border-radius: 10px;
+	height: 300px;
+	max-width: 350px;
 }
 
 #profile-pic-btn{
-	position: relative;
-	top: 20px;
+	position: absolute;
+	top: 325px;
+	left: 420px;
 }
 
 
