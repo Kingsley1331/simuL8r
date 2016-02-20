@@ -9,7 +9,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 			$rootScope.loggedin=false;
 		}
 	});		
-	$scope.hasUserTableLoaded = false; // this variable ensures that page on of the user's table is made automatically active only once
+	$scope.hasUserTableLoaded = false; // this variable ensures that page one of the user's table is made automatically active only once
 	console.log('HomeCtrl');
 	setTimeout($rootScope.setNav, 500);
 	$scope.showUsers = true;

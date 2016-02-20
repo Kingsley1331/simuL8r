@@ -123,8 +123,8 @@
 	 <li class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector(this.id);}else{shapeSelector(this.id); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></li> 
      <li class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector(this.id);}else{shapeSelector(this.id); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></li> 	  
    
-   <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable(); getAll(); getAll_i();'> {{scenesVisibility}} </button></li>
-   <li><button type='button' class='btn btn-info'  id = 'showOptions'> show Options </button></li>
+   <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable(); reset(); getAll(); getAll_i();'> {{scenesVisibility}} </button></li>
+   <li><button type='button' class='btn btn-info'  id = 'showOptions'> show Settings </button></li>
    <li><button type='button' class='btn btn-info'  id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</button></li>
    </div>
 
@@ -138,7 +138,7 @@
 <table class='view-table' id='sceneTable' ng-show='showSceneTable && showRemote'>
 	<tr>
 		<td colspan='3'></td>
-		<td colspan='4'><button type="button" class="btn btn-success" ng-click='create();'>save scene</button></td>
+		<td colspan='4'></td>
 	</tr>
 	<tr>
 		<td colspan='4'></td>
@@ -199,7 +199,7 @@
               </span>
             </div>			
 		</td>
-		<td><button ng-click='addData();' type="button" class="btn btn-success" id='browserSave' class='browser'>save</button></td>
+		<td><!--<button ng-click='addData();' type="button" class="btn btn-success" id='browserSave' class='browser'>save</button>--></td>
 		<td><button ng-click='IDB_removeAll();' type="button" class="btn btn-danger" id='removeAllScenes' class='browser'>remove all</button></td>
 	</tr>
 	<tr ng-repeat='scene in currentPage_i  | filter:searchQuery | limitTo:pageSize_i'>
