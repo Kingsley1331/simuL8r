@@ -74,13 +74,13 @@
 -->
 
 
-<span id='sceneName'> Scene - {{sceneName || 'untitled'}}</span>
+<span id='sceneName'> scene - {{sceneName || 'untitled'}}</span>
 <nav id='navigation-bar' class="navbar navbar-inverse" onclick='shapeSelector(this.id)'>
   <div class="container-fluid">
     <ul class="nav navbar-nav">
       <!--<li class="active"><a href="#simuL8r">Home</a></li>-->
 
-      <li class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector(this.id);}else{shapeSelector(this.id); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></li> 
+      <li ng-click='create();' class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector(this.id);}else{shapeSelector(this.id);};"><img class = 'icons' src = 'images/save.png'></img></li> 
       <li class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector(this.id);}else{shapeSelector(this.id); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></li>
 	  <li class = 'shapes' id = 'circle' onmouseover = "hover(circle);" onmouseout = "leave(circles, circle);" onclick = " if(circles){shapeSelector(this.id);}else{shapeSelector(this.id);  circles = true; shapeSelection.shapes.circle[0] = true;} gradient(circle);"><img class = 'icons' src = 'images/shapes/circle.png'></img></li> 
       <li class = 'shapes' id = 'square' onmouseover = "hover(square);" onmouseout = "leave(squares, square);" onclick = "if(squares){shapeSelector(this.id);}else{shapeSelector(this.id); squares = true; shapeSelection.shapes.square[0] = true;} gradient(square);"><img class = 'icons' src = 'images/shapes/square.png'></li>
