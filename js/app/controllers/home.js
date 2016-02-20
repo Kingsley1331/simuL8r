@@ -168,6 +168,7 @@ $scope.addPageEventListeners = function(){
 	}	
 		
 	$scope.selU_scenesPageNavigator = function(){
+		$scope.selU_scenePagesArray = [];
 		for(var i = 0; i < $scope.selU_numberOfScenePages; i++){
 			$scope.selU_scenePagesArray[i] = i;
 		}
@@ -270,11 +271,12 @@ $scope.addPageEventListeners = function(){
 	}
 	
 	$scope.getSelectUserScenes = function(id){
-		//$scope.selectedUserScenes = {};
 		$http.get('/scenes/' + id)
 		.success(function(response){
 			console.log('getSelectUserScenes ', response);
 			$scope.selectedUserScenes = response;
+			
+			$scope.selU_currentScenePage = [];
 			
 			$scope.selU_numberOfScenes = response.length;
 			for(var j = 0; j < $scope.selU_numberOfScenes; j++){
