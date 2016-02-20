@@ -1,6 +1,7 @@
 <div id='welcome'><h1>Welcome {{currentUser.local.username || currentUser.google.name}}!</h1></div>
 <!--<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show users</span><span ng-show='showUsers'>hide users</span></button><br></br>-->
 <table id="users" class='view-table'  ng-show='showUsers'>
+	<!--<div ng-click='showAllUsers(true)' class='tab' id='usersTab'>users</div>-->
 	<div ng-click='showAllUsers(true)' class='tab' id='usersTab'>users</div>
 	<div ng-click='showAllScenes(true)' class='tab' id='scenesTab'>scenes</div>	  
 	<tr>
@@ -16,8 +17,8 @@
             </div>			
 		</th>		
 	</tr>
-	<tr ng-repeat="user in currentUserPage | filter:searchQuery | limitTo:userPageSize"'>
-		<td><img class='table-pic' img width='75' ng-src='{{user.local.profilePic || defaultPic}}'/></td>		
+	<tr ng-repeat="user in currentUserPage | filter:searchQuery | limitTo:userPageSize">
+		<td><img class='table-pic' width='75' ng-src='{{user.local.profilePic || defaultPic}}'/></td>		
 		<td>{{user.google.name || user.local.username}}</td>
 		<td>{{user.google.email || user.local.email}}</td>
 		<td class='button'><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>

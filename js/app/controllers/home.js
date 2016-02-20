@@ -1,4 +1,5 @@
 app.controller('HomeCtrl', function($scope, $rootScope, $http){
+	$scope.hasUserTableLoaded = false; // this variable ensures that page on of the user's table is made automatically active only once
 	console.log('HomeCtrl');
 	setTimeout($rootScope.setNav, 500);
 	$rootScope.loggedin = true;
@@ -117,8 +118,11 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 
 
 $scope.addPageEventListeners = function(){
-	var pages = $('.pagination > li');	
-	$('#1').addClass('active');	
+	var pages = $('.pagination > li');
+	if(!$scope.hasUserTableLoaded){
+		$('#1').addClass('active');
+		$scope.hasUserTableLoaded = true;		
+	}
 	$('#1_scene').addClass('active');
 	$('#1selU_scene').addClass('active');	
 	pages.click(function(){
@@ -205,7 +209,7 @@ $scope.addPageEventListeners = function(){
 	$scope.showAllUsers = function(){
 		$scope.showSelectedUserScenes = false;
 		console.log('getting users');
-		$scope.getUsers();
+		//$scope.getUsers();
 		$scope.showUsers = true;
 		$scope.showUser = false;
 		$scope.showScenes = false;
@@ -213,8 +217,7 @@ $scope.addPageEventListeners = function(){
 		$('#scenesTab').css({'background-color' : 'rgba(69, 73, 74, 1)', 'border-style' : 'none'});
 	}
 
-	$scope.showAllScenes = function(bool){
-		//$scope.getUsers();
+	$scope.getScenes = function(){
 		$http.get('/scenes')
 		.success(function(response){
 			console.log('getAllScenes ', response);
@@ -228,7 +231,12 @@ $scope.addPageEventListeners = function(){
 			setTimeout(function(){
 				$scope.addPageEventListeners();
 			}, 500);			
-		});	
+		});		
+	}
+	
+	
+	
+	$scope.showAllScenes = function(bool){
 		$scope.showScenes = bool;
 		$scope.showUsers = !bool;
 		$scope.showUser = false;
@@ -241,7 +249,7 @@ $scope.addPageEventListeners = function(){
 		}	
 	}	
 	$scope.showAllScenes();
-
+	$scope.getScenes();
 	
 	$scope.remove = function(id){
 		var deleteUser = confirm('Are you sure you want to delete this user');

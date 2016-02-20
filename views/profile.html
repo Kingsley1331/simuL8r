@@ -36,9 +36,10 @@
 					<button class='btn btn-success disabled'>edit</button>
 				</td>
 			</tr>
-		</table>		
+		</table>
+		<button id='deleteButton' type="button" class="btn btn-danger profile-align" ng-click="remove(currentUser._id)">delete account</button>
 	</div>	
-	<button id='deleteButton' type="button" class="btn btn-danger profile-align" ng-click="remove(currentUser._id)">delete account</button>
+
 	<table id='profileTable' ng-show='showUserScenes'>
 		<tr>
 			<th>name</th>
@@ -64,6 +65,7 @@
 					</div>
 				</center>
 			</td>
-		</tr>
+		</tr>		
 	</table>
+	
 </div>

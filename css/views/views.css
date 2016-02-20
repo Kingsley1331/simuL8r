@@ -304,13 +304,15 @@ hr{
 	left: 25px
 }
 
-#profileTable, #deleteButton{
-	position: relative;
-	top: 100px;
+#deleteButton{
+	position: absolute;
+	top: 325px;
+	left: 625px;
 }
 
 #profileUser{
 	width: 1500px;
+	/*height: 1000px;*/
 }
 
 .profile-align{
