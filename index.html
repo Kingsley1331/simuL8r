@@ -225,16 +225,17 @@
               <!-- User Account Menu -->
 			  <li ng-if='loggedin' id='user-loggedin'><a href='#logout' ng-click='logout()'><i class="fa fa-sign-out"></i> logout</a></li>
 			  <li ng-if='!loggedin' id='user-loggedout'><a href='#login' ng-click='setNav()'><i class="fa fa-sign-in"></i> login</a></li>
-              <li class="dropdown user user-menu" ng-if='loggedin'>
-                <!-- Menu Toggle Button -->
+			 <!-- TEMPORARILY HIDE THIS DROPDOWN -->
+              <!-- <li class="dropdown user user-menu" ng-if='loggedin'>
+                <-- Menu Toggle Button ->
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <!-- The user image in the navbar-->
-                  <img ng-src='{{currentUser.local.profilePic || defaultPic}}' class="user-image" alt="User Image">
-                  <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                  <-- The user image in the navbar->
+                  <img ng-src='{{currentUser.local.profilePic}}' class="user-image" alt="User Image">
+                  <-- hidden-xs hides the username on small devices so only the image appears. ->
                   <span class="hidden-xs">{{currentUser.google.name || currentUser.local.username}}</span>
                 </a>
                 <ul class="dropdown-menu">
-                  <!-- The user image in the menu -->
+                  <-- The user image in the menu ->
                   <li class="user-header">
                     <img ng-src='{{currentUser.local.profilePic || defaultPic}}' class="img-circle" alt="User Image">
                     <p>
@@ -242,7 +243,7 @@
                       <small>Member since Nov. 2012</small>
                     </p>
                   </li>
-                  <!-- Menu Body -->
+                  <-- Menu Body ->
                   <li class="user-body">
                     <div class="col-xs-4 text-center">
                       <a href="#">Followers</a>
@@ -254,7 +255,7 @@
                       <a href="#">Friends</a>
                     </div>
                   </li>
-                  <!-- Menu Footer-->
+                  <-- Menu Footer ->
                   <li class="user-footer">
                     <div class="pull-left">
                       <a href="#" class="btn btn-default btn-flat">Profile</a>
@@ -264,7 +265,7 @@
                     </div>
                   </li>
                 </ul>
-              </li>
+              </li>-->
               <!-- Control Sidebar Toggle Button -->
               <li ng-show='loggedin'>
                 <a href="#" data-toggle="control-sidebar" id="settings-gears"><i class="fa fa-gears"></i></a>

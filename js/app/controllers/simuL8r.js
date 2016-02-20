@@ -10,17 +10,11 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		}
 	});	
 	init();
-	console.log('$rootScope.loggedin ', $rootScope.loggedin);
-	console.log('$rootScope.currentUser ', $rootScope.currentUser);
-	//$rootScope.loggedin = true;
 	$rootScope.currentUser;
 	$scope.IDBscenes = [];
 	$scope.showRemote = true;
 	$scope.showLocal = false;
 	$scope.sceneName = '';
-	/*$scope.selectRemote = function(){
-		if(){}
-	}*/
 	
 	
 		/***********************************************************start pagination ******************************************************************/
@@ -206,29 +200,29 @@ $scope.addPageEventListeners = function(){
 	$scope.currentThumbnail = {};//current thumbnail
 	
 	$scope.create = function(){
-		var name = prompt('please choose a name for this scene', 'untitled');
-		
-		if(name !== ''){
-			shapeSelection.name = name;
-		}
-		var dataURL = canvas.toDataURL();
-		shapeSelection.imageUrl = dataURL;
-		
-		//console.log('imageUrl', shapeSelection.imageUrl);
-		
-		$scope.simulation = shapeSelection;
-		console.log('create: ', $scope.simulation);
+		if($rootScope.loggedin){
+			var name = prompt('please choose a name for this scene', 'untitled');
+			
+			if(name !== ''){
+				shapeSelection.name = name;
+			}
+			var dataURL = canvas.toDataURL();
+			shapeSelection.imageUrl = dataURL;	
+			$scope.simulation = shapeSelection;
 
-		$http.post('/scenes', $scope.simulation)
-		.success(function(response){
-			//console.log('create_response: ', response);
-			console.log(response);			
-			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
-			var thumbnailUrl = $scope.currentThumbnail[response._id];
-			//$scope.saveThumbnail(thumbnailUrl);
-		});
-		$scope.getAll();
+			$http.post('/scenes', $scope.simulation)
+			.success(function(response){		
+				$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
+				var thumbnailUrl = $scope.currentThumbnail[response._id];
+				var name = response.name;
+				$scope.addData(name);
+			});
+			//$scope.getAll();
+		}else{
+			$scope.addData();
+		}
 	}
+	
 	
 	function shapeLoader(response, id){
 		try {
@@ -556,7 +550,7 @@ if (window.IDBTransaction){
 	removeAllScenes.addEventListener('click', removeAll , false);*/
 	
 	
-	 $scope.addData = function(){		
+	 $scope.addData = function(scene_name){		
 		// open a read/write db transaction, ready for adding the data
 		//var transaction = db.transaction(["scenes"], "readwrite");
 		 var transaction = db.transaction(["scenes"], "readwrite");
@@ -583,8 +577,12 @@ if (window.IDBTransaction){
 		scene = $scope.loadDatabase();
 		// add our newItem object to the object store
 		scene.userID = Math.floor(10000000000 * Math.random());
-		var name = prompt('please choose a name for this scene', 'untitled');
-		scene.name = name;
+		if(!scene_name){
+			var name = prompt('please choose a name for this scene (local)', 'untitled');
+			scene.name = name;
+		}else{
+			scene.name = scene_name;
+		}
 		
 		scene.imgURL = dataURL;
 

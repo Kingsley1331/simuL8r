@@ -1595,7 +1595,7 @@ function draw(){
 	
 	context.drawImage(bufferCanvas, 0, 0, canvas.width, canvas.height);
 	
-	if(saving){
+	/*if(saving){
 		image.style.visibility = 'visible';
 		
 		// save canvas image as data url (png format by default)
@@ -1606,7 +1606,7 @@ function draw(){
 		image.src = dataURL;
 		console.log(dataURL);
 		//window.location.replace(dataURL);
-	}
+	}*/
 }
 
 function calcAngle(x1, y1, x2, y2){
