@@ -1,6 +1,15 @@
 app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
+	/** put this in a service **/
+	$http.get('/loggedin').success(function(user){
+		// User is Authenticated
+		if(user !== '0'){
+			$rootScope.currentUser = user;
+			$rootScope.loggedin=true;
+		}else if(user == '0'){// User is Not Authenticated
+			$rootScope.loggedin=false;
+		}
+	});	
 	console.log('HomeCtrl');
-	$rootScope.loggedin = true;
 	$scope.userScenes = {};	
 	$scope.showUserScenes = true;	
 	

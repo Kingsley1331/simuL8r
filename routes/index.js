@@ -401,7 +401,6 @@ module.exports = function(passport){
 	// logged in.  Otherwise, authentication has failed.
 	
 	router.get('/auth/google/callback',
-	//router.get('/oauth2callback',
 	  passport.authenticate('google', { successRedirect: '/#/home',
 										failureRedirect: '/login' }));
 		

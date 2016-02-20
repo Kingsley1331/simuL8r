@@ -1,6 +1,18 @@
 app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
+	/** put this in a service **/
+	$http.get('/loggedin').success(function(user){
+		// User is Authenticated
+		if(user !== '0'){
+			$rootScope.currentUser = user;
+			$rootScope.loggedin=true;
+		}else if(user == '0'){// User is Not Authenticated
+			$rootScope.loggedin=false;
+		}
+	});	
+
 	console.log('$rootScope.loggedin ', $rootScope.loggedin);
 	console.log('$rootScope.currentUser ', $rootScope.currentUser);	
+	
 	$scope.demoScenes = {};
 	// newscene function 
 	clearAll(wallConfig);

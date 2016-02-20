@@ -1,8 +1,17 @@
 app.controller('HomeCtrl', function($scope, $rootScope, $http){
+	/** put this in a service **/
+	$http.get('/loggedin').success(function(user){
+		// User is Authenticated
+		if(user !== '0'){
+			$rootScope.currentUser = user;
+			$rootScope.loggedin=true;
+		}else if(user == '0'){// User is Not Authenticated
+			$rootScope.loggedin=false;
+		}
+	});		
 	$scope.hasUserTableLoaded = false; // this variable ensures that page on of the user's table is made automatically active only once
 	console.log('HomeCtrl');
 	setTimeout($rootScope.setNav, 500);
-	$rootScope.loggedin = true;
 	$scope.showUsers = true;
 	$scope.showUser = false;
 	$scope.users = [];

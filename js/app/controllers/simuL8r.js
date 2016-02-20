@@ -1,4 +1,14 @@
 app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope){
+		/** put this in a service **/
+	$http.get('/loggedin').success(function(user){
+		// User is Authenticated
+		if(user !== '0'){
+			$rootScope.currentUser = user;
+			$rootScope.loggedin=true;
+		}else if(user == '0'){// User is Not Authenticated
+			$rootScope.loggedin=false;
+		}
+	});	
 	init();
 	console.log('$rootScope.loggedin ', $rootScope.loggedin);
 	console.log('$rootScope.currentUser ', $rootScope.currentUser);
@@ -170,16 +180,6 @@ $scope.addPageEventListeners = function(){
 	}
 	
 		/*********************************************************** end tabs ******************************************************************/		
-	
-	$http.get('/loggedin').success(function(user){
-		// User is Authenticated
-		if(user !== '0'){
-			return true;
-		}else if(typeof user == 'object'){// User is Not Authenticated
-			//location.replace('/');
-			$rootScope.loggedin=true;
-		}
-	});
 	
 	$scope.currentScene = '';
 	
