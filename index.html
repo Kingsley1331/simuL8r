@@ -66,7 +66,7 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="css/AdminLTE.css">
-	<link rel="stylesheet" href="css/views/views.css">
+
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
           apply the skin class to the body tag so the changes take effect.
@@ -86,6 +86,7 @@
 	<link type="text/css" rel="stylesheet" href="css/main.css"></link> -->
 	<link type="text/css" rel="stylesheet" href="js/lib/PACE/themes/blue/pace-theme-center-atom.css"></link>	
 	<link type='text/css' rel='stylesheet' href='css/spectrum.css'></link>
+	<link rel="stylesheet" href="css/views/views.css">
 	
   </head>
   <!--
@@ -110,18 +111,13 @@
   -->
   <body class='hold-transition skin-green sidebar-mini'>
 	<div id='barnav'></div>  
-    <div class="wrapper" ng-controller='NavCtrl'>
+    <div class="wrapper" ng-controller='NavCtrl' style='min-width: 1300px'>
 
       <!-- Main Header -->
-      <header class="main-header">
+      <header class="main-header" style='background-color: transparent'>
 
         <!-- Logo -->
-        <a href="#" class="logo">
-          <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>s</b>L8</span>
-          <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>simuL8r</b></span>
-        </a>
+       
         <!-- Header Navbar -->
         <nav class="navbar navbar-static-top" role="navigation">
 		<h3 id='scene-title'> scene title</h3>
@@ -274,6 +270,10 @@
           </div>
         </nav>
       </header>
+	  
+	   <a href="#" class="logo">
+          <span class="logo-lg"><b>simuL8r</b></span>
+        </a>
       <!-- Left side column. contains the logo and sidebar -->
       <aside class="main-sidebar">
 

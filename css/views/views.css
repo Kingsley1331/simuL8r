@@ -1,9 +1,17 @@
+html{
+	zoom: 100%;
+}
+
 body{
 	overflow: scroll;
 }
 .main-header{
 	z-index: 0;
+	min-width: 1300px;
 }
+
+
+
 
 ::-webkit-scrollbar { 
     display: none; 
@@ -442,7 +450,17 @@ ul.nav.navbar-nav{
 
 
 
-@media only screen and (min-width: 1500px) {
+@media only screen and (min-width: 1800px) {
+	
+	#sceneName{
+		color: white;
+		position: absolute;
+		top: 0px;
+		left: 50%;
+		z-index: 10;
+		font-size: 30px
+	}
+		
 	#showScenes{
 		left: 190px;
 		top: 8px;	
@@ -459,36 +477,45 @@ ul.nav.navbar-nav{
 	}
 }
 
-@media only screen and (max-width: 1500px) {
+@media only screen and (max-width: 1800px) {
+	
+	#sceneName{
+		color: white;
+		position: absolute;
+		top: 0px;
+		left: 750px;
+		z-index: 10;
+		font-size: 30px
+	}
+	
 	btn-info{
 		z-index: 1000
 	}
 	#showScenes{
-		left: -840px;
+		left: -870px;
 		top: -41px;	
 	}
 
 	#showOptions{
-		left: -975px; 
+		left: -1005px; 
 		top: -41px;
 	}
 
 	#refresh{
-		left: -711px;
+		left: -741px;
 		top: -41px;	
 	}
 }
 
-#sceneName{
-	color: white;
-	position: absolute;
-	top: 0px;
-	left: 50%;
-	z-index: 10;
-	font-size: 30px
-	
-}
 
+.logo{
+    position: absolute;
+    left: 50px;
+    top: 0px;
+    z-index: 10000;
+    font-size: 35px;
+    color: white;
+}
 
 
 
@@ -592,8 +619,59 @@ ul.nav.navbar-nav{
 	font-size: 20px;
 }
 
-#registerButton, #loginButton{
-	position: relative;
+#loginButton{
+	position: absolute;
+	left: 320px;
+	top: -7px;
+}
+
+#registerButton{
+	position: absolute;
 	left: 230px;
+	top: -7px;	
+}
+.btn-google{
+	position: absolute;
+	top: 4px;
+}
+
+.panel-green{
+	width: 560px;
+}
+
+.form-actions{
+	position: relative;
+	margin-bottom: 30px;
+}
+
+
+
+@media only screen and (max-width: 1000px) {
+	#loginButton{
+		position: absolute;
+		left: 450px;
+		top: -7px;
+	}
+
+	#registerButton{
+		position: absolute;
+		left: 360px;
+		top: -7px;	
+	}
+
+	#btn-google-id{
+		top: 391px;
+		left: 40px;
+	}	
+}
+@media only screen and (min-width: 1000px) {
+	#btn-google-id{
+		top: 341px;
+		left: 40px;
+	}
+}
+
+.content-wrapper{
+	min-width: 1000px;
 }
 

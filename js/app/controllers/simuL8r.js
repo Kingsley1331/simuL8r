@@ -193,7 +193,6 @@ $scope.addPageEventListeners = function(){
 	$scope.scenesVisibility = 'show scenes';
 	
 	$scope.toggleSceneTable = function(){
-		alert('toggleSceneTable');
 		if(!$scope.showSceneTable){
 			$scope.showSceneTable = true;
 			$scope.scenesVisibility = 'hide scenes';			
@@ -229,6 +228,7 @@ $scope.addPageEventListeners = function(){
 				var name = response.name;
 				$scope.addData(name);
 				$scope.showSceneTable = false;
+				$scope.sceneName = response.name;
 			});
 			$scope.getAll();
 		}else{
@@ -290,6 +290,7 @@ $scope.addPageEventListeners = function(){
 					//$scope.paginator($scope.currentPageNumber);
 						//$scope.getAll();
 						$scope.showSceneTable = false;
+						$scope.sceneName = response.name;
 				});
 
 	}
