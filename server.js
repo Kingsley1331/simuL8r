@@ -23,7 +23,7 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
-/*
+
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
@@ -41,7 +41,7 @@ var s3fsImpl = new S3FS(S3_BUCKET, {
 	secretAccessKey: AWS_SECRET_ACCESS_KEY
 });
 
-s3fsImpl.create();*/
+s3fsImpl.create();
 
 app.get('/',function(req,res){
       res.sendfile("main.html");
@@ -79,11 +79,11 @@ app.post('/uploadProfile', function(req, res){
 					console.log('Error#############', err);
 				}
 				if(mimetype === '.octet-stream'){
-					user.local.profilePic = 'images/profiles/Default.png';
-					//user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
+					//user.local.profilePic = 'images/profiles/Default.png';
+					user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
 				}else{
-					user.local.profilePic = 'images/profiles/' + value + mimetype;
-					//user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
+					//user.local.profilePic = 'images/profiles/' + value + mimetype;
+					user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				}
 				user.save(function(err) {
 				if (err){
@@ -99,14 +99,14 @@ app.post('/uploadProfile', function(req, res){
 		res.redirect('/#/home');
 		
 		// send image to AWS S3
-		/*var stream = fs.createReadStream(path + value1 + mimetype1);
-		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
+		var stream = fs.createReadStream(path + value1 + mimetype1);
+		return s3fsImpl.writeFile('images/profiles/test/' + value1 + mimetype1, stream).then(function(){	
 			fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
 				}
 			})
-		});*/	
+		});
     });
 });
 
