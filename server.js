@@ -112,6 +112,16 @@ app.post('/uploadProfile', function(req, res){
 
 
 
+
+
+
+
+
+
+
+
+
+
 // Configuring Passport
 // TODO - Why Do we need this key ?
 app.use(expressSession({secret: 'mySecretKey'}));

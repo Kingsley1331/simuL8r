@@ -5,7 +5,7 @@ var Users = require('./../models/users');
 var fs = require('fs');
 var busboy = require('connect-busboy');
 
-
+/*
 function deleteFile(path){
 	fs.unlink(path, function(err){
 	   if(err){
@@ -13,7 +13,7 @@ function deleteFile(path){
 	   }
 	   console.log("File deleted successfully!");
 	});
-}
+}*/
 
 function deleteAllFiles() {
 	fs.readdir('images/thumbnails/', function(err, files){
@@ -28,6 +28,44 @@ function deleteAllFiles() {
 	   });
 	});
 }
+
+
+
+
+
+var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
+var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;
+
+var aws = require('aws-sdk');
+aws.config.update({
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+  region:'eu-west-1' 
+});
+
+
+function deleteFile(path){
+	path = path.replace('http://s3.amazonaws.com/simuL8rBucket/', '');
+	var s3 = new aws.S3();
+	var deleteParam = {
+		Bucket: S3_BUCKET,
+		Delete: {
+			Objects: [
+				{Key: path},
+			]
+		}
+	}; 
+	s3.deleteObjects(deleteParam, function(err, data) {
+		if (err) console.log(err, err.stack);
+		else console.log('delete', data);
+	});
+}
+
+
+
+
+
 
 /**
 An example dataString might look like this ==> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==;"
