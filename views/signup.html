@@ -82,8 +82,8 @@
 					<div class="form-group">
 						<div class="input-icon right">
 							<i class="fa fa-lock"></i>
-							<input ng-model='newPassword' id="inputConfirmPassword" type="password" placeholder="Confirm Password" class="form-control" />
-							<span class="{{newPassword === '' ? 'hiddenInput' : ''}} inputStyle" id="{{user.password === newPassword? 'inputSuccess' : 'inputWarning'}}">{{user.password === newPassword ? 'passwords match!' : 'passwords do not match'}}</span>
+							<input ng-click='changeMessage();' ng-model='newPassword' id="inputConfirmPassword" type="password" placeholder="Confirm Password" class="form-control" />
+							<span class="{{newPassword === '' ? inputClass : ''}} inputStyle" id="{{user.password === newPassword? 'inputSuccess' : 'inputWarning'}}">{{user.password === newPassword ? 'passwords match!' : message}}</span>
 							</div>
 					</div>
 					

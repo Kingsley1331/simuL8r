@@ -47,12 +47,23 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.user.lastname = 'Ankomah';
 	$scope.user.profilePic = 'profilePic'; 
 	$scope.newPassword = '';
+	$scope.message = 'passwords do not match!';
+	$scope.inputClass = 'hiddenInput';
+	
+	$scope.changeMessage = function(){
+		if($scope.message === 'please enter a password'){
+			$scope.inputClass = 'hiddenInput';
+			$scope.message = 'passwords do not match!';
+		}
+	}
 	
 	$scope.signup = function(user){
 		console.log(user);
-		
+		if($scope.newPassword === ''){
+			$scope.inputClass = 'shownInput';
+			$scope.message = 'please enter a password';
+		}
 		if($scope.newPassword === $scope.user.password){
-			
 			$http.post('/signup', user)
 			.then(function(response){
 				console.log('response: ', response);
@@ -65,11 +76,9 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 				$rootScope.currentUser = user;
 				uploader.submit();
 			}, function(err){
-				alert('The username ' + '"' + user.username +'"' + ' already exists please enter a different one');
+				alert('The username ' + '"' + user.username + '"' + ' already exists please enter a different one');
 			});
-		
 		}
-		
 	}
 });
 

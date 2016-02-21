@@ -11,7 +11,7 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 			$rootScope.currentUser = user;
 			$rootScope.loggedin = true;
 			//alert('loggedin');
-			console.log('$rootScope.currentUser: ',$rootScope.currentUser)
+			console.log('$rootScope.currentUser: ', $rootScope.currentUser)
 			//location.replace('/simuL8r');
 			location.replace('#/home');
 			//$location.url('/profile');

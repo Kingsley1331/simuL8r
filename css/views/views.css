@@ -607,6 +607,10 @@ ul.nav.navbar-nav{
 	display: none
 }
 
+.shownInput{
+	display: block
+}
+
 #inputWarning{
 	color: red;
 }

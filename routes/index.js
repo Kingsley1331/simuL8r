@@ -329,7 +329,8 @@ module.exports = function(passport){
 	});
 	
 	router.post('/logout', function(req, res){
-		req.logOut();
+		//req.logOut();
+		req.logout();
 		//res.send(200);
 		res.redirect('/');
 	});
