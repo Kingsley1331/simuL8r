@@ -100,7 +100,7 @@ app.post('/uploadProfile', function(req, res){
 		
 		// send image to AWS S3
 		var stream = fs.createReadStream(path + value1 + mimetype1);
-		return s3fsImpl.writeFile('images/profiles/test/' + value1 + mimetype1, stream).then(function(){	
+		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
 			fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
