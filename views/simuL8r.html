@@ -1,5 +1,5 @@
 
-<div id = 'bar'>
+<div ng-cloak id = 'bar'>
 <!--
 <div class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector(this.id);}else{shapeSelector(this.id); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></div>
 
@@ -135,7 +135,7 @@
 <div ng-click="showRemote = true; showLocal = false; setTabs('remote');" class='tab' id='remote' ng-show='showSceneTable'>remote</div>
 <div ng-click="showLocal = true; showRemote = false; setTabs('local'); getAll();" class='tab' id='local' ng-show='showSceneTable'>local</div>	  
 
-<table class='view-table' id='sceneTable' ng-show='showSceneTable && showRemote'>
+<table ng-cloak class='view-table' id='sceneTable' ng-show='showSceneTable && showRemote'>
 	<tr>
 		<td colspan='3'></td>
 		<td colspan='4'><button type="button" class="btn btn-success" ng-click='create();'>save</td>
@@ -183,7 +183,7 @@
 
 
 
-<table class='view-table' id='indexedDBTable' ng-show='showSceneTable && showLocal'>
+<table ng-cloak class='view-table' id='indexedDBTable' ng-show='showSceneTable && showLocal'>
 	<tr>
 		<td colspan='4'></td>
 	</tr>
