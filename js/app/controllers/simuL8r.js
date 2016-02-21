@@ -28,14 +28,15 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.pagesArray = [];
 	$scope.numberOfScenes = 0;
 	$scope.numberOfPages = 1;	
+	$scope.showPageNav = false;
 
-	$scope.pageSize_i = 5;
+	$scope.pageSize_i = 4;
 	$scope.currentPageNumber_i = 1;	
 	$scope.currentPage_i = [];
 	$scope.pagesArray_i = [];
 	$scope.numberOfScenes_i = 0;
 	$scope.numberOfPages_i = 1;		
-	
+	$scope.showPageNav_i = false;
 	
 	$scope.pageTurner = function(bool){
 		if(bool === true){
@@ -328,6 +329,9 @@ $scope.addPageEventListeners = function(){
 			}
 			
 			$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
+			if($scope.numberOfPages > 1){
+				$scope.showPageNav = true;
+			}
 			$scope.pageNavigator();	
 			setTimeout(function(){
 				$scope.addPageEventListeners()
@@ -682,6 +686,9 @@ if (window.IDBTransaction){
 						}
 						
 						$scope.numberOfPages_i = Math.ceil($scope.numberOfScenes_i / $scope.pageSize_i);
+						if($scope.numberOfPages_i > 1){
+							$scope.showPageNav_i = true;
+						}		
 						$scope.pageNavigator_i();
 						setTimeout(function(){
 							$scope.addPageEventListeners()

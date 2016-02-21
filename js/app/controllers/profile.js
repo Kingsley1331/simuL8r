@@ -19,7 +19,8 @@ app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
 	$scope.currentPage = [];
 	$scope.pagesArray = [];
 	$scope.numberOfScenes = 0;
-	$scope.numberOfPages = 1;	
+	$scope.numberOfPages = 1;
+	$scope.showPageNav = false;	
 	
 	$scope.pageTurner = function(bool){
 		if(bool === true){
@@ -115,6 +116,9 @@ $scope.addPageEventListeners = function(){
 			}			
 			
 			$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
+			if($scope.numberOfPages > 1){
+				$scope.showPageNav = true;
+			}
 			$scope.pageNavigator();
 		});
 		//$scope.showUserScenes = !$scope.showUserScenes;

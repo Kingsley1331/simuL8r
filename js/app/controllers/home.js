@@ -33,20 +33,23 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	$scope.userPagesArray = [];
 	$scope.numberOfUsers = 0;
 	$scope.numberOfUserPages = 1;
+	$scope.showUserPageNav = false;
 	
 	$scope.scenePageSize = 5;
 	$scope.currentScenePageNumber = 1;	
 	$scope.currentScenePage = [];
 	$scope.scenePagesArray = [];
 	$scope.numberOfScenes = 0;
-	$scope.numberOfScenePages = 1;	
+	$scope.numberOfScenePages = 1;
+	$scope.showScenePageNav = false;	
 	
 	$scope.selU_scenePageSize = 5;
 	$scope.selU_currentScenePageNumber = 1;	
 	$scope.selU_currentScenePage = [];
 	$scope.selU_scenePagesArray = [];
 	$scope.selU_numberOfScenes = 0;
-	$scope.selU_numberOfScenePages = 1;		
+	$scope.selU_numberOfScenePages = 1;	
+	$scope.selU_showScenePageNav = false;	
 	
 	$scope.userPageTurner = function(bool){
 		if(bool === true){
@@ -209,6 +212,9 @@ $scope.addPageEventListeners = function(){
 				}
 			}
 			$scope.numberOfUserPages = Math.ceil($scope.numberOfUsers / $scope.userPageSize);
+			if($scope.numberOfUserPages > 1){
+				$scope.showUserPageNav = true;
+			}
 			$scope.usersPageNavigator();
 		});
 	}
@@ -236,6 +242,9 @@ $scope.addPageEventListeners = function(){
 				$scope.currentScenePage[j] = $scope.scenes[j];
 			}
 			$scope.numberOfScenePages = Math.ceil($scope.numberOfScenes / $scope.scenePageSize);
+			if($scope.numberOfScenePages > 1){
+				$scope.showScenePageNav = true;
+			}
 			$scope.scenesPageNavigator();
 			setTimeout(function(){
 				$scope.addPageEventListeners();
@@ -300,6 +309,9 @@ $scope.addPageEventListeners = function(){
 				$scope.selU_currentScenePage[j] = $scope.selectedUserScenes[j];
 			}
 			$scope.selU_numberOfScenePages = Math.ceil($scope.selU_numberOfScenes / $scope.selU_scenePageSize);
+			if($scope.selU_numberOfScenePages > 1){
+				$scope.selU_showScenePageNav = true;
+			}
 			$scope.selU_scenesPageNavigator();	
 			setTimeout(function(){
 				$scope.addPageEventListeners();

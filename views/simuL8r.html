@@ -165,7 +165,7 @@
 		<td><button type="button" class="btn btn-info" ng-click='updateScene(scene._id);'>update</button></td>
 		<td><button type="button" class="btn btn-danger" ng-click='remove(scene._id);'>delete</button></td>
 	</tr>
-	<tr>
+	<tr ng-show='showPageNav'>
 		<td colspan='5'>
 			<center>
 				<div class="container">  
@@ -209,7 +209,7 @@
 		<td><button type="button" class="btn btn-info" ng-click='editRecord(scene.userID);'>update</button></td>
 		<td><button type="button" class="btn btn-danger" ng-click='deleteData(scene.userID);'>delete</button></td>
 	</tr>
-	<tr>
+	<tr ng-show='showPageNav_i'>
 		<td colspan='5'>
 			<center>
 				<div class="container">  

@@ -24,11 +24,11 @@
 		<td class='button'><button type="button" class="btn btn-info" ng-click='selectUser(user._id)'>select</button></td>
 		<td class='button'><button type="button" class="btn btn-danger" ng-click="remove(user._id)">delete</button></td>
 	</tr>
-	<tr>
+	<tr ng-show='showUserPageNav'>
 		<td colspan='5'>
 			<center>
 				<div class="container">  
-				  <ul class="pagination">
+				  <ul class="pagination" >
 					  <li ng-click="userPageTurner(false);" id='prev'><a href="#/home">«</a></li>
 					  <li ng-repeat='page in userPagesArray' ng-click='userPaginator(userPagesArray[page] + 1);' id="{{userPagesArray[page] + 1}}" class='li_user' ng-class="{{(userPagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{userPagesArray[page] + 1}}</a></li>
 					  <li ng-click='userPageTurner(true);' id='next'><a href="#/home">»</a></li>
@@ -64,7 +64,7 @@
 		<td>{{scene.name}}</td>		
 		<td ng-click='getSelectedScene(scene._id)' ><img class='table-pic' width='75' ng-src='{{scene.imageUrl || defaultPic}}'/></td>	
 	</tr>
-	<tr>
+	<tr ng-show='showScenePageNav'>
 		<td colspan='5'>
 			<center>
 				<div class="container">  
@@ -124,7 +124,7 @@
 			<th></th>
 			<th></th>
 		</tr>
-		<tr>
+		<tr ng-show='selU_showScenePageNav'>
 			<td colspan='5'>
 				<center>
 					<div class="container">  
