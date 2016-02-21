@@ -30,7 +30,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.numberOfPages = 1;	
 	$scope.showPageNav = false;
 
-	$scope.pageSize_i = 4;
+	$scope.pageSize_i = 5;
 	$scope.currentPageNumber_i = 1;	
 	$scope.currentPage_i = [];
 	$scope.pagesArray_i = [];
