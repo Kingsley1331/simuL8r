@@ -1,6 +1,6 @@
-<div id='welcome'><h1>Welcome {{currentUser.local.username || currentUser.google.name}}!</h1></div>
+<div id='welcome' ng-cloak><h1>Welcome {{currentUser.local.username || currentUser.google.name}}!</h1></div>
 <!--<button type="button" class="btn btn-primary" ng-click='showAllUsers(true)'><span ng-show='!showUsers'>show users</span><span ng-show='showUsers'>hide users</span></button><br></br>-->
-<table id="users" class='view-table'  ng-show='showUsers'>
+<table ng-cloak id="users" class='view-table'  ng-show='showUsers'>
 	<!--<div ng-click='showAllUsers(true)' class='tab' id='usersTab'>users</div>-->
 	<div ng-click='showAllUsers(true)' class='tab' id='usersTab'>users</div>
 	<div ng-click='showAllScenes(true)' class='tab' id='scenesTab'>scenes</div>	
@@ -44,7 +44,7 @@
 
 
 <!--<button id="scenesButton" type="button" class="btn btn-primary" ng-click='showAllScenes()'><span ng-show='!showScenes'>show scenes</span><span ng-show='showScenes'>hide scenes</span></button><br></br>-->
-<table id="scenes" class='view-table' style="width:25%" ng-show='showScenes'>
+<table ng-cloak id="scenes" class='view-table' style="width:25%" ng-show='showScenes'>
 	<tr>
 		<th colspan='3'>
 			<div class="input-group" id='sceneSearch'>
@@ -81,8 +81,8 @@
 	</tr>	
 </table>
 
-<div class='view-table' id='selected_user' ng-show='showUser'>
-<div id='selectedUserWrapper'>
+<div ng-cloak class='view-table' id='selected_user' ng-show='showUser'>
+<div ng-cloak id='selectedUserWrapper'>
 	<span class='selectedUserDetails selectedUserUsername'>{{selectedUser[0].local.username || selectedUser[0].google.name}}'s profile</span>
 	<span class='selectedUserDetails'><img id='selectedUserImage' ng-src='{{selectedUser[0].local.profilePic}}'/></span>
 	<table id='selectedUserDetailsTable'>	
@@ -113,7 +113,7 @@
 	</table>	
 </div>
 	
-	<table id="selectedUserTable" width='40%' ng-show='showSelectedUserScenes'>
+	<table ng-cloak id="selectedUserTable" width='40%' ng-show='showSelectedUserScenes'>
 		<tr>
 			<th>name</th>
 			<th>thumbnail</th>
