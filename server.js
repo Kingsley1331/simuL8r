@@ -79,11 +79,11 @@ app.post('/uploadProfile', function(req, res){
 					console.log('Error#############', err);
 				}
 				if(mimetype === '.octet-stream'){
-					//user.local.profilePic = 'images/profiles/Default.png';
-					user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
+					user.local.profilePic = 'images/profiles/Default.png';
+					//user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
 				}else{
-					//user.local.profilePic = 'images/profiles/' + value + mimetype;
-					user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
+					user.local.profilePic = 'images/profiles/' + value + mimetype;
+					//user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				}
 				user.save(function(err) {
 				if (err){
@@ -101,11 +101,11 @@ app.post('/uploadProfile', function(req, res){
 		// send image to AWS S3
 		var stream = fs.createReadStream(path + value1 + mimetype1);
 		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
-			fs.unlink(path + value1 + mimetype1, function(err){
+			/*fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
 				}
-			})
+			})*/
 		});
     });
 });
