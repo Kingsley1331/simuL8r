@@ -8,6 +8,7 @@
     "url": "https://github.com/Kingsley1331/simuL8r.git"
   },
   "dependencies": {
+    "aws-sdk": "^2.2.37",
     "base64-image": "^0.1.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.13.2",
