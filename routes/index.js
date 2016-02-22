@@ -52,7 +52,7 @@ aws.config.update({
 
 
 function deleteFile(path){
-	path = path.replace('http://s3.amazonaws.com/simuL8rBucket/', '');
+	path = path.replace('https://s3.amazonaws.com/simuL8rBucket/', '');
 	var s3 = new aws.S3();
 	var deleteParam = {
 		Bucket: S3_BUCKET,

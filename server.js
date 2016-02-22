@@ -83,10 +83,10 @@ app.post('/uploadProfile', function(req, res){
 				}
 				if(mimetype === '.octet-stream'){
 					//user.local.profilePic = 'images/profiles/Default.png';
-					user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
+					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
 				}else{
 					//user.local.profilePic = 'images/profiles/' + value + mimetype;
-					user.local.profilePic = 'http://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
+					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				}
 				user.save(function(err) {
 				if (err){
@@ -116,14 +116,6 @@ app.post('/uploadProfile', function(req, res){
 			
     });
 });
-
-
-
-
-
-
-
-
 
 
 // Configuring Passport
