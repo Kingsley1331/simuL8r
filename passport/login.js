@@ -2,8 +2,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/users');
 var bCrypt = require('bcrypt-nodejs');
 
-module.exports = function(passport){
-	
+module.exports = function(passport){	
 	passport.use('login', new LocalStrategy({
            passReqToCallback : true
         },
@@ -19,7 +18,7 @@ module.exports = function(passport){
 					}
                     if (!user){
                         console.log('User Not Found With Username ' + username);
-                        //return done(null, false, req.flash('message', 'User Not found.'));     
+                        // return done(null, false, req.flash('message', 'User Not found.'));     
 						return done(null, false, {message: 'unable to log in'}); 
                     }
                     // User exists but wrong password, log the error 

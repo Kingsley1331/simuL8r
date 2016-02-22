@@ -24,27 +24,29 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
-
+var environment = 'production'
 var s3 = new aws.S3();
 
-var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
-var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
-var S3_BUCKET = process.env.S3_BUCKET;
+if(environment === 'production'){
+	var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
+	var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+	var S3_BUCKET = process.env.S3_BUCKET;
 
 
-console.log('AWS_ACCESS_KEY_ID ', AWS_ACCESS_KEY_ID);
-console.log('AWS_SECRET_KEY ', AWS_SECRET_ACCESS_KEY);
-console.log('S3_BUCKET ', S3_BUCKET);
+	console.log('AWS_ACCESS_KEY_ID ', AWS_ACCESS_KEY_ID);
+	console.log('AWS_SECRET_KEY ', AWS_SECRET_ACCESS_KEY);
+	console.log('S3_BUCKET ', S3_BUCKET);
 
-var S3FS = require('s3fs');
-var multiparty = require('connect-multiparty');
-var multipartyMiddleware = multiparty();
-var s3fsImpl = new S3FS(S3_BUCKET, {
-	accessKeyId: AWS_ACCESS_KEY_ID,
-	secretAccessKey: AWS_SECRET_ACCESS_KEY
-});
+	var S3FS = require('s3fs');
+	var multiparty = require('connect-multiparty');
+	var multipartyMiddleware = multiparty();
+	var s3fsImpl = new S3FS(S3_BUCKET, {
+		accessKeyId: AWS_ACCESS_KEY_ID,
+		secretAccessKey: AWS_SECRET_ACCESS_KEY
+	});
 
-s3fsImpl.create();
+	s3fsImpl.create();
+}
 
 app.get('/',function(req,res){
       res.sendfile("main.html");
@@ -101,19 +103,21 @@ app.post('/uploadProfile', function(req, res){
     req.busboy.on('finish', function(field){
 		//res.redirect('/#/home');
 		// send image to AWS S3
-		var stream = fs.createReadStream(path + value1 + mimetype1);
-		//return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){
-			
-		setTimeout(function(){
-			s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){				
-			fs.unlink(path + value1 + mimetype1, function(err){
-				if(err){
-					console.error(err);
-				}
-			});
-			res.redirect('/#/home');
-		})}, 500 );
-			
+		if(environment === 'production'){
+			var stream = fs.createReadStream(path + value1 + mimetype1);
+			//return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){
+				
+			setTimeout(function(){
+				s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){				
+					fs.unlink(path + value1 + mimetype1, function(err){
+						if(err){
+							console.error(err);
+						}
+					});
+					res.redirect('/#/home');
+				});
+			}, 500 );
+		);	
     });
 });
 

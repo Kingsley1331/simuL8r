@@ -46,7 +46,7 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.user.firstname = 'King';
 	$scope.user.lastname = 'Ankomah';
 	$scope.user.profilePic = 'profilePic'; 
-	$scope.newPassword = '';
+	$scope.newPassword = '12345';
 	$scope.message = 'passwords do not match!';
 	$scope.inputClass = 'hiddenInput';
 	

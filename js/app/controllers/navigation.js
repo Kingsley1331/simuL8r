@@ -16,7 +16,7 @@ app.controller('NavCtrl', function($scope, $rootScope, $http, $location){
 			$rootScope.currentUser = null;
 			$rootScope.loggedin = false;
 			console.log('logging out!!!');
-			$location.url('/home');
+			$location.url('/login');
 		});
 	}
 	

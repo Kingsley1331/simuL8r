@@ -375,7 +375,7 @@ module.exports = function(passport){
 		//req.logOut();
 		req.logout();
 		//res.send(200);
-		res.redirect('/');
+		res.redirect('/#/login');
 	});
 
 	router.get('/loggedin', function(req, res){
