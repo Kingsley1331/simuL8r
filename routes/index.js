@@ -37,6 +37,7 @@ var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var S3_BUCKET = process.env.S3_BUCKET;
 
+
 var aws = require('aws-sdk');
 /*aws.config.update({
   accessKeyId: AWS_ACCESS_KEY_ID,

@@ -14,6 +14,7 @@ var busboy = require('connect-busboy');
 var User = require('./models/users');
 var flash = require('connect-flash');
 var app = express();
+var aws = require('aws-sdk');
 var routes = require('./routes/index')(passport);
 //app.use(express.static(__dirname + 'login.html'));
 app.use(busboy({ immediate: true }));
@@ -23,6 +24,8 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
+
+var s3 = new aws.S3();
 
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
@@ -96,22 +99,23 @@ app.post('/uploadProfile', function(req, res){
 	});		
     // Listen for 'finish' event and redirect to the main app
     req.busboy.on('finish', function(field){
-		res.redirect('/#/home');
-		
+		//res.redirect('/#/home');
 		// send image to AWS S3
 		var stream = fs.createReadStream(path + value1 + mimetype1);
-		return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){	
+		//return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){
+			
+		setTimeout(function(){
+			s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){				
 			fs.unlink(path + value1 + mimetype1, function(err){
 				if(err){
 					console.error(err);
 				}
-			})
-		});
+			});
+			res.redirect('/#/home');
+		})}, 500 );
+			
     });
 });
-
-
-
 
 
 
