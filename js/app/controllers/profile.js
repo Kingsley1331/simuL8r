@@ -1,4 +1,4 @@
-app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
+app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http, $timeout){
 	/** put this in a service **/
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
@@ -46,9 +46,9 @@ app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http){
 		$scope.currentPage.splice(0, firstUserIndex);	
 	}	
 		
-	setTimeout(function(){
-		$scope.addPageEventListeners()
-	}, 500);
+	$timeout(function() {
+		$scope.addPageEventListeners();
+	}, 200);
 
 
 $scope.addPageEventListeners = function(){

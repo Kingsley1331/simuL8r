@@ -1,4 +1,4 @@
-app.controller('HomeCtrl', function($scope, $rootScope, $http){
+app.controller('HomeCtrl', function($scope, $rootScope, $http, $timeout){
 	/** put this in a service **/
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
@@ -11,7 +11,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 	});		
 	$scope.hasUserTableLoaded = false; // this variable ensures that page one of the user's table is made automatically active only once
 	console.log('HomeCtrl');
-	setTimeout($rootScope.setNav, 500);
+	$timeout($rootScope.setNav, 200);
 	$scope.showUsers = true;
 	$scope.showUser = false;
 	$scope.users = [];
@@ -124,12 +124,14 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http){
 		$scope.selU_currentScenePage.splice(0, firstSceneIndex);
 	}
 	
-	setTimeout(function(){
-		$scope.addPageEventListeners()
-	}, 500);
+	
 
+	$timeout(function() {
+		$scope.addPageEventListeners();
+	}, 200);
 
 $scope.addPageEventListeners = function(){
+	//alert('addPageEventListeners');
 	var pages = $('.pagination > li');
 	if(!$scope.hasUserTableLoaded){
 		$('#1').addClass('active');
@@ -246,9 +248,9 @@ $scope.addPageEventListeners = function(){
 				$scope.showScenePageNav = true;
 			}
 			$scope.scenesPageNavigator();
-			setTimeout(function(){
+			$timeout(function() {
 				$scope.addPageEventListeners();
-			}, 500);			
+			}, 200);			
 		});		
 	}
 	
@@ -313,9 +315,9 @@ $scope.addPageEventListeners = function(){
 				$scope.selU_showScenePageNav = true;
 			}
 			$scope.selU_scenesPageNavigator();	
-			setTimeout(function(){
+			$timeout(function() {
 				$scope.addPageEventListeners();
-			}, 500);
+			}, 200);
 		});
 		$scope.showSelectedUserScenes = !$scope.showSelectedUserScenes;
 	}	

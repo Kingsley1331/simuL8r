@@ -24,10 +24,10 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
-var environment = 'dev'
+var environment = 'production';
 var s3 = new aws.S3();
 
-if(environment == 'production'){
+if(environment === 'production'){
 	var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 	var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 	var S3_BUCKET = process.env.S3_BUCKET;
@@ -85,7 +85,7 @@ app.post('/uploadProfile', function(req, res){
 				}
 				if(mimetype === '.octet-stream'){
 					//user.local.profilePic = 'images/profiles/Default.png';
-					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/default.png';
+					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/Default.png';
 				}else{
 					//user.local.profilePic = 'images/profiles/' + value + mimetype;
 					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
@@ -103,7 +103,7 @@ app.post('/uploadProfile', function(req, res){
     req.busboy.on('finish', function(field){
 		//res.redirect('/#/home');
 		// send image to AWS S3
-		if(environment == 'production'){
+		if(environment === 'production'){
 			var stream = fs.createReadStream(path + value1 + mimetype1);
 			//return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){
 				

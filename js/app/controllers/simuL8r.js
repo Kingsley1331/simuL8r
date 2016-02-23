@@ -1,4 +1,4 @@
-app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope){
+app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope, $timeout){
 	// these variable ensures that first page on tables are made automatically active only once
 	$scope.hasRemoteTableLoaded = false; 
 	$scope.hasLocalTableLoaded = false;  
@@ -90,7 +90,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		$( '#' + pageNumber + '_i' ).trigger( 'click' );
 	}	
 		
-	setTimeout(function(){
+	$timeout(function(){
 		//$scope.addPageEventListeners();
 	}, 500);
 
@@ -333,9 +333,9 @@ $scope.addPageEventListeners = function(){
 			if(pageNumber){
 				$scope.paginator(pageNumber);
 			}else{
-				setTimeout(function(){
-					$scope.addPageEventListeners()
-				}, 500);
+				$timeout(function() {
+					$scope.addPageEventListeners();
+				}, 200);
 			}
 		});	
 	}
@@ -445,7 +445,7 @@ $scope.addPageEventListeners = function(){
 		
 	checkParameters();	
 		
-	setTimeout($scope.loadSelectedScene, 500);
+	$timeout($scope.loadSelectedScene, 200);
 	canvas = document.getElementById('canvas');
 	
 	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
@@ -693,9 +693,9 @@ if (window.IDBTransaction){
 					if(pageNumber){
 						$scope.paginator_i(pageNumber);
 					}else{
-						setTimeout(function(){
-							$scope.addPageEventListeners()
-						}, 500);
+						$timeout(function() {
+							$scope.addPageEventListeners();
+						}, 200);
 					}
 					
 				}
