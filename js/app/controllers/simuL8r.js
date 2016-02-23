@@ -76,10 +76,9 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		$scope.currentPage.splice(0, firstUserIndex);	
 		console.log('currentPage', $scope.currentPage);
 	}		
-	
-		
+
 	$scope.paginator_i = function(pageNumber){
-		$scope.currentPageNumber_i = pageNumber;
+		$scope.currentPageNumber_i = pageNumber;		
 		$scope.numberOfScenes_i = $scope.IDBscenes.length;
 		for(var j = 0; j < $scope.numberOfScenes_i; j++){
 			$scope.currentPage_i[j] = $scope.IDBscenes[j];
@@ -87,10 +86,8 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		$scope.numberOfPages_i = Math.ceil($scope.numberOfScenes_i / $scope.pageSize_i);
 		var firstUserIndex = (pageNumber - 1) * $scope.pageSize_i;
 		$scope.currentPage_i.splice(0, firstUserIndex);	
-		/*console.log('numberOfScenes_i', $scope.numberOfScenes_i);
-		console.log('pageSize_i', $scope.pageSize_i);
 		console.log('currentPage_i', $scope.currentPage_i);
-		console.log('numberOfPages_i', $scope.numberOfPages_i);*/
+		$( '#' + pageNumber + '_i' ).trigger( 'click' );
 	}	
 		
 	setTimeout(function(){
@@ -228,16 +225,16 @@ $scope.addPageEventListeners = function(){
 				var thumbnailUrl = $scope.currentThumbnail[response._id];
 				var name = response.name;
 				$scope.addData(name);
-				$scope.showSceneTable = false;
+				//$scope.showSceneTable = false;
 				$scope.sceneName = response.name;
 			});
-			$scope.getAll();
+			$scope.getAll($scope.currentPageNumber);
 		}else{
 			$scope.addData();
 		}
 	}
 	
-	
+
 	function shapeLoader(response, id){
 		try {
 			loadShapes(response);
@@ -286,11 +283,9 @@ $scope.addPageEventListeners = function(){
 				$http.put('/scenes/' + id, $scope.simulation)
 				.success(function(response){
 					console.log('update ', response);					
-					$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
-					var thumbnailUrl = $scope.currentThumbnail[response._id];
-					//$scope.paginator($scope.currentPageNumber);
-						//$scope.getAll();
-						$scope.showSceneTable = false;
+					//$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
+					//var thumbnailUrl = $scope.currentThumbnail[response._id];
+						$scope.getAll($scope.currentPageNumber);
 						$scope.sceneName = response.name;
 				});
 
@@ -302,9 +297,9 @@ $scope.addPageEventListeners = function(){
 			$http.delete('/scene/' + id)
 			.success(function(response){
 				console.log('remove ', response);
-				$scope.showSceneTable = false;
+				//$scope.showSceneTable = false;
 			});
-			//$scope.getAll();
+			$scope.getAll();
 		}
 	}
 	
@@ -315,8 +310,8 @@ $scope.addPageEventListeners = function(){
 		});
 		$scope.getAll();
 	}
-		
-	$scope.getAll = function(bool){
+
+	$scope.getAll = function(pageNumber){
 		$scope.simulation = shapeSelection;
 		$http.get('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
@@ -324,18 +319,24 @@ $scope.addPageEventListeners = function(){
 			$scope.scenes = response;
 					
 			$scope.numberOfScenes = response.length;
-			for(var j = 0; j < $scope.numberOfScenes; j++){
-				$scope.currentPage[j] = $scope.scenes[j];
-			}
-			
+		
+				for(var j = 0; j < $scope.numberOfScenes; j++){
+					$scope.currentPage[j] = $scope.scenes[j];
+				}
+		
 			$scope.numberOfPages = Math.ceil($scope.numberOfScenes / $scope.pageSize);
 			if($scope.numberOfPages > 1){
 				$scope.showPageNav = true;
 			}
 			$scope.pageNavigator();	
-			setTimeout(function(){
-				$scope.addPageEventListeners()
-			}, 500);
+			
+			if(pageNumber){
+				$scope.paginator(pageNumber);
+			}else{
+				setTimeout(function(){
+					$scope.addPageEventListeners()
+				}, 500);
+			}
 		});	
 	}
 	
@@ -496,7 +497,6 @@ $scope.addPageEventListeners = function(){
 	
 	console.log('indexedDB');
 	var scenes = [];
-	var display = true;
 	var sceneTable = document.getElementById('sceneTable');
 		
 	// In the following line, you should include the prefixes of implementations you want to test.
@@ -610,11 +610,12 @@ if (window.IDBTransaction){
 		var objectStoreRequest = objectStore.add(scene); 		
 		objectStoreRequest.onsuccess = function(event) {
 			// report the success of our new item going into the database
-			console.log('New scene added to database');		
+			console.log('New scene added to database');
+			$scope.getAll_i($scope.currentPageNumber_i);			
 			//appendTable(null, scene.userID, scene, scene.imgURL);	
-			setTimeout(function(){
+			/*setTimeout(function(){
 				$scope.getAll_i();
-			}, 300);			
+			}, 300);*/			
 		};
 	}	
 	
@@ -648,55 +649,57 @@ if (window.IDBTransaction){
 	}
 
 	
-	 $scope.getAll_i = function(){
-		if(display){
-			//console.log('sceneTable.children.length', sceneTable.children.length);
-			//console.log('sceneTable.childNodes.length', sceneTable.childNodes.length);
-			for(var i = 3; i < sceneTable.children.length; i++){
-				sceneTable.removeChild(sceneTable.childNodes[i]);
-			}			
-			scenes = [];
-			var request = indexedDB.open('test');
-			request.onsuccess = function(e){
-				var idb = e.target.result;
-				var transaction = idb.transaction('scenes', IDBTransaction.READ_ONLY);
-				var objectStore = transaction.objectStore('scenes');
-				objectStore.openCursor().onsuccess = function(event){
-					var cursor = event.target.result;
-					if (cursor){
-						//console.log('Cursor data', cursor.value);
-						//console.log('event: ', event);
-						scenes.push(cursor.value);
-						//$scope.IDBscenes.push(cursor.value);
-						cursor.continue();
+	 $scope.getAll_i = function(pageNumber){
+		//console.log('sceneTable.children.length', sceneTable.children.length);
+		//console.log('sceneTable.childNodes.length', sceneTable.childNodes.length);
+		for(var i = 3; i < sceneTable.children.length; i++){
+			sceneTable.removeChild(sceneTable.childNodes[i]);
+		}			
+		scenes = [];
+		var request = indexedDB.open('test');
+		request.onsuccess = function(e){
+			var idb = e.target.result;
+			var transaction = idb.transaction('scenes', IDBTransaction.READ_ONLY);
+			var objectStore = transaction.objectStore('scenes');
+			objectStore.openCursor().onsuccess = function(event){
+				var cursor = event.target.result;
+				if (cursor){
+					//console.log('Cursor data', cursor.value);
+					//console.log('event: ', event);
+					scenes.push(cursor.value);
+					//$scope.IDBscenes.push(cursor.value);
+					cursor.continue();
+				}else{
+					console.log('scenes ', scenes);
+					//$scope.IDBscenes = scenes;
+					console.log('IDBscenes ', $scope.IDBscenes);
+					for(var i = 0; i < scenes.length; i++){
+						//appendTable(i);
+					}
+					$scope.IDBscenes = scenes;
+					console.log('IDBscenes ', $scope.IDBscenes);
+					console.log('All entries displayed.');
+					
+					$scope.numberOfScenes_i = $scope.IDBscenes.length;
+					for(var j = 0; j < $scope.numberOfScenes_i; j++){
+						$scope.currentPage_i[j] = $scope.IDBscenes[j];
+					}
+					
+					$scope.numberOfPages_i = Math.ceil($scope.numberOfScenes_i / $scope.pageSize_i);
+					if($scope.numberOfPages_i > 1){
+						$scope.showPageNav_i = true;
+					}		
+					$scope.pageNavigator_i();
+					if(pageNumber){
+						$scope.paginator_i(pageNumber);
 					}else{
-						console.log('scenes ', scenes);
-						//$scope.IDBscenes = scenes;
-						console.log('IDBscenes ', $scope.IDBscenes);
-						for(var i = 0; i < scenes.length; i++){
-							//appendTable(i);
-						}
-						$scope.IDBscenes = scenes;
-						console.log('IDBscenes ', $scope.IDBscenes);
-						console.log('All entries displayed.');
-						
-						$scope.numberOfScenes_i = $scope.IDBscenes.length;
-						for(var j = 0; j < $scope.numberOfScenes_i; j++){
-							$scope.currentPage_i[j] = $scope.IDBscenes[j];
-						}
-						
-						$scope.numberOfPages_i = Math.ceil($scope.numberOfScenes_i / $scope.pageSize_i);
-						if($scope.numberOfPages_i > 1){
-							$scope.showPageNav_i = true;
-						}		
-						$scope.pageNavigator_i();
 						setTimeout(function(){
 							$scope.addPageEventListeners()
 						}, 500);
 					}
-				};	
-			}
-			display = false;
+					
+				}
+			};	
 		}
 	}
 	
@@ -803,7 +806,6 @@ if (window.IDBTransaction){
 	$scope.deleteData = function(id){
 		var request = indexedDB.open('test');
 		var deleteScene = confirm('Are you sure you want to delete this scene?');
-		$scope.showSceneTable = false;
 		if(deleteScene){
 			request.onsuccess = function(e){
 				var idb = e.target.result;
@@ -844,8 +846,7 @@ if (window.IDBTransaction){
 				scene.userID = key;
 				currentScene.imgURL = dataURL;
 				data = scene;
-				var name = prompt("add or update this scene's name", currentScene.name);
-				$scope.showSceneTable = false;				
+				var name = prompt("add or update this scene's name", currentScene.name);			
 				data.name = name;
 				data.imgURL = currentScene.imgURL;
 				var result = objectStore.put(data);
@@ -854,6 +855,7 @@ if (window.IDBTransaction){
 					var sceneKey = ev.target.result;
 					console.log('Updated scene: ', ev.target);
 					console.log('Successfully edited key ' + sceneKey);
+					$scope.getAll_i($scope.currentPageNumber_i);
 				};
 	 
 				result.onerror = function(ev){

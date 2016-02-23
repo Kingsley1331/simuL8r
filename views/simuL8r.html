@@ -133,7 +133,7 @@
 </nav>
 
 <div ng-click="showRemote = true; showLocal = false; setTabs('remote');" class='tab' id='remote' ng-show='showSceneTable'>remote</div>
-<div ng-click="showLocal = true; showRemote = false; setTabs('local'); getAll();" class='tab' id='local' ng-show='showSceneTable'>local</div>	  
+<div ng-click="showLocal = true; showRemote = false; setTabs('local');" class='tab' id='local' ng-show='showSceneTable'>local</div>	  
 
 <table ng-cloak class='view-table' id='sceneTable' ng-show='showSceneTable && showRemote'>
 	<tr>
@@ -188,7 +188,7 @@
 		<td colspan='4'></td>
 	</tr>
 	<tr>
-		<td colspan='3'><td colspan='4'><button type="button" class="btn btn-success" ng-click='addData();'>save</td>
+		<td colspan='4'><button type="button" class="btn btn-success" ng-click='addData();'>save</button></td>
 	</tr>	
 	<tr>
 		<td colspan='2'>
