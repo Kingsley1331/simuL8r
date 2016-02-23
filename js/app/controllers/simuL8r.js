@@ -1,7 +1,8 @@
 app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope, $timeout){
 	// these variable ensures that first page on tables are made automatically active only once
 	$scope.hasRemoteTableLoaded = false; 
-	$scope.hasLocalTableLoaded = false;  
+	$scope.hasLocalTableLoaded = false; 
+	$timeout($rootScope.setNav, 500);	
 	
 		/** put this in a service **/
 	$http.get('/loggedin').success(function(user){

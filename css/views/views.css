@@ -551,7 +551,14 @@ ul.nav.navbar-nav{
 #thumbnail{
 	background-color: black;
 }
+.scene-name{
+	color: white;
+	font-size: 20px;
+}
 
+#demo-page{
+	background-color: black;	
+}
 
 #scene-title{
 	position:absolute;
