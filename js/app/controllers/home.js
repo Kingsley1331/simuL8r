@@ -11,7 +11,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http, $timeout){
 	});		
 	$scope.hasUserTableLoaded = false; // this variable ensures that page one of the user's table is made automatically active only once
 	console.log('HomeCtrl');
-	$timeout($rootScope.setNav, 200);
+	$timeout($rootScope.setNav, 500);
 	$scope.showUsers = true;
 	$scope.showUser = false;
 	$scope.users = [];
@@ -128,7 +128,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $http, $timeout){
 
 	$timeout(function() {
 		$scope.addPageEventListeners();
-	}, 200);
+	}, 500);
 
 $scope.addPageEventListeners = function(){
 	//alert('addPageEventListeners');
@@ -250,7 +250,7 @@ $scope.addPageEventListeners = function(){
 			$scope.scenesPageNavigator();
 			$timeout(function() {
 				$scope.addPageEventListeners();
-			}, 200);			
+			}, 500);			
 		});		
 	}
 	
@@ -317,7 +317,7 @@ $scope.addPageEventListeners = function(){
 			$scope.selU_scenesPageNavigator();	
 			$timeout(function() {
 				$scope.addPageEventListeners();
-			}, 200);
+			}, 500);
 		});
 		$scope.showSelectedUserScenes = !$scope.showSelectedUserScenes;
 	}	

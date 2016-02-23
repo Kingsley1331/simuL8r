@@ -48,7 +48,7 @@ app.controller('ProfileCtrl', function($scope, $location, $rootScope, $http, $ti
 		
 	$timeout(function() {
 		$scope.addPageEventListeners();
-	}, 200);
+	}, 500);
 
 
 $scope.addPageEventListeners = function(){

@@ -335,7 +335,7 @@ $scope.addPageEventListeners = function(){
 			}else{
 				$timeout(function() {
 					$scope.addPageEventListeners();
-				}, 200);
+				}, 500);
 			}
 		});	
 	}
@@ -445,7 +445,7 @@ $scope.addPageEventListeners = function(){
 		
 	checkParameters();	
 		
-	$timeout($scope.loadSelectedScene, 200);
+	$timeout($scope.loadSelectedScene, 500);
 	canvas = document.getElementById('canvas');
 	
 	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
@@ -695,7 +695,7 @@ if (window.IDBTransaction){
 					}else{
 						$timeout(function() {
 							$scope.addPageEventListeners();
-						}, 200);
+						}, 500);
 					}
 					
 				}
