@@ -51,7 +51,7 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.inputClass = 'hiddenInput';
 	
 	$scope.changeMessage = function(){
-		if($scope.message === 'please enter a password'){
+		if($scope.message === 'please confirm the password' || $scope.message === 'please enter a password'){
 			$scope.inputClass = 'hiddenInput';
 			$scope.message = 'passwords do not match!';
 		}
@@ -61,9 +61,13 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 		console.log(user);
 		if($scope.newPassword === ''){
 			$scope.inputClass = 'shownInput';
+			$scope.message = 'please confirm the password';
+		}if($scope.user.password === ''){
+			$scope.inputClass = 'shownInput';
 			$scope.message = 'please enter a password';
 		}
-		if($scope.newPassword === $scope.user.password){
+		
+		if($scope.newPassword === $scope.user.password && $scope.user.password === ''){
 			$http.post('/signup', user)
 			.then(function(response){
 				console.log('response: ', response);
