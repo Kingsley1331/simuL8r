@@ -95,7 +95,7 @@ app.post('/uploadProfile', function(req, res){
 					console.log('file save error', err);
 				};
 					//res.send(user);
-					res.redirect('/#/profile');
+					//res.redirect('/#/home');
 				});
 			});
 		});	
