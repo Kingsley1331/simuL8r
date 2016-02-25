@@ -97,7 +97,7 @@ app.controller('EditCtrl', function($scope, $http, $rootScope, $location){
 			console.log('update ', response);
 			var useridVal = response._id;
 			userId.setAttribute('value', useridVal);
-			//uploader.submit();	
+			uploader.submit();	
 			$location.url('/home');			
 		});
 	}	

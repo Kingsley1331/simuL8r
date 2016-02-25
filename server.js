@@ -31,12 +31,7 @@ if(environment === 'production'){
 	var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 	var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 	var S3_BUCKET = process.env.S3_BUCKET;
-
-
-	console.log('AWS_ACCESS_KEY_ID ', AWS_ACCESS_KEY_ID);
-	console.log('AWS_SECRET_KEY ', AWS_SECRET_ACCESS_KEY);
-	console.log('S3_BUCKET ', S3_BUCKET);
-
+	
 	var S3FS = require('s3fs');
 	var multiparty = require('connect-multiparty');
 	var multipartyMiddleware = multiparty();
@@ -76,8 +71,6 @@ app.post('/uploadProfile', function(req, res){
 			console.log('key: ', key, 'value: ', value);
 			value1 = value;
 			mimetype1 = mimetype;
-			console.log('#####################################################################################################################################mimetype',mimetype);
-			console.log('#####################################################################################################################################file', file)
 			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
 				User.findById(value, function(err, user){// value is the user id that was passed into the form
 				if(err){ 
@@ -88,8 +81,7 @@ app.post('/uploadProfile', function(req, res){
 					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/Default.png';
 				}else{
 					//user.local.profilePic = 'images/profiles/' + value + mimetype;
-					//user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
-					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + 'testUpload' + mimetype;
+					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				}
 				user.save(function(err) {
 				if(err){
@@ -103,14 +95,11 @@ app.post('/uploadProfile', function(req, res){
 	});		
     // Listen for 'finish' event and redirect to the main app
     req.busboy.on('finish', function(field){
-		//res.redirect('/#/home');
 		// send image to AWS S3
 		if(environment === 'production'){
 			var stream = fs.createReadStream(path + value1 + mimetype1);
-			//return s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){
-				
 				setTimeout(function(){
-					s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){				
+					s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){					
 					fs.unlink(path + value1 + mimetype1, function(err){
 						if(err){
 							console.error(err);
