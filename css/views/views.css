@@ -691,3 +691,12 @@ ul.nav.navbar-nav{
 	min-width: 1000px;
 }
 
+#upload_image{
+	display: none;
+}
+
+#upload_profile{
+	position: relative;
+	bottom: 15px;
+	left: 20px;
+}
