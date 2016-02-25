@@ -237,6 +237,99 @@ module.exports = function(passport){
 		});
 	});
 
+	
+	router.put('/user/:id', function(req, res){
+		var id = req.params.id;
+		console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@req.body', req.body);
+		console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@req.param', req.param);
+		console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@req.params', req.params);		
+		/*var sim = req.body;
+		var newScene = new Scenes({
+			name: sim.name,
+			userID: sim.userID,
+			isPublic: sim.isPublic,
+			imageUrl: sim.imageUrl,
+			canvas: {
+				width: sim.canvas.width, 
+				height: sim.canvas.height
+			},
+			shapes: {
+				circle: sim.shapes.circle,
+				square: sim.shapes.square,
+				triangle: sim.shapes.triangle,
+				customShape: sim.shapes.customShape,
+				pencil: sim.shapes.pencil,
+				curve: sim.shapes.curve,
+				wall: sim.shapes.wall
+			}
+		});*/
+				
+				// create the user
+				/*var newUser = new Users();
+				newUser.local.username = req.body.username;
+				//newUser.local.password = createHash(password);
+				newUser.local.email = req.param('email');
+				newUser.local.firstName = req.param('firstName');
+				newUser.local.lastName = req.param('lastName');
+				newUser.local.profilePic = req.param('profilePic');	*/	
+		
+				//save the user		
+		
+		
+		Users.findById(id, function(err, user){
+		  if (err){ 
+			console.log(err);
+			};
+			//user.local.password = createHash(password);
+			user.local.email = req.param('email');
+			user.local.username = req.param('username');
+			user.local.firstName = req.param('firstName');
+			user.local.lastName = req.param('lastName');
+			user.local.profilePic = req.param('profilePic');		
+			user.save(function(err) {
+			if (err){
+				console.log(err);
+			};
+				console.log(user);
+				res.send(user);
+				//res.redirect('/#/profile');
+			});
+		});
+
+
+
+
+
+		
+		/*Scenes.findById(id, function(err, scene){
+		  if (err){ 
+			console.log(err);
+			};
+			scene.name = newScene.name,
+			scene.userID = newScene.userID,
+			scene.isPublic = newScene.isPublic,
+			scene.imageUrl = newScene.imageUrl,
+			scene.canvas.width = newScene.canvas.width,
+			scene.canvas.height = newScene.canvas.height,
+			scene.shapes.circle = newScene.shapes.circle,
+			scene.shapes.square = newScene.shapes.square,
+			scene.shapes.triangle = newScene.shapes.triangle,
+			scene.shapes.customShape = newScene.shapes.customShape,
+			scene.shapes.pencil = newScene.shapes.pencil,
+			scene.shapes.curve = newScene.shapes.curve,
+			scene.shapes.wall = newScene.shapes.wall
+			
+			scene.save(function(err) {
+			if (err){
+				console.log(err);
+			};
+				res.send(scene);
+			});
+		});*/
+	});	
+	
+	
+	
 
 	router.delete('/scene/:id', function(req, res){
 		var id = req.params.id;

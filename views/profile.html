@@ -2,38 +2,47 @@
 	<div id='profileUserWrapper'>
 		<div id='profilename' class='selectedUserDetails selectedUserUsername'>{{currentUser.local.username || currentUser.google.name}}</div><br>
 		<img class='profile-align' ng-src='{{currentUser.local.profilePic}}'id='profilePagePic'/><br><br>
-		<button id='profile-pic-btn' class='btn btn-info profile-align disabled'>change profile pic</button>
+		<a href="#/edit" id='profile-pic-btn' class="btn btn-primary">edit account</a>
+		<!--<a href="#/login" class="btn btn-primary">login</a>-->
 		<table id='userProfileTable'>
 			<tr>
 				<td>
-					<span class='selectedUserDetails'>username: {{currentUser.local.username}}<span>
+					<span class='selectedUserDetails'>username: <span>
 				</td>
 				<td>
-					<button class='btn btn-success disabled'>edit</button>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span class='selectedUserDetails'>name: {{currentUser.local.name}}<span>
 				</td>
 				<td>
-					<button class='btn btn-success disabled'>edit</button>
+					{{currentUser.local.username}}
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<span class='selectedUserDetails'>lastname: {{currentUser.local.lastname}}<span>
+					<span class='selectedUserDetails'>name:<span>
 				</td>
 				<td>
-					<button class='btn btn-success disabled'>edit</button>
+				</td>
+				<td>
+					 {{currentUser.local.name}}
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<span class='selectedUserDetails'>Email: {{currentUser.local.email}}<span>
+					<span class='selectedUserDetails'>lastname:<span>
 				</td>
 				<td>
-					<button class='btn btn-success disabled'>edit</button>
+				</td>
+				<td>
+					 {{currentUser.local.lastname}}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class='selectedUserDetails'>Email:<span>
+				</td>
+				<td>
+				</td>				
+				<td>
+					 {{currentUser.local.email}}
 				</td>
 			</tr>
 		</table>

@@ -24,6 +24,10 @@ app.config(function($routeProvider){
 		templateUrl: 'views/signup.html',
 		controller: 'SignupCtrl'
 	})
+	.when('/edit', {
+		templateUrl: 'views/edit.html',
+		controller: 'EditCtrl'
+	})
 	.when('/demos', {
 		templateUrl: 'views/demos.html',
 		controller: 'DemosCtrl'

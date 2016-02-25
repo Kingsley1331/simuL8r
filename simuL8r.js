@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-02-20 **/ 
+/** simuL8r - v1.0.0 - 2016-02-24 **/ 
 var circle;
 var canvas;
 var circleArray = [];

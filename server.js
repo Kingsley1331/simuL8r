@@ -92,9 +92,10 @@ app.post('/uploadProfile', function(req, res){
 				}
 				user.save(function(err) {
 				if (err){
-					console.log(err);
+					console.log('file save error', err);
 				};
 					//res.send(user);
+					res.redirect('/#/profile');
 				});
 			});
 		});	
