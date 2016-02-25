@@ -4,6 +4,7 @@ var Scenes = require('./../models/scenes');
 var Users = require('./../models/users');
 var fs = require('fs');
 var busboy = require('connect-busboy');
+var bCrypt = require('bcrypt-nodejs');
 
 /*
 function deleteFile(path){
@@ -14,6 +15,11 @@ function deleteFile(path){
 	   console.log("File deleted successfully!");
 	});
 }*/
+
+// Generates hash using bCrypt
+var createHash = function(password){
+	return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+}
 
 function deleteAllFiles() {
 	fs.readdir('images/thumbnails/', function(err, files){
@@ -28,10 +34,6 @@ function deleteAllFiles() {
 	   });
 	});
 }
-
-
-
-
 
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
@@ -282,7 +284,8 @@ module.exports = function(passport){
 		  if (err){ 
 			console.log(err);
 			};
-			//user.local.password = createHash(password);
+			var password = req.param('password');
+			user.local.password = createHash(password);
 			user.local.email = req.param('email');
 			user.local.username = req.param('username');
 			user.local.firstName = req.param('firstName');

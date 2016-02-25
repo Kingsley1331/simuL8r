@@ -24,6 +24,7 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencoded
   extended: true
 }));
+
 var environment = 'production';
 var s3 = new aws.S3();
 
