@@ -53,19 +53,21 @@ aws.config.update({
 
 function deleteFile(path){
 	path = path.replace('https://s3.amazonaws.com/simuL8rBucket/', '');
-	var s3 = new aws.S3();
-	var deleteParam = {
-		Bucket: S3_BUCKET,
-		Delete: {
-			Objects: [
-				{Key: path},
-			]
-		}
-	}; 
-	s3.deleteObjects(deleteParam, function(err, data) {
-		if (err) console.log(err, err.stack);
-		else console.log('delete', data);
-	});
+	if(path !== 'images/profiles/Default.png'){
+		var s3 = new aws.S3();
+		var deleteParam = {
+			Bucket: S3_BUCKET,
+			Delete: {
+				Objects: [
+					{Key: path},
+				]
+			}
+		}; 
+		s3.deleteObjects(deleteParam, function(err, data) {
+			if (err) console.log(err, err.stack);
+			else console.log('delete', data);
+		});
+	}
 }
 
 
