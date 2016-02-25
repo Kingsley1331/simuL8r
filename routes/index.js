@@ -285,7 +285,9 @@ module.exports = function(passport){
 			console.log(err);
 			};
 			var password = req.param('password');
-			user.local.password = createHash(password);
+			if(password !== ''){
+				user.local.password = createHash(password);
+			}
 			user.local.email = req.param('email');
 			user.local.username = req.param('username');
 			user.local.firstName = req.param('firstName');
