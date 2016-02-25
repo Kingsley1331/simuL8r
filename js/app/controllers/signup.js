@@ -67,7 +67,7 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 			$scope.message = 'please enter a password';
 		}
 		
-		if($scope.newPassword === $scope.user.password && $scope.user.password === ''){
+		if($scope.newPassword === $scope.user.password && $scope.user.password !== ''){
 			$http.post('/signup', user)
 			.then(function(response){
 				console.log('response: ', response);
