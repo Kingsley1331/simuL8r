@@ -57,7 +57,7 @@ app.controller('EditCtrl', function($scope, $http, $rootScope, $location){
 				//userObject.setAttribute('value', usernameVal);
 				userId.setAttribute('value', useridVal);
 				$rootScope.currentUser = user;
-				//uploader.submit();
+				uploader.submit();
 			}, function(err){
 				alert('The username ' + '"' + user.username + '"' + ' already exists please enter a different one');
 			});

@@ -80,7 +80,7 @@ app.post('/uploadProfile', function(req, res){
 			console.log('#####################################################################################################################################file', file)
 			file.pipe(fs.createWriteStream(path + value + mimetype)); // Save to path 				
 				User.findById(value, function(err, user){// value is the user id that was passed into the form
-				if (err){ 
+				if(err){ 
 					console.log('Error#############', err);
 				}
 				if(mimetype === '.octet-stream'){
@@ -88,10 +88,11 @@ app.post('/uploadProfile', function(req, res){
 					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/Default.png';
 				}else{
 					//user.local.profilePic = 'images/profiles/' + value + mimetype;
-					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
+					//user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
+					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + 'testUpload' + mimetype;
 				}
 				user.save(function(err) {
-				if (err){
+				if(err){
 					console.log('file save error', err);
 				};
 					//res.send(user);
