@@ -29,8 +29,8 @@
 	<tr ng-show='showUserPageNav'>
 		<td colspan='5'>
 			<center>
-				<div class="container">  
-				  <ul class="pagination" >
+				<div class="container pagesNav">  
+				  <ul class="pagination">
 					  <li ng-click="userPageTurner(false);" id='prev'><a href="#/home">«</a></li>
 					  <li ng-repeat='page in userPagesArray' ng-click='userPaginator(userPagesArray[page] + 1);' id="{{userPagesArray[page] + 1}}" class='li_user' ng-class="{{(userPagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{userPagesArray[page] + 1}}</a></li>
 					  <li ng-click='userPageTurner(true);' id='next'><a href="#/home">»</a></li>
@@ -69,7 +69,7 @@
 	<tr ng-show='showScenePageNav'>
 		<td colspan='5'>
 			<center>
-				<div class="container">  
+				<div class="container pagesNav">  
 				  <ul class="pagination">
 					  <li ng-click="scenePageTurner(false);" id='Sprev'><a href="#/home">«</a></li>
 					  <li ng-repeat='page in scenePagesArray' ng-click='scenePaginator(scenePagesArray[page] + 1);'class='li_scene' id="{{scenePagesArray[page] + 1 +'_scene'}}" ng-class="{{(scenePagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{scenePagesArray[page] + 1}}</a></li>
@@ -129,7 +129,7 @@
 		<tr ng-show='selU_showScenePageNav'>
 			<td colspan='5'>
 				<center>
-					<div class="container">  
+					<div class="container pagesNav">  
 					  <ul class="pagination">
 						  <li ng-click="selU_scenePageTurner(false);" id='selU_prev'><a href="#/home">«</a></li>
 						  <li ng-repeat='page in selU_scenePagesArray' ng-click='selU_scenePaginator(selU_scenePagesArray[page] + 1);'class='selU_scene' id="{{selU_scenePagesArray[page] + 1 +'selU_scene'}}" ng-class="{{(selU_scenePagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/home">{{selU_scenePagesArray[page] + 1}}</a></li>

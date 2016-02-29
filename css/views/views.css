@@ -111,13 +111,21 @@ body{
 	padding-top: 50px;
 }
 
+#users  > tr, td, th{
+	width: 200px;
+}
+
 #userSearch{
 	padding-top: 20px;
 }
 
+.pagesNav{
+	width: 500px;
+}
 
 .view-table, tr{
-	font-size: 20px;
+	font-size: 14px;
+	width: 10px;
 }
 
 .table-pic{
@@ -214,6 +222,7 @@ hr{
 
 #row-id{
 	width:1200px;
+	width:100%;	
 	padding-top: 20px;
 	margin: auto;	
 	color: white;
@@ -226,6 +235,7 @@ hr{
 
 #description{
 	width:1200px;
+	width:100%;
 	margin: auto;
 	background-color: rgba(245, 245, 220, 0.8);
 	padding: 10px;
@@ -236,7 +246,7 @@ hr{
 }
 
 #selected_user{
-	width: 1500px;
+	width: 600px;
 }
 
 #selectedUserTable > tr > td{
@@ -278,10 +288,10 @@ hr{
 }
 #profileUserWrapper{
 	position: relative;
-	width: 800px;
+	width: 750px;
 	height: 400px;
-	background-color: rgba(0, 0, 0, 0.4);
-	border-bottom-right-radius: 10px;	
+	background-color: rgba(0, 0, 0, 0.4);	
+	border-top-right-radius: 10px;
 }
 
 #selectedUserWrapper{
@@ -289,7 +299,7 @@ hr{
 	width: 600px;
 	height: 300px;
 	background-color: rgba(0, 0, 0, 0.4);
-	border-bottom-right-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
 #selectedUserDetailsTable{
@@ -324,7 +334,7 @@ hr{
 }
 
 #profileUser{
-	width: 1500px;
+	width: 750px;
 	/*height: 1000px;*/
 }
 
@@ -501,12 +511,12 @@ ul.nav.navbar-nav{
 		top: -41px;	
 	}
 
-	#showOptions{
+	#refresh{
 		left: -1005px; 
 		top: -41px;
 	}
 
-	#refresh{
+	#showOptions{
 		left: -741px;
 		top: -41px;	
 	}

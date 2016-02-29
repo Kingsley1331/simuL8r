@@ -9,8 +9,8 @@
 				<td>
 					<span class='selectedUserDetails'>username: <span>
 				</td>
-				<td>
-				</td>
+				<!--<td>
+				</td>-->
 				<td>
 					{{currentUser.local.username}}
 				</td>
@@ -19,8 +19,8 @@
 				<td>
 					<span class='selectedUserDetails'>name:<span>
 				</td>
-				<td>
-				</td>
+				<!--<td>
+				</td>-->
 				<td>
 					 {{currentUser.local.name}}
 				</td>
@@ -29,8 +29,8 @@
 				<td>
 					<span class='selectedUserDetails'>lastname:<span>
 				</td>
-				<td>
-				</td>
+				<!--<td>
+				</td>-->
 				<td>
 					 {{currentUser.local.lastname}}
 				</td>
@@ -39,8 +39,8 @@
 				<td>
 					<span class='selectedUserDetails'>Email:<span>
 				</td>
-				<td>
-				</td>				
+				<!--<td>
+				</td>-->				
 				<td>
 					 {{currentUser.local.email}}
 				</td>
@@ -65,7 +65,7 @@
 		<tr ng-show='showPageNav'>
 			<td colspan='5'>
 				<center>
-					<div class="container">  
+					<div class="container pagesNav">  
 					  <ul class="pagination">
 						  <li ng-click="pageTurner(false);" id='prev'><a href="#/profile">«</a></li>
 						  <li ng-repeat='page in pagesArray' ng-click='paginator(pagesArray[page] + 1);' id="{{pagesArray[page] + 1}}" class='li_user' ng-class="{{(pagesArray[page] + 1 == 1) ? 'active' : 'inactive'}}"><a href="#/profile">{{pagesArray[page] + 1}}</a></li>
