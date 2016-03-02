@@ -15,7 +15,8 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		}else if(user == '0'){// User is Not Authenticated
 			$rootScope.loggedin=false;
 			$scope.showRemote = false;
-			$scope.showLocal = true;			
+			$scope.showLocal = true;	
+			$scope.getAll_i();			
 		}
 	});	
 	init();
@@ -698,7 +699,8 @@ if (window.IDBTransaction){
 					}else{
 						$timeout(function() {
 							$scope.addPageEventListeners();
-						}, 1000);
+							$( '#1_i' ).trigger( 'click' );
+						}, 5000);
 					}
 					
 				}
@@ -706,9 +708,9 @@ if (window.IDBTransaction){
 		}
 	}
 	
-	if($rootScope.loggedin === false){
+	/*if($rootScope.loggedin === false){
 		$scope.getAll_i();
-	}
+	}*/
 	
 	function appendTable(i, id, scene, imgURL){
 		if(i !== null){

@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
   extended: true
 }));
 
-var environment = 'production1';
+var environment = 'production';
 var s3 = new aws.S3();
 
 if(environment === 'production'){
