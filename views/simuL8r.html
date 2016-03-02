@@ -1,85 +1,8 @@
-
 <div ng-cloak id = 'bar'>
-<!--
-<div class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector(this.id);}else{shapeSelector(this.id); saving = true;} gradient(save);"><img class = 'icons' src = 'images/save.png'></img></div>
-
-<div class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector(this.id);}else{shapeSelector(this.id); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></div>
-
-<div class = 'shapes' id = 'circle' onmouseover = "hover(circle);" onmouseout = "leave(circles, circle);" onclick = " if(circles){shapeSelector(this.id);}else{shapeSelector(this.id);  circles = true; shapeSelection.shapes.circle[0] = true;} gradient(circle);"><img class = 'icons' src = 'images/shapes/circle.png'></img></div>
-
-<div class = 'shapes' id = 'square' onmouseover = "hover(square);" onmouseout = "leave(squares, square);" onclick = "if(squares){shapeSelector(this.id);}else{shapeSelector(this.id); squares = true; shapeSelection.shapes.square[0] = true;} gradient(square);"><img class = 'icons' src = 'images/shapes/square.png'></img></div>
-
-<div class = 'shapes' id = 'triangle' onmouseover = "hover(triangle);" onmouseout = "leave(triangles, triangle);" onclick = "if(triangles){shapeSelector(this.id);}else{shapeSelector(this.id); triangles = true; shapeSelection.shapes.triangle[0] = true;} gradient(triangle);"><img class = 'icons' src = 'images/shapes/triangle.png'></img></div>
-
-<div class = 'shapes' id = 'customShape' onmouseover = "hover(customShape);" onmouseout = "leave(shapes, customShape);" onclick = "if(shapes){shapeSelector(this.id);}else{shapeSelector(this.id); shapes = true;} gradient(customShape);"><img class = 'icons' src = 'images/shapes/custom.png'></img></div>
-
-
-
-<div class = 'shapes' id = 'Re-Size' onmouseover = "hover(ReSize);" onmouseout = "leave(reSize, ReSize);" onclick = "if(reSize){shapeSelector(this.id);}else{shapeSelector(this.id); reSize = true;} gradient(ReSize);"><img class = 'icons' src = 'images/resize.png'></img></div>
-
-<div class = 'shapes' id = 'Re-Shape' onmouseover = "hover(ReShape);" onmouseout = "leave(reShape, ReShape);" onclick = "if(reShape){ shapeSelector(this.id);}else{shapeSelector(this.id); reShape = true;} gradient(ReShape);"><img id = 'ReShaper' class = 'icons' src = 'images/shapes/reshape.png'></img></div>
-
-<div class = 'shapes' id = 'Rotate' onmouseover = "hover(Rotate);" onmouseout = "leave(rotate, Rotate);" onclick = "if(rotate){shapeSelector(this.id);}else{shapeSelector(this.id); rotateListStyle(); rotate = true;} gradient(Rotate); resetRotate();"><img class = 'icons' src = 'images/rotate.png'></img></div>
-	<ul id = 'rotateList'>
-		<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
-		<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
-		<li id='reverseX' class='item'>ReverseX</li>
-		<li id='reverseY' class='item'>ReverseY</</li>
-	</ul>
-
-
-<div id = 'colourful'>
-<div class = 'shapes' id = 'ChangeColour'  onmouseover = "hover(ChangeColour);" onmouseout = "leave(colourChange, ChangeColour);" onclick = " if(colourChange){shapeSelector(this.id); PickColor.style.visibility = 'invisible';}else{shapeSelector(this.id); colourChange = true; PickColor.style.visibility = 'visible';} gradient(ChangeColour); colours.lightblue[1] = true;  "><img class = 'icons' src = 'images/colour-wheel.png'></img></div>
-
-<div id = 'PickColor'>
-<table id = 'board'>
-	<tr>
-		<td><div id = 'transparent' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.transparent[1] = true;'></div></td>
-		<td><div id = 'blue' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.blue[1] = true;'></div></td>
-		<td><div id = 'red' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.red[1] = true;'></div></td>
-		<td><div id = 'yellow' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.yellow[1] = true;'></div></td>
-	</tr>
-	<tr>
-		<td><div id = 'green' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.green[1] = true;'></div></td>
-		<td><div id = 'white' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.white[1] = true;'></div></td>
-		<td><div id = 'black' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.black[1] = true;'></div></td>
-		<td><div id = 'lightblue' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.lightblue[1] = true;'></div></td>
-	</tr>
-	<tr>
-		<td><div id = 'lightgreen' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.lightgreen[1] = true;'></div></td>
-		<td><div id = 'orange' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.orange[1] = true;'></div></td>
-		<td><div id = 'purple' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.purple[1] = true;'></div></td>
-		<td><div id = 'violet' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.violet[1] = true;'></div></td>
-	</tr>
-	<tr>
-		<td><div id = 'beige' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.beige[1] = true;'></div></td>
-		<td><div id = 'aqua' class = 'pallet' style = 'text-align:center' onclick ='colourPicker(); colours.aqua[1] = true;'></div></td>
-		<td><div id = 'grey' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.grey[1] = true;'></div></td>
-		<td><div id = 'pink' class = 'pallet'style = 'text-align:center' onclick ='colourPicker(); colours.pink[1] = true;'></div></td>
-	</tr>
-</table>
-</div>
-</div>
-
-<div class = 'shapes' id = 'pencil_id' onmouseover = "hover(pencil_id); "onmouseout = "leave(pencils, pencil_id);" onclick = " if(pencils){shapeSelector(this.id);}else{shapeSelector(this.id); pencilStyle(); pencils = true; shapeSelection.shapes.pencil[0] = true;} gradient(pencil_id); pencilCursor();"><img class = 'icons' src = 'images/pencil.png'></img></div>
-	<ul id = 'pencilList'>
-		<li id='shapes' class='item'>Shapes</li>
-		<li id='strokes' class='item'>Strokes</li>
-	</ul>
-</div>
-
-<div class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector(this.id);}else{shapeSelector(this.id); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></div>
-
-<div class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector(this.id);}else{shapeSelector(this.id); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></img></div>
--->
-
-
 <span id='sceneName'> scene - {{sceneName || 'untitled'}}</span>
 <nav ng-cloak id='navigation-bar' class="navbar navbar-inverse" onclick='shapeSelector(this.id)'>
   <div class="container-fluid">
     <ul class="nav navbar-nav">
-      <!--<li class="active"><a href="#simuL8r">Home</a></li>-->
-
       <li ng-click='create();' class = 'shapes' id = 'save' onmouseover = "hover(save);" onmouseout = "leave(saving, save);" onclick = "if(saving){shapeSelector(this.id);}else{shapeSelector(this.id);};"><img class = 'icons' src = 'images/save.png'></img></li> 
       <li class = 'shapes' id = 'erase' onmouseover = "hover(erase);" onmouseout = "leave(deletion, erase);" onclick = "if(deletion){shapeSelector(this.id);}else{shapeSelector(this.id); deletion = true;} gradient(erase);"><img class = 'icons' src = 'images/erase.png'></img></li>
 	  <li class = 'shapes' id = 'circle' onmouseover = "hover(circle);" onmouseout = "leave(circles, circle);" onclick = " if(circles){shapeSelector(this.id);}else{shapeSelector(this.id);  circles = true; shapeSelection.shapes.circle[0] = true;} gradient(circle);"><img class = 'icons' src = 'images/shapes/circle.png'></img></li> 
@@ -88,19 +11,8 @@
       <li class = 'shapes' id = 'customShape' onmouseover = "hover(customShape);" onmouseout = "leave(shapes, customShape);" onclick = "if(shapes){shapeSelector(this.id);}else{shapeSelector(this.id); shapes = true;} gradient(customShape);"><img class = 'icons' src = 'images/shapes/custom.png'></img></li> 
       <li class = 'shapes' id = 'Re-Size' onmouseover = "hover(ReSize);" onmouseout = "leave(reSize, ReSize);" onclick = "if(reSize){shapeSelector(this.id);}else{shapeSelector(this.id); reSize = true;} gradient(ReSize);"><img class = 'icons' src = 'images/resize.png'></li>
       <li class = 'shapes' id = 'Re-Shape' onmouseover = "hover(ReShape);" onmouseout = "leave(reShape, ReShape);" onclick = "if(reShape){ shapeSelector(this.id);}else{shapeSelector(this.id); reShape = true;} gradient(ReShape);"><img id = 'ReShaper' class = 'icons' src = 'images/shapes/reshape.png'></img></li> 
-      <li class = 'shapes' id = 'Rotate' onmouseover = "hover(Rotate);" onmouseout = "leave(rotate, Rotate);" onclick = "if(rotate){shapeSelector(this.id);}else{shapeSelector(this.id); rotateListStyle(); rotate = true;} gradient(Rotate); resetRotate();"><img class = 'icons' src = 'images/rotate.png'></img>		
-			<!--<ul id = 'rotateList'>
-				<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
-				<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
-				<li id='reverseX' class='item'>ReverseX</li>
-				<li id='reverseY' class='item'>ReverseY</li>
-			</ul>-->
-			
+      <li class = 'shapes' id = 'Rotate' onmouseover = "hover(Rotate);" onmouseout = "leave(rotate, Rotate);" onclick = "if(rotate){shapeSelector(this.id);}else{shapeSelector(this.id); rotateListStyle(); rotate = true;} gradient(Rotate); resetRotate();"><img class = 'icons' src = 'images/rotate.png'></img>				
 			<div class="dropdown">
-			  <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				Dropdown
-				<span class="caret"></span>
-			  </button>-->
 			  <ul id='rotateList' class="dropdown-menu" aria-labelledby="dropdownMenu1">
 				<li id='rotate90' class='item'>Rotate 90<span style='vertical-align:super; font-size:0.5em'>O</span></li>
 				<li id='rotate180' class='item'>Rotate 180<span style='vertical-align:super; font-size:0.5em'>O</span></li>
@@ -108,9 +20,8 @@
 				<li id='reverseY' class='item'>upside down</li>
 			  </ul>
 			</div>
-			
 	  </li> 
-      <li class = 'shapes' id = 'ChangeColour' ng-click='showColourPallet();' onmouseover = "hover(ChangeColour);" onmouseout = "leave(colourChange, ChangeColour);" onclick = " if(colourChange){shapeSelector(this.id); /*PickColor.style.visibility = 'invisible';*/}else{shapeSelector(this.id); colourChange = true; /*PickColor.style.visibility = 'visible';*/} gradient(ChangeColour); colours.lightblue[1] = true;"><img class = 'icons' src = 'images/colour-wheel.png'></img>
+     <li class = 'shapes' id = 'ChangeColour' ng-click='showColourPallet();' onmouseover = "hover(ChangeColour);" onmouseout = "leave(colourChange, ChangeColour);" onclick = " if(colourChange){shapeSelector(this.id); /*PickColor.style.visibility = 'invisible';*/}else{shapeSelector(this.id); colourChange = true; /*PickColor.style.visibility = 'visible';*/} gradient(ChangeColour); colours.lightblue[1] = true;"><img class = 'icons' src = 'images/colour-wheel.png'></img>
 
 	 </li>
 	 
@@ -123,26 +34,19 @@
 	 <li class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector(this.id);}else{shapeSelector(this.id); copy = true;} gradient(Copy);"><img class = 'icons' src = 'images/copy.png'></img></li> 
      <li class = 'shapes' id = 'physics' onmouseover = "hover(Physics);" onmouseout = "leave(physics, Physics);" onclick = " if(physics){shapeSelector(this.id);}else{shapeSelector(this.id); physics = true;} gradient(Physics);"><img class = 'icons' src = 'images/physics.png'></li> 	  
    
-   <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable(); reset(); getAll(); getAll_i();'> {{scenesVisibility}} </button></li>
-   <li><button type='button' class='btn btn-info'  id = 'showOptions'> show Settings </button></li>
-   <li><button type='button' class='btn btn-info'  id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</button></li>
+   <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable(); reset(); getAll_i();'> {{scenesVisibility}} </button></li>
+   <li><button type='button' class='btn btn-info' id = 'showOptions'> show Settings </button></li>
+   <li><button type='button' class='btn btn-info' id = 'refresh' ng-click='refresh(currentScene)'> refresh scene</button></li>
    </div>
 
    </ul>
   </div>
 </nav>
 
-<div ng-click="showRemote = true; showLocal = false; setTabs('remote');" class='tab' id='remote' ng-show='showSceneTable'>remote</div>
-<div ng-click="showLocal = true; showRemote = false; setTabs('local');" class='tab' id='local' ng-show='showSceneTable'>local</div>	  
+<div ng-click="showRemote = true; showLocal = false; setTabs('remote');" class='tab' id='remote' ng-show='showSceneTable && loggedin'>remote</div>
+<div ng-click="showLocal = true; showRemote = false; setTabs('local');" class='tab' id='local' ng-show='showSceneTable && loggedin'>local</div>	  
 
 <table ng-cloak class='view-table' id='sceneTable' ng-show='showSceneTable && showRemote'>
-	<tr>
-		<td colspan='3'></td>
-		<td colspan='4'><button type="button" class="btn btn-success" ng-click='create();'>save</td>
-	</tr>
-	<tr>
-		<td colspan='4'></td>
-	</tr>	
 	<tr>
 		<td colspan='2'>
             <div class="input-group" id='userSearch'>
@@ -152,18 +56,19 @@
               </span>
             </div>			
 		</td>
-		<td><button type="button" class="btn btn-success" ng-click='newScene();'>new scene</button></td>
-		<td><button type="button" class="btn btn-danger" ng-click='removeAllScenes();'>remove all</button></td>
+		<td><button type="button" class="btn btn-success btn-xs" ng-click='newScene();'>new scene</button></td>
+		<td><button type="button" class="btn btn-danger btn-xs" ng-click='removeAllScenes();'>delete all</button></td>
 		<!--<td><button type="button" class="btn btn-success" id='browserSave' class='browser'>save</button></td>
 		<td><button type="button" class="btn btn-success" id='webData' class='browser'>display</button></td>
 		<td><button type="button" class="btn btn-success" id='removeAllScenes' class='browser'>remove all</button></td>-->
+		<td colspan='4'><button type="button" class="btn btn-success btn-xs" ng-click='create();'>save</td>
 	</tr>
 	<tr ng-repeat='scene in currentPage  | filter:searchQuery | limitTo:pageSize'>
 	<!--<tr ng-repeat='scene in IDBscenes | limitTo:pageSize'>-->
 		<td>{{scene.name}}</td>
-		<td ng-click='retrieve(scene._id);'><img class='table-pic' ng-src='{{scene.imageUrl}}' id = 'thumbnail'/></td>
-		<td><button type="button" class="btn btn-info" ng-click='updateScene(scene._id);'>update</button></td>
-		<td><button type="button" class="btn btn-danger" ng-click='remove(scene._id);'>delete</button></td>
+		<td ng-click='retrieve(scene._id);'><img class='table-pic' ng-src='{{scene.imageUrl}}'/></td>
+		<td><button type="button" class="btn btn-info btn-xs" ng-click='updateScene(scene._id);'>update</button></td>
+		<td><button type="button" class="btn btn-danger btn-xs" ng-click='remove(scene._id);'>delete</button></td>
 	</tr>
 	<tr ng-show='showPageNav'>
 		<td colspan='5'>
@@ -180,16 +85,7 @@
 	</tr>	
 </table>
 
-
-
-
 <table ng-cloak class='view-table' id='indexedDBTable' ng-show='showSceneTable && showLocal'>
-	<tr>
-		<td colspan='4'></td>
-	</tr>
-	<tr>
-		<td colspan='4'><button type="button" class="btn btn-success" ng-click='addData();'>save</button></td>
-	</tr>	
 	<tr>
 		<td colspan='2'>
             <div class="input-group" id='userSearch'>
@@ -199,15 +95,15 @@
               </span>
             </div>			
 		</td>
-		<td><!--<button ng-click='addData();' type="button" class="btn btn-success" id='browserSave' class='browser'>save</button>--></td>
-		<td><button ng-click='IDB_removeAll();' type="button" class="btn btn-danger" id='removeAllScenes' class='browser'>remove all</button></td>
+		<td><button ng-click='IDB_removeAll();' type="button" class="btn btn-danger btn-xs" id='removeAllScenes' class='browser'>remove all</button></td>
+		<td colspan='4'><button type="button" class="btn btn-success btn-xs" ng-click='addData();'>save</button></td>
 	</tr>
 	<tr ng-repeat='scene in currentPage_i  | filter:searchQuery | limitTo:pageSize_i'>
 	<!--<tr ng-repeat='scene in IDBscenes'>scenes-->
 		<td>{{scene.name}}</td>
-		<td ng-click='retrieveIDBscene(scene);'><img class='table-pic' ng-src='{{scene.imgURL}}' id = 'thumbnail'/></td>
-		<td><button type="button" class="btn btn-info" ng-click='editRecord(scene.userID);'>update</button></td>
-		<td><button type="button" class="btn btn-danger" ng-click='deleteData(scene.userID);'>delete</button></td>
+		<td ng-click='retrieveIDBscene(scene);'><img class='table-pic' ng-src='{{scene.imgURL}}'/></td>
+		<td><button type="button" class="btn btn-info btn-xs" ng-click='editRecord(scene.userID);'>update</button></td>
+		<td><button type="button" class="btn btn-danger btn-xs" ng-click='deleteData(scene.userID);'>delete</button></td>
 	</tr>
 	<tr ng-show='showPageNav_i'>
 		<td colspan='5'>

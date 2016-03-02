@@ -2,7 +2,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	// these variable ensures that first page on tables are made automatically active only once
 	$scope.hasRemoteTableLoaded = false; 
 	$scope.hasLocalTableLoaded = false; 
-	$timeout($rootScope.setNav, 500);	
+	$timeout($rootScope.setNav, 1000);	
 	
 		/** put this in a service **/
 	$http.get('/loggedin').success(function(user){
@@ -10,20 +10,22 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		if(user !== '0'){
 			$rootScope.currentUser = user;
 			$rootScope.loggedin=true;
+			$scope.showRemote = true;
+			$scope.showLocal = false;
 		}else if(user == '0'){// User is Not Authenticated
 			$rootScope.loggedin=false;
+			$scope.showRemote = false;
+			$scope.showLocal = true;			
 		}
 	});	
 	init();
 	$rootScope.currentUser;
 	$scope.IDBscenes = [];
-	$scope.showRemote = true;
-	$scope.showLocal = false;
 	$scope.sceneName = '';
 	
 	
 		/***********************************************************start pagination ******************************************************************/
-	$scope.pageSize = 5;
+	$scope.pageSize = 4;
 	$scope.currentPageNumber = 1;	
 	$scope.currentPage = [];
 	$scope.pagesArray = [];
@@ -31,7 +33,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.numberOfPages = 1;	
 	$scope.showPageNav = false;
 
-	$scope.pageSize_i = 5;
+	$scope.pageSize_i = 4;
 	$scope.currentPageNumber_i = 1;	
 	$scope.currentPage_i = [];
 	$scope.pagesArray_i = [];
@@ -93,7 +95,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 		
 	$timeout(function(){
 		//$scope.addPageEventListeners();
-	}, 500);
+	}, 1000);
 
 $scope.reset = function(){
 	$('.pagination > li').removeClass('active');
@@ -336,7 +338,7 @@ $scope.addPageEventListeners = function(){
 			}else{
 				$timeout(function() {
 					$scope.addPageEventListeners();
-				}, 500);
+				}, 1000);
 			}
 		});	
 	}
@@ -446,7 +448,7 @@ $scope.addPageEventListeners = function(){
 		
 	checkParameters();	
 		
-	$timeout($scope.loadSelectedScene, 500);
+	$timeout($scope.loadSelectedScene, 1000);
 	canvas = document.getElementById('canvas');
 	
 	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
@@ -696,7 +698,7 @@ if (window.IDBTransaction){
 					}else{
 						$timeout(function() {
 							$scope.addPageEventListeners();
-						}, 500);
+						}, 1000);
 					}
 					
 				}

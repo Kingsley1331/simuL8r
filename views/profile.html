@@ -5,42 +5,34 @@
 		<a href="#/edit" id='profile-pic-btn' class="btn btn-primary">edit account</a>
 		<!--<a href="#/login" class="btn btn-primary">login</a>-->
 		<table id='userProfileTable'>
-			<tr>
+			<tr style='border-bottom: none'>
 				<td>
 					<span class='selectedUserDetails'>username: <span>
 				</td>
-				<!--<td>
-				</td>-->
 				<td>
 					{{currentUser.local.username}}
 				</td>
-			</tr>
-			<tr>
+			</tr style='border-bottom: none'>
+			<!--<tr style='border-bottom: none'>
 				<td>
 					<span class='selectedUserDetails'>name:<span>
 				</td>
-				<!--<td>
-				</td>-->
 				<td>
 					 {{currentUser.local.name}}
 				</td>
 			</tr>
-			<tr>
+			<tr style='border-bottom: none'>
 				<td>
 					<span class='selectedUserDetails'>lastname:<span>
 				</td>
-				<!--<td>
-				</td>-->
 				<td>
 					 {{currentUser.local.lastname}}
 				</td>
-			</tr>
-			<tr>
+			</tr>-->
+			<tr style='border-bottom: none'>
 				<td>
 					<span class='selectedUserDetails'>Email:<span>
-				</td>
-				<!--<td>
-				</td>-->				
+				</td>				
 				<td>
 					 {{currentUser.local.email}}
 				</td>
@@ -62,7 +54,7 @@
 			<th></th>
 			<th></th>
 		</tr>
-		<tr ng-show='showPageNav'>
+		<tr ng-show='showPageNav' style='border-bottom: none'>
 			<td colspan='5'>
 				<center>
 					<div class="container pagesNav">  

@@ -84,5 +84,23 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 			});
 		}
 	}
+	
+	function centerForm(){
+		var windowWidth = window.innerWidth;
+		$('.col-lg-4').css('position', 'absolute');
+		var formWidth = $('.panel-green').css('width').replace('px','');
+		var left = (windowWidth - formWidth) / 2;
+		if(windowWidth < 1070){left += 100}
+		if(windowWidth < 768){left -= 100}
+		$('.col-lg-4').css({'left' :  left + 'px'});
+	}
+	
+	centerForm();
+	
+	$(window).resize(function(){
+		centerForm();
+	});
+	
+	
 });
 

@@ -3,7 +3,9 @@ html{
 }
 
 body{
-	overflow: scroll;
+	/*overflow: scroll;*/
+	overflow-y: auto;
+	overflow-x: auto;
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -19,8 +21,9 @@ body{
 
 
 ::-webkit-scrollbar { 
-    display: none; 
+    /*display: none; */
 }
+
 #view-div{
 	height: 0px;
 }
@@ -73,13 +76,13 @@ body{
 
 #remote, #local{
 	position: relative;	
-	top: 115px;
-	left: 85px;
+	top: 65px;
+	left: 35px;
 }
 
 #local{
-	top: 95px;
-	left: 185px;
+	top: 45px;
+	left: 135px;
 }
 
 #remote{
@@ -128,9 +131,18 @@ body{
 	width: 10px;
 }
 
+.view-table tr{
+	border-bottom: rgba(255, 255, 255, 0.1) 1px solid;
+	padding-left: 10px;
+}
+
+.view-table tr:hover{
+	background-color: rgba(0, 0, 0, 0.2);
+}
 .table-pic{
 	border-radius: 5px;
 	z-index: 10000;
+	width: 80px;
 }
 
 img.table-pic:hover{
@@ -249,7 +261,7 @@ hr{
 	width: 600px;
 }
 
-#selectedUserTable > tr > td{
+#selectedUserTable > td{
 	width: 600px;
 }
 
@@ -306,6 +318,14 @@ hr{
 	position: absolute;
 	top: 80px;
 	left: 260px;
+}
+
+#selectedUserDetailsTable td{
+	width: 150px;
+}
+
+#userProfileTable td{
+	width: 150px;
 }
 
 #selectedUserImage{
@@ -537,8 +557,8 @@ ul.nav.navbar-nav{
 #sceneTable, #indexedDBTable{
 	/*color: white;*/
 	position:absolute;
-	left: 330px;
-	top: 200px;
+	left: 280px;
+	top: 150px;
 	z-index: 3;
 	/*background-color:lightblue;*/
 	/*padding: 10px;
@@ -548,6 +568,8 @@ ul.nav.navbar-nav{
 
 #indexedDBTable td, #sceneTable td {
 	width: 100px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 #sceneTable .container, #indexedDBTable .container{
@@ -686,13 +708,15 @@ ul.nav.navbar-nav{
 	}
 
 	#btn-google-id{
-		top: 391px;
+		/*top: 391px;*/
+		top: 12px;
 		left: 40px;
 	}	
 }
 @media only screen and (min-width: 1000px) {
 	#btn-google-id{
-		top: 341px;
+		/*top: 341px;*/
+		top: 12px;
 		left: 40px;
 	}
 }
