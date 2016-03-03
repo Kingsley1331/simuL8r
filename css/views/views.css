@@ -734,3 +734,13 @@ ul.nav.navbar-nav{
 	bottom: 15px;
 	left: 20px;
 }
+
+#save + .tooltip > .tooltip-inner{
+	background-color: black;
+	position: relative;
+	left: 50px;
+}
+
+.tooltip-inner, .tooltip-arrow {
+	 opacity: 0.7;
+ }
