@@ -1,5 +1,17 @@
 app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope, $timeout){
 	// these variable ensures that first page on tables are made automatically active only once
+	$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/play.png';
+	$scope.play = false;
+	
+	$scope.checkPlay = function(){
+		if($scope.play === false){
+			$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/play.png';
+		}else if($scope.play === true){
+			$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/pause.png';
+		}
+	}
+	
+	
 	$scope.hasRemoteTableLoaded = false; 
 	$scope.hasLocalTableLoaded = false; 
 	$timeout($rootScope.setNav, 1000);	

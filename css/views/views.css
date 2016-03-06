@@ -43,7 +43,7 @@ body{
 }
 
 .content-wrapper{
-	background-image: url('../../images/bg-images/13.jpg');
+	background-image: url('https://s3.amazonaws.com/simuL8rBucket/images/bg_images/13.jpg');
 	/*background-size: 100% 100%;
 	background-repeat: no-repeat;*/
 }

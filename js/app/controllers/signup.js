@@ -1,52 +1,16 @@
-/*app.controller('SignupCtrl', function($scope, $http, $rootScope){
-	$scope.user = {};
-	var uploader = document.getElementById('uploadForm1');
-	//var userObject = document.getElementById('username');
-	var userId = document.getElementById('userid');
-	console.log('uploader: ',uploader);
-	//console.log('userObject: ',userObject);
-	//userObject.setAttribute('value', 'usernameghgg');
-	//console.log('userObject1: ',userObject);
-	
-	$scope.user.username = 'Kingsley3';
-	$scope.user.password = '12345';
-	$scope.user.email = 'k@a3.com';
-	$scope.user.firstname = 'King';
-	$scope.user.lastname = 'Ankomah';
-	$scope.user.profilePic = 'profilePic'; 
-	
-	$scope.signup = function(user){
-		console.log(user);
-		$http.post('/signup', user)
-		.success(function(response){
-			console.log('response: ', response);
-			//var usernameVal = user.username;
-			var useridVal = response._id;
-			//userObject.setAttribute('value', usernameVal);
-			userId.setAttribute('value', useridVal);
-			$rootScope.currentUser = user;
-			uploader.submit();
-		});
-	}
-});*/
-
 app.controller('SignupCtrl', function($scope, $http, $rootScope){
 	$scope.user = {};
 	var uploader = document.getElementById('uploadForm1');
-	//var userObject = document.getElementById('username');
 	var userId = document.getElementById('userid');
 	console.log('uploader: ',uploader);
-	//console.log('userObject: ',userObject);
-	//userObject.setAttribute('value', 'usernameghgg');
-	//console.log('userObject1: ',userObject);
 	
-	$scope.user.username = 'Kingsley3';
-	$scope.user.password = '12345';
-	$scope.user.email = 'k@a3.com';
-	$scope.user.firstname = 'King';
-	$scope.user.lastname = 'Ankomah';
+	$scope.user.username = '';
+	$scope.user.password = '';
+	$scope.user.email = '';
+	$scope.user.firstname = '';
+	$scope.user.lastname = '';
 	$scope.user.profilePic = 'profilePic'; 
-	$scope.newPassword = '12345';
+	$scope.newPassword = '';
 	$scope.message = 'passwords do not match!';
 	$scope.inputClass = 'hiddenInput';
 	
@@ -71,11 +35,8 @@ app.controller('SignupCtrl', function($scope, $http, $rootScope){
 			$http.post('/signup', user)
 			.then(function(response){
 				console.log('response: ', response);
-				//var usernameVal = user.username;
-				//var useridVal = response._id;
 				var useridVal = response.data._id;
 				console.log('useridVal: ', useridVal);
-				//userObject.setAttribute('value', usernameVal);
 				userId.setAttribute('value', useridVal);
 				$rootScope.currentUser = user;
 				uploader.submit();
