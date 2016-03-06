@@ -411,17 +411,71 @@ function collisionDetector(){
 if(physics)
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+			/*var boundingRectWidthA = shapeSelection.shapes[key][2][i].boundingRectangle.width;
+			var boundingRectHeightA = shapeSelection.shapes[key][2][i].boundingRectangle.height;
+			var boundingRectMinXA = shapeSelection.shapes[key][2][i].boundingRectangle.minX;
+			var boundingRectMinYA = shapeSelection.shapes[key][2][i].boundingRectangle.minY;*/			
 			shapeSelection.shapes[key][2][i].preCollision = false;
 			//shapeSelection.shapes[key][2][i].collision = false;
 			for(unit in shapeSelection.shapes){
 				for(var j = 0; j < shapeSelection.shapes[unit][2].length; j++){
-					if(!(i == j && key == unit)){
+					/*var boundingRectWidthB = shapeSelection.shapes[unit][2][j].boundingRectangle.width;
+					var boundingRectHeightB = shapeSelection.shapes[unit][2][j].boundingRectangle.height;	
+					var boundingRectMinXB = shapeSelection.shapes[unit][2][j].boundingRectangle.minX;
+					var boundingRectMinYB = shapeSelection.shapes[unit][2][j].boundingRectangle.minY;*/						
+					if(!(i === j && key === unit)){
 						if(distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y) < shapeSelection.shapes[key][2][i].setOuterRadius() + shapeSelection.shapes[unit][2][j].setOuterRadius() ||
 							unit == 'wall' && j == 0 && shapeSelection.shapes[key][2][i].X < shapeSelection.shapes[key][2][i].setOuterRadius() ||
 							unit == 'wall' && j == 1 && shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.width ||
 							unit == 'wall' && j == 2 && shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.height ||
-							unit == 'wall' && j == 3 && shapeSelection.shapes[key][2][i].Y < shapeSelection.shapes[key][2][i].setOuterRadius() + 50){							
+							unit == 'wall' && j == 3 && shapeSelection.shapes[key][2][i].Y < shapeSelection.shapes[key][2][i].setOuterRadius() + 50){
 							shapeSelection.shapes[key][2][i].preCollision = true;
+						/*for(var k = 0; k < 4; k++){
+							if(k === 0){// top left corner
+								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
+									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&				
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
+								){
+									shapeSelection.shapes[key][2][i].preCollision = true;
+									break;
+								}															
+							}
+
+							if(k === 1){// top right corner
+								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
+									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&				
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
+								){
+									shapeSelection.shapes[key][2][i].preCollision = true;
+									break;
+								}															
+							}							
+							
+							if(k === 2){// bottom right corner
+								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
+									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&				
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
+								){
+									shapeSelection.shapes[key][2][i].preCollision = true;
+									break;
+								}															
+							}							
+
+							if(k === 3){// bottom left corner
+								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
+									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&				
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
+									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
+								){
+									shapeSelection.shapes[key][2][i].preCollision = true;
+									break;
+								}															
+							}
+						}						
+							if(shapeSelection.shapes[key][2][i].preCollision === true){*/
 								for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){ // check each vertex of shape A to see if it's in shape B
 									var collidingVertex = [shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y];
 									if(isPointInShape([collidingVertex[0], collidingVertex[1]], shapeSelection.shapes[unit][2][j].vertices, shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y)){																														
