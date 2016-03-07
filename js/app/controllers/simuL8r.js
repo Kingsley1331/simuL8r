@@ -3,10 +3,10 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/play.png';
 	$scope.play = false;
 	
-	$scope.checkPlay = function(){
-		if($scope.play === false){
+	$scope.checkPlay = function(bool){
+		if($scope.play === false || bool === false){
 			$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/play.png';
-		}else if($scope.play === true){
+		}else if($scope.play === true || bool === true){
 			$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/pause.png';
 		}
 	}
@@ -1010,5 +1010,28 @@ showColourPallet = function(){
 }
 
 showColourPallet();
+
+/**************/
+	
+function arrow_keys_handler(e) {
+	switch(e.keyCode){
+		case 32: if(physics === true){
+			physics = false;
+			$scope.play = false;
+			$scope.checkPlay(false);
+		}else if(physics === false){
+			physics = true;
+			$scope.play = true;
+			$scope.checkPlay(true);
+		}
+		e.preventDefault();
+		//$scope.checkPlay();
+		break; 
+		default: break; // do not block other keys
+	}
+};
+
+	//$timeout(function(){window.addEventListener("keydown", arrow_keys_handler)}, 500);	
+	
 	
 });

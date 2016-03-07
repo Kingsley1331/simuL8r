@@ -439,7 +439,7 @@ var canvasReadyEvent = new CustomEvent("canvasReady", {
 function init(){
 	//displayData();
 	//checkParameters();
-	var arrow_keys_handler = function(e) {
+	/*var arrow_keys_handler = function(e) {
     switch(e.keyCode){
 		case 32: if(physics == true){
 			physics = false;
@@ -451,7 +451,7 @@ function init(){
         default: break; // do not block other keys
     }
 };
-	window.addEventListener("keydown", arrow_keys_handler, false);
+	window.addEventListener("keydown", arrow_keys_handler, false);*/
 
 	circleMaker();
 	selectPencilStroke();
@@ -2122,6 +2122,15 @@ function shapeSelector(id){
 		colourChange = false;
 	}
 	
+	if(id && id === 'physics'){
+		if(physics === true){
+			physics = false;
+		}else if(physics === false){
+			physics = true;
+		}
+	}	
+	
+	
 	shapeSelection.shapes.circle[0] = false;
 	shapeSelection.shapes.square[0] = false;
 	shapeSelection.shapes.triangle[0] = false;
@@ -2132,7 +2141,7 @@ function shapeSelector(id){
 	shapes = false;
 	pencils = false;
 	copy = false;
-	physics = false;
+	//physics = false;
 	
 	circles = false;
 	triangles = false;
