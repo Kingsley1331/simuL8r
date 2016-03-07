@@ -28,7 +28,8 @@ app.use(bodyParser.urlencoded({  // for parsing application/x-www-form-urlencode
 var environment = 'production';
 var s3 = new aws.S3();
 
-if(environment === 'production'){
+//if(environment === 'production'){
+if(process.env.PORT){
 	var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 	var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 	var S3_BUCKET = process.env.S3_BUCKET;
@@ -97,7 +98,8 @@ app.post('/uploadProfile', function(req, res){
     // Listen for 'finish' event and redirect to the main app
     req.busboy.on('finish', function(field){
 		// send image to AWS S3
-		if(environment === 'production'){
+		//if(environment === 'production'){
+		if(process.env.PORT){
 			var stream = fs.createReadStream(path + value1 + mimetype1);
 				setTimeout(function(){
 					s3fsImpl.writeFile('images/profiles/' + value1 + mimetype1, stream).then(function(){					
