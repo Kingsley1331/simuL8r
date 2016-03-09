@@ -25,7 +25,7 @@ app.controller('DemosCtrl', function($scope, $rootScope, $http, $window){
 	
 	$scope.getDemoScenes = function(){
 		$http.get('/scenes/56ccce1e088555030081f894')
-		//$http.get('/scenes/')
+		//$http.get('/scenes/56c98c246c14b7a80b30ce76')
 		.success(function(response){
 			console.log('getDemoScenes ', response);
 			$scope.demoScenes = response;

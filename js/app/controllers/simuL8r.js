@@ -1,8 +1,7 @@
 app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope, $timeout){
-	// these variable ensures that first page on tables are made automatically active only once
+	physics = false;
 	$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/play.png';
 	$scope.play = false;
-	
 	$scope.checkPlay = function(bool){
 		if($scope.play === false || bool === false){
 			$scope.playIcon = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/play.png';
