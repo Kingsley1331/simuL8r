@@ -233,7 +233,7 @@ $scope.addPageEventListeners = function(){
 			var dataURL = canvas.toDataURL();
 			shapeSelection.imageUrl = dataURL;	
 			$scope.simulation = shapeSelection;
-
+			if(name){
 			$http.post('/scenes', $scope.simulation)
 			.success(function(response){		
 				$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
@@ -244,6 +244,7 @@ $scope.addPageEventListeners = function(){
 				$scope.sceneName = response.name;
 			});
 			$scope.getAll($scope.currentPageNumber);
+		}
 		}else{
 			$scope.addData();
 		}
@@ -294,7 +295,8 @@ $scope.addPageEventListeners = function(){
 		shapeSelection.imageUrl = dataURL;
 		shapeSelection.name = name;	
 		$scope.simulation = shapeSelection;
-		console.log('updateScene: ', $scope.simulation);			
+		console.log('updateScene: ', $scope.simulation);
+			if(name){
 				$http.put('/scenes/' + id, $scope.simulation)
 				.success(function(response){
 					console.log('update ', response);					
@@ -303,7 +305,7 @@ $scope.addPageEventListeners = function(){
 						$scope.getAll($scope.currentPageNumber);
 						$scope.sceneName = response.name;
 				});
-
+			}
 	}
 	
 	$scope.remove = function(id){
@@ -621,17 +623,18 @@ if (window.IDBTransaction){
 		}
 		
 		scene.imgURL = dataURL;
-
-		var objectStoreRequest = objectStore.add(scene); 		
-		objectStoreRequest.onsuccess = function(event) {
-			// report the success of our new item going into the database
-			console.log('New scene added to database');
-			$scope.getAll_i($scope.currentPageNumber_i);			
-			//appendTable(null, scene.userID, scene, scene.imgURL);	
-			/*setTimeout(function(){
-				$scope.getAll_i();
-			}, 300);*/			
-		};
+		if(name){
+			var objectStoreRequest = objectStore.add(scene); 		
+			objectStoreRequest.onsuccess = function(event) {
+				// report the success of our new item going into the database
+				console.log('New scene added to database');
+				$scope.getAll_i($scope.currentPageNumber_i);			
+				//appendTable(null, scene.userID, scene, scene.imgURL);	
+				/*setTimeout(function(){
+					$scope.getAll_i();
+				}, 300);*/			
+			};
+		}
 	}	
 	
 	/** The structure of the scene object is different from that of the shapeSelection object
@@ -865,18 +868,20 @@ if (window.IDBTransaction){
 				var name = prompt("add or update this scene's name", currentScene.name);			
 				data.name = name;
 				data.imgURL = currentScene.imgURL;
-				var result = objectStore.put(data);
-				console.log('data: ', data);
-				result.onsuccess = function(ev){
-					var sceneKey = ev.target.result;
-					console.log('Updated scene: ', ev.target);
-					console.log('Successfully edited key ' + sceneKey);
-					$scope.getAll_i($scope.currentPageNumber_i);
-				};
-	 
-				result.onerror = function(ev){
-					console.log('Error occured', ev.srcElement.error.message);
-				};
+				if(name){
+					var result = objectStore.put(data);
+					console.log('data: ', data);
+					result.onsuccess = function(ev){
+						var sceneKey = ev.target.result;
+						console.log('Updated scene: ', ev.target);
+						console.log('Successfully edited key ' + sceneKey);
+						$scope.getAll_i($scope.currentPageNumber_i);
+					};
+		 
+					result.onerror = function(ev){
+						console.log('Error occured', ev.srcElement.error.message);
+					};
+				}
 			};
 	 
 			request.onerror = function(ev){
