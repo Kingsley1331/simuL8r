@@ -19,7 +19,7 @@ app.controller('EditCtrl', function($scope, $http, $rootScope, $location){
 			$rootScope.loggedin=false;
 		}
 	});	
-	$scope.filename = filename;
+	
 	$scope.user = {};
 	var uploader = document.getElementById('uploadForm1');
 	//var userObject = document.getElementById('username');
