@@ -51,6 +51,7 @@ app.controller('EditCtrl', function($scope, $http, $rootScope, $location){
 			userId.setAttribute('value', useridVal);
 			//console.log($scope.fileData[0].name);
 			if($scope.fileData !== undefined){
+				console.log('submiting');
 				uploader.submit();	
 			}
 			$location.url('/home');			
