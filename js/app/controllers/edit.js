@@ -43,9 +43,6 @@ app.controller('EditCtrl', function($scope, $http, $rootScope, $location){
 	}
 	
 	$scope.editUser = function(){
-		if($scope.fileData === undefined){
-			delete $scope.user.profilePic;
-		}
 		console.log('editUser: ', $scope.user);			
 		$http.put('/user/' + $rootScope.currentUser._id, $scope.user)
 		.success(function(response){

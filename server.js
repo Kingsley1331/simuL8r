@@ -80,7 +80,7 @@ app.post('/uploadProfile', function(req, res){
 				if(mimetype === '.octet-stream'){
 					//user.local.profilePic = 'images/profiles/Default.png';
 					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/Default.png';
-				}else{
+				}else if(value !== 'profilePic'){
 					//user.local.profilePic = 'images/profiles/' + value + mimetype;
 					user.local.profilePic = 'https://s3.amazonaws.com/simuL8rBucket/images/profiles/' + value + mimetype;
 				}
