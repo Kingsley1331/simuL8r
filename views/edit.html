@@ -13,7 +13,7 @@
 			 margin-left: auto;
 			 margin-right: auto;
 		}
-	</style>		
+	</style>
 </head>
 <body>
 	<div class="col-lg-4">
@@ -46,7 +46,7 @@
 							</div>
 					</div>
 					
-					<div class="row">
+					<!--<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<input id="inputFirstName" type="text" name='firstName' placeholder="first name" class="form-control" ng-model='user.firstname'/></div>
@@ -55,7 +55,7 @@
 							<div class="form-group">
 								<input id="inputLastName" type="text" name='lastName' placeholder="last name" class="form-control" ng-model='user.lastname'/></div>
 						</div>
-					</div>
+					</div>-->
 				</div>
 				<div class="form-actions text-right pal">
 					<button type="submit" class="btn btn-primary" ng-click='editUser()'>submit</button>
@@ -63,7 +63,7 @@
 				</form>
 				<form id="uploadForm1" enctype="multipart/form-data" action="/uploadProfile" method="post">
 					<input type="hidden" id="userid" value="#" name="id"/>
-					<input id='upload_profile' type="file" name="profilePic"/>
+					<input id='upload_profile' type="file" name="profilePic" onchange="angular.element(this).scope().getFileData(this.files)"/>
 					<input id='upload_image' type="submit" value="Upload Image" name="submitter">
 				</form>
 			</div>
