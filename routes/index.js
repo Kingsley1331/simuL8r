@@ -292,7 +292,9 @@ module.exports = function(passport){
 			user.local.username = req.param('username');
 			user.local.firstName = req.param('firstName');
 			user.local.lastName = req.param('lastName');
-			user.local.profilePic = req.param('profilePic');		
+			if(req.param('profilePic') !== 'profilePic'){
+				user.local.profilePic = req.param('profilePic');	
+			}			
 			user.save(function(err) {
 			if (err){
 				console.log(err);
