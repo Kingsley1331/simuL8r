@@ -12,9 +12,7 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 			$rootScope.loggedin = true;
 			//alert('loggedin');
 			console.log('$rootScope.currentUser: ', $rootScope.currentUser)
-			//location.replace('/simuL8r');
-			location.replace('#/home');
-			//$location.url('/profile');
+			$location.url('/home');
 			setTimeout($rootScope.setNav, 500);
 		}, function(err){
 			alert(user.username + ' was not recognized, please try again.');

@@ -1,4 +1,4 @@
-app.controller('HomeCtrl', function($scope, $rootScope, $http, $timeout){
+app.controller('HomeCtrl', function($scope, $rootScope, $http, $timeout, $location){
 	/** put this in a service **/
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
@@ -326,7 +326,8 @@ $scope.addPageEventListeners = function(){
 	$scope.getSelectedScene = function(id){
 		clearAll(wallConfig);
 		$scope.simulation = shapeSelection;		
-		location.replace('#/simuL8r?id=' + id);		
+		//location.replace('#/simuL8r?id=' + id);
+		$location.url('/simuL8r?id=' + id);		
 	}
 	
 	
