@@ -13,9 +13,9 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location, $time
 		if($location.search().rl != 1){
 			$timeout(function(){
 				location.reload();
-				location.replace('http://localhost:5000/#/login?rl=1');
+				location.replace('https://intense-atoll-8693.herokuapp.com/#/login?rl=1');
 				if($rootScope.loggedin === true){
-					location.replace('http://localhost:5000/#/home');
+					location.replace('https://intense-atoll-8693.herokuapp.com/#/home');
 				}
 			}, 100);	
 		}
