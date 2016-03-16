@@ -1,8 +1,26 @@
-app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
+app.controller('LoginCtrl', function($scope, $http, $rootScope, $location, $timeout){
 	$scope.user = {};
 	$scope.user.username = '';
 	$scope.user.password = '';
 	console.log('login');
+	var ua = window.navigator.userAgent;
+	var ie = ua.indexOf("MSIE");
+	var edge = ua.indexOf("Edge");
+	
+	
+	// if internet explorer or Edge
+	 if(ie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./) || navigator.appName == "Netscape" && (navigator.appVersion.indexOf('Trident') === -1) && edge !== -1){
+		if($location.search().rl != 1){
+			$timeout(function(){
+				location.reload();
+				location.replace('http://localhost:5000/#/login?rl=1');
+				if($rootScope.loggedin === true){
+					location.replace('http://localhost:5000/#/home');
+				}
+			}, 100);	
+		}
+	}
+	
 	$scope.login = function(user){
 		console.log(user);
 		$http.post('/login', user)
@@ -13,12 +31,13 @@ app.controller('LoginCtrl', function($scope, $http, $rootScope, $location){
 			//alert('loggedin');
 			console.log('$rootScope.currentUser: ', $rootScope.currentUser)
 			$location.url('/home');
-			setTimeout($rootScope.setNav, 500);
+			$timeout($rootScope.setNav, 500);
 		}, function(err){
 			alert(user.username + ' was not recognized, please try again.');
 		});
 	}
 	
+
 	
 	function centerForm(){
 		var windowWidth = window.innerWidth;
