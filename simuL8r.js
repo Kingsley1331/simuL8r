@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-03-07 **/ 
+/** simuL8r - v1.0.0 - 2016-03-26 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2370,6 +2370,7 @@ var showBlueprint = {
 		collisionShadow: false,
 		centroid: false,
 		shadowCentroid: false,
+		frameRate: false,
 		arrow: {
 			normal: false,
 			repulsionA: false,
@@ -2378,7 +2379,6 @@ var showBlueprint = {
 			collisionPointVelocity: false,
 		}
 	};
-
 		//Draw shape's collision outline
 function collisionShadow(){
 	if(showBlueprint.collisionShadow && showBlueprint.on){
@@ -2436,7 +2436,7 @@ function displayData(){
 	var preCollision = document.getElementById("preCollision");
 	var centroid = document.getElementById("centroid");
 	var shadowCentroid = document.getElementById("shadowCentroid");
-	
+	var frameRate = document.getElementById("frameRate");	
 	if(checkbox(normal)){
 		showBlueprint.arrow.normal = true;
 	}else{
@@ -2501,6 +2501,14 @@ function displayData(){
 	}else{
 		showBlueprint.shadowCentroid = false;
 	}
+	
+	if(checkbox(frameRate)){
+		showBlueprint.frameRate = true;
+		$('#fps').css({display: 'block'});
+	}else{
+		showBlueprint.frameRate = false;
+		$('#fps').css({display: 'none'});
+	}	
 }
 
 function arrow(firstPoint, secondPoint, type){
