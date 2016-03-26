@@ -1074,7 +1074,8 @@ function CustomShape(){
 	this.distances = [];
 	this.findOuterRadius = function(){
 		this.distances = this.vertices.map(function(vertex){
-			return distance(vertex[0] + 50, vertex[1] + 50);
+			//return distance(vertex[0] + 50, vertex[1] + 50);
+			return distance(vertex[0], vertex[1]);
 		})
 	};
 	this.outerRadius = 0;
