@@ -363,7 +363,7 @@ function physTest(){
 function physMove(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
-			if(physics && dragging && shapeSelection.shapes[key][2][i].selected){
+			if(physics && dragging && shapeSelection.shapes[key][2][i].selected && shapeSelection.shapes[key][2][i].mass !== Infinity){
 				physicsObject.throwArray.push([mousePos.x, mousePos.y]);
 				var arrayLength = physicsObject.throwArray.length - 1;
 				

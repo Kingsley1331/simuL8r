@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-03-26 **/ 
+/** simuL8r - v1.0.0 - 2016-03-28 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -3097,7 +3097,7 @@ function physTest(){
 function physMove(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
-			if(physics && dragging && shapeSelection.shapes[key][2][i].selected){
+			if(physics && dragging && shapeSelection.shapes[key][2][i].selected && shapeSelection.shapes[key][2][i].mass !== Infinity){
 				physicsObject.throwArray.push([mousePos.x, mousePos.y]);
 				var arrayLength = physicsObject.throwArray.length - 1;
 				
