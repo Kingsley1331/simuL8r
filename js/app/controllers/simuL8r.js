@@ -909,6 +909,7 @@ var frame_rate = document.getElementById('frame_rate');
 var applySettings = document.getElementById('applySettings');
 var fix = document.getElementById('fix');
 var showOptions = document.getElementById('showOptions');
+var hideOptions = document.getElementById('hideOptions');
 var settings = document.getElementById('settings');
 var settingsShowing = false
 
@@ -942,10 +943,12 @@ function showSettings(){
 		settings.style.display = 'inline-block';
 		console.log('show settings');
 		settingsShowing = true;
+		$('#showOptions').css({display: 'none'});
 	}else if(settingsShowing){
 		settings.style.display = 'none';
 		console.log('hide settings');
 		settingsShowing = false;
+		$('#showOptions').css({display: 'block'});
 	}
 }
 
@@ -963,7 +966,7 @@ function startFrames(frame__rate){
 
 applySettings.addEventListener('click', displaySettings);
 showOptions.addEventListener('click', showSettings);
-
+hideOptions.addEventListener('click', showSettings);
 
 /******************************************* spectrum.js boilerplate code *********************************************/
 

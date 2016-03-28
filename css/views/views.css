@@ -601,7 +601,7 @@ ul.nav.navbar-nav{
 }
 
 #settings{
-	position:absolute;
+	position: absolute;
 	top: 60px;
 	right: 10px;
 	display: none;
@@ -610,10 +610,16 @@ ul.nav.navbar-nav{
 	background-color: lightgreen;
 	padding: 20px;
 	border-radius: 10px;
-	-webkit-box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
-	-moz-box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
-	box-shadow:6px 6px 10px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
 	opacity: 1;
+}
+
+
+#hideOptions{
+	position: relative;	
+	left: 20px;
 }
 
 #bp{
