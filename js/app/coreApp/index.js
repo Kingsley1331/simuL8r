@@ -499,7 +499,7 @@ function init(){
 	animate();
 	
 	intervalRunning = true;
-	playScenes = setInterval(animator, 1000 / frame_Rate); console.log('####################animating');
+	playScenes = setInterval(animator, 1000 / frame_Rate);
 	
 	wallMaker();
 	
