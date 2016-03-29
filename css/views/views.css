@@ -742,10 +742,10 @@ ul.nav.navbar-nav{
 	left: 20px;
 }
 
-#save + .tooltip > .tooltip-inner{
+#physics + .tooltip > .tooltip-inner{
 	background-color: black;
 	position: relative;
-	left: 50px;
+	left: 55px;
 }
 
 .tooltip-inner, .tooltip-arrow {
