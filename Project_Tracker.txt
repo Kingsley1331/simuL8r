@@ -9,85 +9,85 @@
 2. Detecting shape overlap
 
 	(a) Check each point of object A against of object B for collision.	                                                                                  /**** COMPLETED ****/
-	(b) Create "cross-lines", use the intersectingLines function to check if 2 shapes (convex) are overlapping if the fail check (a)
+	(b) Create "cross-lines", use the intersectingLines function to check if 2 shapes (convex) are overlapping if they fail check (a)
 	(c) If check (b) fails check to see if cross-lines are intersecting an object using the intersectingLines function
 	(d) If all the above checks fail use the intersectingLines function to check all the sides of object A against all the sides of object B
-	
+
 	** Note: The above checks are computationally expensive, make sure that each one is used only when absolutely necessary.
-	
+
 
 3. Calculate accurate repulsion force
 
 	(a) Compare the line between the centroid of object A and it's colliding vertex to every side in object B
 	(b) Once the line from the centroid has been defined turn it into an inward pointing vector and use it as the repulsion vector
-	
+
 
 4. Friction
 
 	(a) Apply the standard friction formula which takes the following into account.
 		1. the angle of inclination
 		2. reaction force of the surface due to gravity
-	
+
 	(b) Make sure that the torque that friction exerts on the body is taken into account
-	
+
 
 5. Toppling
 
 	- Objects behave strangely when toppling, especially the small ones
-	
-	
+
+
 6. Sliding when resting on a surface
 
 	- Prevent sliding by making repulsion perpendicular to the colliding side
-	
-	
+
+
 /*************************************** indexedDB **************************************/
 
 7. Thumbnails
 
 	(a) Use the canvas canvas.toDataURL function to generate thumbnails for browser-only scenes
 	(b) store the dataUrls at the top level in the database
-	
-	
+
+
 8. Refreshing
 
 	- some properties such as velocity are not being refreshed when scenes are reloaded, instead they appear to be retained
-	
+
 
 9. Deleting and Updating
 
 	- the deletion and updating of scenes does not fully take effect until after the page is reloaded, this is probably due to the fact that the 'scenes' array (initialised in the displayData function) is not in sync with the database
-	
-	
+
+
 /*************************************** MongoDB **************************************/
 
 10. MongoDB scenes
 
 	when getting multiple scenes from MongoDB the browser grinds to a halt as it gets overloaded with too much data, this problem can be solved by transferring the data to indexedDB and freeing up the browser.
 
-	
+
 /*************************************** User Interface and Scenes **************************************/
 
 11. User Account
-	
+
 	- give users the ability to change the name scenes or delete them from within their profile page
-	
-	- create admin users 
-	
-	- create public and private scenes 
-	
-	- add the following metadata to scenes 
-		
+
+	- create admin users
+
+	- create public and private scenes
+
+	- add the following metadata to scenes
+
 		(a) date and time scene was created
-		
-		(b) date and time scene was last modified	
-		
+
+		(b) date and time scene was last modified
+
 		(b) size of scene (in terms of data)
-		
+
 12. Responsive scenes
-	
+
 	- Since making scenes responsive, the performance of some and possibly all scenes have suffered, in some cases very severely.
-	
+
 	- This might be due to memory leaks, a function being called too many times or some of the new function being more expensive than they appear.
-	
+
 	- These changes were made in commits ee49f03 and c7c205d on Jan 20 2016
