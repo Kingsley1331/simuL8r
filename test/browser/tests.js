@@ -15361,7 +15361,7 @@ function findIntersectionPoint(arr1, arr2){
 	}
 }
 
-function intersect(arr1, arr2){
+function intersectingLines(arr1, arr2){
 	var ranges_a = xyRange(arr1);
 	var ranges_b = xyRange(arr2);
 
@@ -15377,14 +15377,14 @@ function intersect(arr1, arr2){
 		return { intersecting: false, intersectionPoint: [null, null] };
 	}
 }
-
+/*
 function intersectingLines(arr1, arr2, bool){
 	if(bool === true){
 		return findIntersectionPoint(arr1, arr2);
 	}else if(bool === false){
 		return intersect(arr1, arr2);
 	}
-}
+}*/
 
 function distanceFromLine(point, line){
 	var lineGradient = defineLine(line).gradient;
@@ -15464,7 +15464,7 @@ describe('findIntersectionPoint: takes 2 2-dimensional arrays which represent 2 
 		expect(findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]])).to.deep.equal({intersecting: false, intersectionPoint:[ 3, 4]});
   });
 });
-
+/*
 describe('intersect: takes 2 2-dimensional arrays which represent 2 line segments, it finds the equation of the lines in terms of y = mx + c', function(){
   it('should return the point of intersection and intersecting => true', function(){
 		expect(intersect([[1, 6], [3, 1]], [[1, 2], [3, 4]])).to.deep.equal({intersecting: true, intersectionPoint:[ 2.142857142857143, 3.1428571428571432]});
@@ -15472,15 +15472,15 @@ describe('intersect: takes 2 2-dimensional arrays which represent 2 line segment
 	it('should return the point of intersection and intersecting => false', function(){
 		expect(intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]])).to.deep.equal({intersecting: false, intersectionPoint:[ null, null]});
   });
-});
+});*/
 
 
 describe('intersectingLines takes 2 2-dimensional arrays (which represents 2 lines) and a boolean, it returns an object with the following format { intersecting: true, intersectionPoint: [x, y] }', function(){
-  it('should return the point of intersection and intersecting => true', function(){
-		expect(intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)).to.deep.equal({intersecting: false, intersectionPoint:[ null, null]});
+  it('should return the point of intersection and intersecting => false', function(){
+		expect(intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]])).to.deep.equal({intersecting: false, intersectionPoint: [ null, null]});
   });
-	it('should return the point of intersection and intersecting => false', function(){
-		expect(intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], true)).to.deep.equal({intersecting: false, intersectionPoint: [3, 4]});
+	it('should return the point of intersection and intersecting => true', function(){
+		expect(intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]])).to.deep.equal({intersecting: true, intersectionPoint:[ 2.142857142857143, 3.1428571428571432]});
   });
 });
 

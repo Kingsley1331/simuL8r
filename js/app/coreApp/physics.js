@@ -193,16 +193,16 @@ function findIntersectionPoint(arr1, arr2){
 }
 
 /**
-	intersect: takes a 2 2-dimensional arrays which represents 2 lines and returns
+	intersectingLines: takes a 2 2-dimensional arrays which represents 2 lines and returns
 	an object with the following format { intersecting: true, intersectionPoint: [x, y] }
 	the "intersecting" property tells us whether or not the point of intersection is on the line segment
 	and the "intersectionPoint" property contains the intersection of the lines (in the form of y = mx + c)
 	that describe the 2 line segments
-	Examples: intersect([[6, 6], [6, 4]], [[5, 5], [7, 5]]) => { intersecting: true, intersectionPoint: [2.14, 3.14] }
-			  intersect([[1, 6], [2, 5]], [[1, 2], [3, 4]]) => { intersecting: false, intersectionPoint: [null, null] }
+	Examples: intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]]) => { intersecting: true, intersectionPoint: [2.14, 3.14] }
+			  intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]]) => { intersecting: false, intersectionPoint: [null, null] }
 **/
 
-function intersect(arr1, arr2){
+function intersectingLines(arr1, arr2){
 	var ranges_a = xyRange(arr1);
 	var ranges_b = xyRange(arr2);
 
@@ -219,30 +219,7 @@ function intersect(arr1, arr2){
 	}
 }
 
-/**
-	intersectingLines: takes 2 2-dimensional arrays (which represents 2 lines) and a boolean, it returns
-	an object with the following format { intersecting: true, intersectionPoint: [x, y] }
-	the "intersecting" property tells us whether or not the point of intersection is on the line segments
-	and the "intersectionPoint" property contains the intersection point of the lines (in the form of y = mx + c)
-	that describe the 2 line segments.
-	Boolean parameter: in situations where calculating the point of intersection
-					   (this is the intersection point of the equations that describes the line segments)
-					   is absolutely necessary the boolean should be set to TRUE and the findIntersectionPoint
-					   function is used.
-					   On the other hand if we simply need to know whether or not 2 line segments intersect
-					   then we set the boolean to FALSE and the intersect function is used instead.
 
-	Examples: intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false) => { intersecting: false, intersectionPoint: [null, null] }
-			  intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], true) => { intersecting: false, intersectionPoint: [3, 4] }
-**/
-
-function intersectingLines(arr1, arr2, bool){
-	if(bool === true){
-		return findIntersectionPoint(arr1, arr2);
-	}else if(bool === false){
-		return intersect(arr1, arr2);
-	}
-}
 /***
 	distanceFromLine: takes a point and a line and calculates the distance between the line and the point.
 	Example: distanceFromLine([0, 2], [[0, 0], [2, 2]]) => 1.4142135623730951
