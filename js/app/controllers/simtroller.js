@@ -7,56 +7,56 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			location.replace('/');
 		}
 	});
-	
+
 	$scope.currentScene = '';
-	
-	
+
+
 	$scope.showSceneTable = false;
 	$scope.scenesVisibility = 'show scenes';
-	
+
 	$scope.toggleSceneTable = function(){
 		if(!$scope.showSceneTable){
 			$scope.showSceneTable = true;
-			$scope.scenesVisibility = 'hide scenes';			
+			$scope.scenesVisibility = 'hide scenes';
 		}else if($scope.showSceneTable){
 			$scope.showSceneTable = false;
-			$scope.scenesVisibility = 'show scenes';			
+			$scope.scenesVisibility = 'show scenes';
 		}
 	}
-	
+
 	$scope.currentUser = {};
-	
+
 	$scope.simulation = shapeSelection;
 	console.log('SimCtrl: ', $scope.simulation);
-	
+
 	$scope.scenes = {};
 	$scope.currentThumbnail = {};//current thumbnail
-	
+
 	$scope.create = function(){
 		var name = prompt('please choose a name for this scene', 'untitled');
-		
+
 		if(name !== ''){
 			shapeSelection.name = name;
 		}
 		var dataURL = canvas.toDataURL();
 		shapeSelection.imageUrl = dataURL;
-		
+
 		//console.log('imageUrl', shapeSelection.imageUrl);
-		
+
 		$scope.simulation = shapeSelection;
 		console.log('create: ', $scope.simulation);
 
 		$http.post('/scenes', $scope.simulation)
 		.success(function(response){
 			//console.log('create_response: ', response);
-			console.log(response);			
+			console.log(response);
 			$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
 			var thumbnailUrl = $scope.currentThumbnail[response._id];
 			//$scope.saveThumbnail(thumbnailUrl);
 		});
 		$scope.getAll();
 	}
-	
+
 	function shapeLoader(response, id){
 		try {
 			loadShapes(response);
@@ -89,22 +89,22 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			wallMaker();
 		});
 	}
-	
+
 	$scope.updateScene = function(id){
 		//console.log('shapeSelection.name+++++++++++++++++++++++++++++++++++++++++++++++++++++++++', shapeSelection.name)
-		var name = prompt("add or update this scene's name", shapeSelection.name);			
+		var name = prompt("add or update this scene's name", shapeSelection.name);
 		if(!shapeSelection.name){
 			shapeSelection.name = 'untitled';
 		}
-		
+
 		var dataURL = canvas.toDataURL();
 		shapeSelection.imageUrl = dataURL;
-		shapeSelection.name = name;	
+		shapeSelection.name = name;
 		$scope.simulation = shapeSelection;
-		console.log('updateScene: ', $scope.simulation);			
+		console.log('updateScene: ', $scope.simulation);
 				$http.put('/scenes/' + id, $scope.simulation)
 				.success(function(response){
-					console.log('update ', response);					
+					console.log('update ', response);
 					$scope.currentThumbnail[response._id] = 'images/thumbnails/' + response._id + '.png';
 					var thumbnailUrl = $scope.currentThumbnail[response._id];
 					//$scope.saveThumbnail(thumbnailUrl);
@@ -112,7 +112,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 				});
 
 	}
-	
+
 	$scope.remove = function(id){
 		var deleteScene = confirm('Are you sure you want to delete this scene?');
 		if (deleteScene){
@@ -123,7 +123,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			$scope.getAll();
 		}
 	}
-	
+
 	$scope.removeAll = function(){
 		$http.delete('/scenes/' + $scope.simulation.userID)
 		.success(function(response){
@@ -131,7 +131,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 		});
 		$scope.getAll();
 	}
-		
+
 	$scope.getAll = function(){
 		$scope.simulation = shapeSelection;
 		$http.get('/scenes/' + $scope.simulation.userID)
@@ -140,7 +140,7 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			$scope.scenes = response;
 		});
 	}
-	
+
 	$scope.removeAllScenes = function(){
 		var deleteAllScenes = confirm('Are you sure you want to delete all scenes?');
 		if(deleteAllScenes){
@@ -151,28 +151,28 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			});
 		}
 	}
-	
-	
+
+
 	$scope.retrieve = function(id){
 		clearAll(wallConfig);
 		$scope.select(id);
 		$scope.currentScene = id;
 	}
-	
+
 	$scope.refresh = function(id){
 		if($scope.currentScene !== ''){
 		clearAll(wallConfig);
 		$scope.select(id);
 		}
 	}
-	
-	
+
+
 	$scope.newScene = function(){
 		clearAll(wallConfig);
 		$scope.simulation = shapeSelection;
 		console.log('newScene: ', $scope.simulation);
 	}
-	
+
 	/*$scope.saveThumbnail = function(id){
 		var image = canvas.toDataURL('image/png');
 		postData = {
@@ -184,12 +184,12 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			console.log('successful upload!');
 		});
 	}*/
-	
+
 	$scope.logout = function(){
 		console.log('Simtroller logging out!!!');
 		location.replace('/signout');
 	}
-	
+
 	$scope.findCurrentUser = function(){
 		$http.get('/loggedin').success(function(user){
 			// User is Authenticated
@@ -205,9 +205,9 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			}
 		});
 	}
-	
+
 	console.log('getQueryVariable: ', getQueryVariable('id'));
-	
+
 	// load scenes from id value in querystring
 	$scope.loadSelectedScene = function(){
 		id = getQueryVariable('id');
@@ -217,12 +217,15 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 			$scope.select(id);
 		}
 	}
-	
+
 	//setTimeout($scope.loadSelectedScene, 500);
 	canvas = document.getElementById('canvas');
-	
+
 	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
-	
+
 	$scope.findCurrentUser();
+
+	var height = window.innerHeight - 50;
+	$('.content-wrapper').css({'min-height': window.innerHeight + 'px'});
 
 });
