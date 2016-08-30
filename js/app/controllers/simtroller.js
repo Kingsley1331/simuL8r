@@ -224,8 +224,5 @@ simApp.controller('SimCtrl', function($scope, $http, $window){
 	canvas.addEventListener('canvasReady', $scope.loadSelectedScene);
 
 	$scope.findCurrentUser();
-
-	var height = window.innerHeight - 50;
-	$('.content-wrapper').css({'min-height': window.innerHeight + 'px'});
-
+	
 });

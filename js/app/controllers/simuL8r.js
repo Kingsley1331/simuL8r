@@ -13,7 +13,7 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 
 	$scope.hasRemoteTableLoaded = false;
 	$scope.hasLocalTableLoaded = false;
-	$timeout($rootScope.setNav, 1000);	
+	$timeout($rootScope.setNav, 1000);
 
 		/** put this in a service **/
 	$http.get('/loggedin').success(function(user){

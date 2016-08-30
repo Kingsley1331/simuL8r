@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html ng-app='simuL8r'>	
+<html ng-app='simuL8r'>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,9 +29,9 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-	
-	
-	
+
+
+
     <!-- ####################################################################simuL8r################################################################
 	<link type="text/css" rel="stylesheet" href="css/main.css"></link> -->
 	<!--<link type="text/css" rel="stylesheet" href="js/lib/PACE/themes/blue/pace-theme-center-atom.css"></link>-->
@@ -45,7 +45,7 @@
 
 	  ga('create', 'UA-17846569-2', 'auto');
 	  ga('send', 'pageview');
-	</script>	
+	</script>
   </head>
   <!--
   BODY TAG OPTIONS:
@@ -67,15 +67,15 @@
   |               | sidebar-mini                            |
   |---------------------------------------------------------|
   -->
-  <body class='hold-transition skin-green sidebar-mini' ng-cloak>
-	<div id='barnav'></div>  
+  <body onload='tempFix();' class='hold-transition skin-green sidebar-mini' ng-cloak>
+	<div id='barnav'></div>
     <div class="wrapper" ng-controller='NavCtrl' style='min-width: 1300px'>
 
       <!-- Main Header -->
       <header class="main-header" style='background-color: transparent'>
 
         <!-- Logo -->
-       
+
         <!-- Header Navbar -->
         <nav class="navbar navbar-static-top" role="navigation">
 		<h3 id='scene-title'> scene title</h3>
@@ -228,7 +228,7 @@
           </div>
         </nav>
       </header>
-	  
+
 	   <a href="#" class="logo">
           <span class="logo-lg"><b>simuL8r</b></span>
         </a>
@@ -361,14 +361,14 @@
          Both of these plugins are recommended to enhance the
          user experience. Slimscroll is required when using the
          fixed layout.
-	<div ng-view></div>	--> 
+	<div ng-view></div>	-->
 	<script type="text/javascript" src="js/lib/jquery/dist/jquery.js"></script>
 	<script type="text/javascript" src='js/app/spectrum/spectrum.js'></script>
 	<script type="text/javascript" src="js/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/lib/angular/angular.js"></script>
 	<script type="text/javascript" src="js/lib/angular-route/angular-route.js"></script>
 	<script type="text/javascript" src="js/app/stats/Stats.js"></script>
-	<script type="text/javascript" src="js/app/stats/Stats_gui.js"></script>	
+	<script type="text/javascript" src="js/app/stats/Stats_gui.js"></script>
 	<script type="text/javascript" src="js/app/app.js"></script>
 	<script type="text/javascript" src='js/app/controllers/login.js'></script>
 	<script type="text/javascript" src='js/app/controllers/signup.js'></script>
@@ -376,24 +376,28 @@
 	<script type="text/javascript" src='js/app/controllers/home.js'></script>
 	<script type="text/javascript" src='js/app/controllers/demos.js'></script>
 	<script type="text/javascript" src='js/app/controllers/profile.js'></script>
-	<script type="text/javascript" src='js/app/controllers/edit.js'></script>	
+	<script type="text/javascript" src='js/app/controllers/edit.js'></script>
 	<script src="js/AdminLTE/app.min.js"></script>
 
     <!-- ####################################################################simuL8r################################################################ -->
-	
+
 	<!--<script type="text/javascript"  data-pace-options='{"ajax": true, document: true, eventLag: true}' src="js/app/controllers/simuL8r.js"></script>
 	<script type="text/javascript" src="js/lib/PACE/pace.min.js"></script>-->
 	<script type="text/javascript" src="js/app/controllers/simuL8r.js"></script>
 	<script type="text/javascript" src='simuL8r.js'></script>
+  <script>
+
+  function tempFix(){
+    var height = window.innerHeight - 50;
+    $('.content-wrapper').css({'min-height': height + 'px'});
+  }
+
+  </script>
 
 	<!--<script type="text/javascript" src='settings.js'></script>-->
-	<!--<script type="text/javascript" data-pace-options='{"ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>-->	
-	
-	
-  </body>	
+	<!--<script type="text/javascript" data-pace-options='{"ajax": true, document: true, eventLag: true}' src='js/app/controllers/simtroller.js'></script>-->
+
+
+  </body>
 
 </html>
-
-
-
-

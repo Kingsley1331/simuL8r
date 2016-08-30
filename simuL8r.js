@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-08-23 **/ 
+/** simuL8r - v1.0.0 - 2016-08-30 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2857,8 +2857,9 @@ function defineLine(arr){
 	their point of intersection, provided that they are not parallel.
 	findIntersectionPoint returns an array, the first 2 elements are the x and y coordinates of the intersection point respectively,
 	the 3rd element tells us if the intersection point lies on the line segments.
-	Examples: findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]]) => [2.14, 3.14, true]
+	Examples: findIntersectionPoint([[1, 6], [3, 1]], [[1, 2], [3, 4]]) => {intersecting: true, intersectionPoint:[ 2.142857142857143, 3.1428571428571432]}
 			  findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]]) => [3, 4, false]
+			  findIntersectionPoint([[1, 6], [2, 5]], [[1, 2], [3, 4]]) => {intersecting: false, intersectionPoint:[3, 4]}
 ***/
 
 function findIntersectionPoint(arr1, arr2){
@@ -2996,7 +2997,7 @@ function distanceFromLine(point, line){
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [3, 1]], [[1, 2], [3, 4]], false)); // true
 //console.log('intersectingLines: ', intersectingLines([[1, 6], [2, 5]], [[1, 2], [3, 4]], false)); // false
 
-/** Horizontal line crossing vertica line **/
+/** Horizontal line crossing vertical line **/
 //console.log('intersectingLines: ', intersectingLines([[6, 6], [6, 4]], [[5, 5], [7, 5]], false)); // true
 //console.log('intersectingLines: ', intersectingLines([[5, 3], [6, 1]], [[7, 1], [8, 3]], false)); // false
 
