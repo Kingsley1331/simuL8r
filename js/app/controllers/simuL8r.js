@@ -15,6 +15,8 @@ app.controller('SimCtrl', function($scope, $http, $location, $window, $rootScope
 	$scope.hasLocalTableLoaded = false;
 	$timeout($rootScope.setNav, 1000);
 
+	clearInterval(playScenes);
+
 		/** put this in a service **/
 	$http.get('/loggedin').success(function(user){
 		// User is Authenticated
