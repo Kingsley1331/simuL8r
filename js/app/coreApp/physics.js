@@ -219,6 +219,31 @@ function intersectingLines(arr1, arr2){
 	}
 }
 
+function intersectingShapes(shapeA, shapeB, centroid){ // example centroid = [[Xa, Ya], [Xb, Yb]]
+	var lengthA = shapeA.length;
+	var lengthB = shapeB.length;
+	if(centroid){
+		for(var m = 0; m < lengthA - 1; m++){
+			shapeA[m][0] += centroid[0][0];
+			shapeA[m][1] += centroid[0][1];
+		}
+		for(var n = 0; m < lengthB - 1; n++){
+			shapeB[n][0] += centroid[1][0];
+			shapeB[n][1] += centroid[1][1];
+		}
+	}
+	for(var i = 0; i < lengthA - 1; i++){ // using (lengthA - 1) instead of lengthA to avoid checking first line twice
+		var lineA = [];
+		lineA[0] = shapeA[i];
+		lineA[1] = shapeA[i + 1];
+			for(var j = 0; j < lengthB - 1; j++){
+				var lineB = [];
+				lineB[0] = shapeB[j];
+				lineB[1] = shapeB[j + 1];
+				intersectingLines(lineA, lineA);
+			}
+		}
+	}
 
 /***
 	distanceFromLine: takes a point and a line and calculates the distance between the line and the point.
