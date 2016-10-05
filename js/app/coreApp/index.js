@@ -1046,7 +1046,6 @@ function getMousePos(canvas, evt) {       //canvas.addEventListener uses this fu
 
 	var zoomedX = x - (x - centerX) * (zoom - 1)/zoom;
 	var zoomedY = y - (y - centerY) * (zoom - 1)/zoom;
-
 	return {
 				x: zoomedX,
 				y: zoomedY
