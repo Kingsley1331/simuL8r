@@ -21,6 +21,7 @@ var selectedShape = [];
 var frame_Rate = 100;
 var playScenes;
 var selectedColour = '';
+var zoom = 1;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -40,8 +41,8 @@ var shapeSelection = {
 							curve:[false, curveGen, curveArray, 5],
 							wall:[false, wallGen, wallArray, 6]
 						}
-					};					
-					
+					};
+
 var pencilPointsArray = [];
 var superPencilPoints = [];
 var triangle;
@@ -53,11 +54,11 @@ var reShape = false;
 var onReshape = false;
 var expand = false;
 var colourChange = false;
-var selectSize = 15; // resize: the shortest distance between the radius 
+var selectSize = 15; // resize: the shortest distance between the radius
 var smallBox = 9; // size of the small black square in the expansion square
 var colours = {
-				transparent:['transparent', false], blue:['blue', false], red:['red', false], yellow:['yellow', false], 
-				green:['green', false], white:['white', false], black:['black', false], lightblue:['lightblue', false], 
+				transparent:['transparent', false], blue:['blue', false], red:['red', false], yellow:['yellow', false],
+				green:['green', false], white:['white', false], black:['black', false], lightblue:['lightblue', false],
 				lightgreen:['lightgreen', false], orange:['orange', false], purple:['purple', false], violet:['violet',
 				false], beige:['beige', false],
 				aqua:['aqua', false], grey:['grey', false], pink:['pink', false]
@@ -87,7 +88,7 @@ var pointStroking = true;
 var reversingX = false;
 var reversingY = false;
 var rotating90 = false;
-var rotating180 = false; 
+var rotating180 = false;
 var copyArray = [];
 var copying = true;
 var onBar = false; //checks to see if the cursor is on the navigation bar
@@ -185,7 +186,7 @@ function resetRotate(){
 	reversingX = false;
 	reversingY = false;
 	rotating90 = false;
-	rotating180 = false; 
+	rotating180 = false;
 }
 
 
@@ -237,7 +238,7 @@ $(document).ready(function(){
 	$('#bar').hover(function(){
 	if(rotate)
 		$('#rotateList').fadeIn(250);
-		$('#bar').mouseleave(function(){ 
+		$('#bar').mouseleave(function(){
 			setTimeout(listStyleCallback, 2500);
 		})
 	})
@@ -247,13 +248,13 @@ $(document).ready(function(){
 	$('#bar').hover(function(){
 	if(pencils)
 		$('#pencilList').fadeIn(250);
-		$('#bar').mouseleave(function(){ 
+		$('#bar').mouseleave(function(){
 			setTimeout(listStyleCallback, 2500);
 		})
 	})
 })
 
-	
+
 function listStyleCallback(){
 	if(!onBar && rotate) {$('#rotateList').fadeOut(1000);}
 	if(!onBar && pencils) {$('#pencilList').fadeOut(1000);}
@@ -269,17 +270,17 @@ $(document).ready(function(){
 	})
 })
 
-	
+
 function distance(x,y){
 	return Math.sqrt(x*x + y*y);
 }
 
-function angleFinder(x1, y1, x2, y2){  
+function angleFinder(x1, y1, x2, y2){
 	var product = x1*x2 + y1*y2;
 	var mag = distance(x1,y1)*distance(x2,y2);
 	return Math.acos(product/mag);
 }
-	
+
 function angleCalc(x1, y1, x2, y2){
 	var theta = angleFinder(Math.abs(x1), Math.abs(y1), Math.abs(x2), Math.abs(y2));
 
@@ -292,14 +293,14 @@ function angleCalc(x1, y1, x2, y2){
 		var product = x1*x2 + y1*y2;
 		var mag = distance(x1, y1)*distance(x2, y2);
 		return Math.PI + theta;
-			
+
 	}else if(y1 <= 0 && x1 >=0){
 		var product = x1*x2 + y1*y2;
 		var mag = distance(x1, y1)*distance(x2, y2);
 		return 2*Math.PI - theta;
 	}
 }
-	
+
 function rotater2(center_x, center_y, point_x, point_y, angle){
 	var length = distance(point_x - center_x, point_y - center_y);
 	var angle_1 = angleCalc(point_x - center_x, point_y - center_y, length, 0);
@@ -315,24 +316,24 @@ function shifter(currentCanvas, dbCanvas, shapes){
 	var height = dbCanvas.height;
 	var innerHeight = window.innerHeight;
 	var innerWidth = window.innerWidth;
-	
+
 	if(dbCanvas.width <= innerWidth && currentCanvas.width > innerWidth ){
 		setCanvasSize(canvas, innerWidth, innerHeight);
-		setCanvasSize(bufferCanvas, innerWidth, innerHeight);	
+		setCanvasSize(bufferCanvas, innerWidth, innerHeight);
 		currentCanvas.height = innerHeight;
 	}
-	
-	var heightDiff = currentCanvas.height - dbCanvas.height;	
+
+	var heightDiff = currentCanvas.height - dbCanvas.height;
 	if(heightDiff > 0){
-		for(var e in shapes){		
+		for(var e in shapes){
 			var len = shapes[e][2].length;
 			for(var i = 0; i < len; i++){
 				shapes[e][2][i].Y += heightDiff;
 			}
 		}
-	}else if(heightDiff < 0){	
+	}else if(heightDiff < 0){
 		setCanvasSize(canvas, width, height);
-		setCanvasSize(bufferCanvas, width, height);			
+		setCanvasSize(bufferCanvas, width, height);
 	}
 }
 
@@ -395,7 +396,7 @@ function setCanvasSize(canvas, width, height){
 	shapeSelection.canvas = {
 		width: width,
 		height: height
-	};	
+	};
 	$('#navigation-bar').css({'width': width});
 	$('.main-sidebar').css({'height': height + 100 + 'px'});
 	$('#barnav').css({'width': width});
@@ -447,7 +448,7 @@ function init(){
 			physics = true;
 		}
 		e.preventDefault();
-		break; 
+		break;
         default: break; // do not block other keys
     }
 };
@@ -463,33 +464,33 @@ function init(){
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
 	//alert(window.innerWidth - 230 + 'px');
-	
-	
-	
+
+
+
 	setCanvasSize(canvas, window.innerWidth -230, window.innerHeight - 100);
 	window.onresize = function(event) {
 		/*canvas = document.getElementById('canvas');
 		context = canvas.getContext('2d');*/
 		//setCanvasSize();
     };
-	
+
 	body = document.getElementById('body');
-	
+
 	bar = document.getElementById('bar');
 	bar.style.width = window.innerWidth + 'px';;
-	
+
 	//tips = document.getElementById('tips');
-	
+
 	bufferCanvas = document.createElement('canvas');
     bufferCtx = bufferCanvas.getContext("2d");
     bufferCtx.canvas.width = context.canvas.width;
     bufferCtx.canvas.height = context.canvas.height;
-	
+
 	shapeSelection.canvas = {
 		width: context.canvas.width,
 		height: context.canvas.height
 	};
-	
+
 	options();
 	locate();
 	mouseMove()
@@ -497,12 +498,12 @@ function init(){
 	mouseUp();
 	eraser();
 	animate();
-	
+
 	intervalRunning = true;
 	playScenes = setInterval(animator, 1000 / frame_Rate);
-	
+
 	wallMaker();
-	
+
 	canvas.dispatchEvent(canvasReadyEvent);
 }
 
@@ -590,7 +591,7 @@ function mouseDown(){
 	physTest();
 	var points = [1,1];
 	var arrays = [[1,2], [2,2], [3,3]];
-	if(pencils){startPencil = true;}	
+	if(pencils){startPencil = true;}
 	}, false)
 }
 
@@ -609,7 +610,7 @@ function mouseUp(){
 	}, false)
 }
 
-// this function generates initial set of points (pencilPointsArray) which eventually define the individual strokes and shapes 
+// this function generates initial set of points (pencilPointsArray) which eventually define the individual strokes and shapes
 function pencilPoints(){
 	if(pencils && startPencil){
 		pencilPointsArray.push([mousePos.x, mousePos.y]);
@@ -658,8 +659,8 @@ function drag(){
 				//}
 				/*if(selectedShape[0] && selectedShape[1] !== 'wall'){
 					//selectedShape[0].velocity = [2, 2];
-					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');	
-				}*/		
+					console.log('fghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
+				}*/
 			}
 		}
 	}
@@ -669,11 +670,11 @@ function selected(){
 	select = false;
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
-			shapeSelection.shapes[key][2][i].selected = false; 
-			//shapeSelection.shapes[key][2][i].lineWidth = 0.7;			
+			shapeSelection.shapes[key][2][i].selected = false;
+			//shapeSelection.shapes[key][2][i].lineWidth = 0.7;
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(shapeSelection.shapes[key][2][i].vertices[0][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[0][1] + shapeSelection.shapes[key][2][i].Y);
-			
+
 			for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){
 				bufferCtx.lineTo(shapeSelection.shapes[key][2][i].vertices[j][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[j][1] + shapeSelection.shapes[key][2][i].Y);
 			}
@@ -681,7 +682,7 @@ function selected(){
 				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) >= 10){
 					shapeSelection.shapes[key][2][i].selected = true;
 					//shapeSelection.shapes[key][2][i].lineWidth = 4;
-					select = true;				
+					select = true;
 				}
 			}
 		}
@@ -693,8 +694,8 @@ function drop(){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			dragging = false;
 			shapeSelection.shapes[key][2][i].dragging = false;
-			shapeSelection.shapes[key][2][i].onObject = false; 
-			if(!pencils) canvas.style.cursor = cursor_drag; 
+			shapeSelection.shapes[key][2][i].onObject = false;
+			if(!pencils) canvas.style.cursor = cursor_drag;
 		}
 	}
 }
@@ -731,7 +732,7 @@ function reSizer(){
 					}
 				}
 			}
-		} 
+		}
 				// detects if cursor is over any of the small expansion boxes at the corners
 							/** top-left **/
 				if((distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
@@ -741,33 +742,33 @@ function reSizer(){
 					distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
 							/** bottom-left **/
 					distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2
-				
+
 				)&& shapeSelection.shapes[key][2][i].expandBox){
 					shapeSelection.shapes[key][2][i].expand = true;
 					if(!pencils) canvas.style.cursor = cursor_grab;
 				}
-				
-				
+
+
 				// detects if cursor is over any of the small expansion boxes at the right and left handsides
 							/** left **/
 				if((distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - mousePos.y) <= smallBox/2 ||
 							/** right **/
 					distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - mousePos.y) <= smallBox/2
-				
+
 				) && shapeSelection.shapes[key][2][i].expandBox){
 				if(key == 'customShape' || 'Square' || 'Triangle'/* temporary condition*/){
 					shapeSelection.shapes[key][2][i].h_expand = true;
 					}
 					if(!pencils) canvas.style.cursor = cursor_grab;
 				}
-				
-				
+
+
 				// detects if cursor is over any of the small expansion boxes at the top and bottom sides
 							/** top **/
 				if((distance(shapeSelection.shapes[key][2][i].X - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
 							/** bottom **/
 					distance(shapeSelection.shapes[key][2][i].X - mousePos.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].stretchRadius + selectSize - mousePos.y) <= smallBox/2
-		
+
 				)&& shapeSelection.shapes[key][2][i].expandBox){
 				if(key == 'customShape' || 'Square' || 'Triangle'/* temporary condition*/){
 					shapeSelection.shapes[key][2][i].v_expand = true;
@@ -775,7 +776,7 @@ function reSizer(){
 					if(!pencils) canvas.style.cursor = cursor_grab;
 				}
 			}
-		}	
+		}
 	}
 
 function stopResize(){
@@ -788,8 +789,8 @@ function stopResize(){
 				shapeSelection.shapes[key][2][i].calculateMass(shapeSelection.shapes[key][2][i].vertices, shapeSelection.shapes[key][2][i].boundingRectangle.width, shapeSelection.shapes[key][2][i].boundingRectangle.height, resolution);
 			}
 			shapeSelection.shapes[key][2][i].expand = false;
-			shapeSelection.shapes[key][2][i].v_expand = false; 
-			shapeSelection.shapes[key][2][i].h_expand = false; 
+			shapeSelection.shapes[key][2][i].v_expand = false;
+			shapeSelection.shapes[key][2][i].h_expand = false;
 			}
 		}
 	}
@@ -839,12 +840,12 @@ function rotater(){
 				var vertices = shapeSelection.shapes[key][2][i].vertices;
 				rotateListSwitch(key, vertices, i);
 				if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
-					sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition; 
+					sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition;
 				}
-			
+
 			shapeSelection.shapes[key][2][i].rotationLine = true;
-			
-			// makes sure that only one object at time can be rotated 
+
+			// makes sure that only one object at time can be rotated
 			for(keys in shapeSelection.shapes){
 				if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
 					for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
@@ -867,7 +868,7 @@ function rotater(){
 		}
 	}
 
-		
+
 function referencer(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -903,7 +904,7 @@ function offReshaper(){
 		var centralDifference = [0,0];
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 		/** this section calculates the coordinates of the centroid **/
-		shapeSelection.shapes[key][2][i].centroid = [0,0]; 
+		shapeSelection.shapes[key][2][i].centroid = [0,0];
 		for(var k = 0; k < shapeSelection.shapes[key][2][i].pointsArray.length - 1; k++){
 			//if(k == 0){continue;}else{
 			shapeSelection.shapes[key][2][i].centroid[0] += shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0];
@@ -912,28 +913,28 @@ function offReshaper(){
 		}
 		shapeSelection.shapes[key][2][i].centroid[0] /= (shapeSelection.shapes[key][2][i].pointsArray.length - 1);
 		shapeSelection.shapes[key][2][i].centroid[1] /= (shapeSelection.shapes[key][2][i].pointsArray.length - 1);
-	
+
 		// the code below calculates the difference between the centroid and the current position of the center (X,Y)
 		centralDifference[0] = shapeSelection.shapes[key][2][i].centroid[0] - shapeSelection.shapes[key][2][i].X;
 		centralDifference[1] = shapeSelection.shapes[key][2][i].centroid[1] - shapeSelection.shapes[key][2][i].Y;
-	
+
 		var rotDifference_x = 0;
 		var rotDifference_y = 0;
-		
+
 		var Difference_x = centralDifference[0];
 		var Difference_y = centralDifference[1];
-			
+
 		// this difference is subtracted from the vertices so that they do not move when the X,Y values are eventually updated (by setting them equal to the centroid)
 		for(var m = 0; m < shapeSelection.shapes[key][2][i].pointsArray.length; m++){
 			shapeSelection.shapes[key][2][i].vertices[m][0] -= Difference_x;
 			shapeSelection.shapes[key][2][i].vertices[m][1] -= Difference_y;
 		}
-		
-		/** the shape's X and Y properties are set equal to the centroid **/ 
+
+		/** the shape's X and Y properties are set equal to the centroid **/
 		//the vertices remain in the same position because the difference has been subtracted from them
 		shapeSelection.shapes[key][2][i].X = shapeSelection.shapes[key][2][i].centroid[0];
 		shapeSelection.shapes[key][2][i].Y = shapeSelection.shapes[key][2][i].centroid[1];
-	
+
 		for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){
 			shapeSelection.shapes[key][2][i].vertices[j][2] = false;
 			}
@@ -958,24 +959,24 @@ function copyShape(){
 				}
 				newShape.rotationLine = false;
 				newShape.expandBox = false;
-				
+
 				//if(key !== 'circle'){
 					newShape.vertices = [];
 					newShape.referenceVertices = [];
-					for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){ // this loops ensures that referenceVertices and vertices arrays of the new shape are not simply referencing the original 
+					for(var j = 0; j < shapeSelection.shapes[key][2][i].vertices.length; j++){ // this loops ensures that referenceVertices and vertices arrays of the new shape are not simply referencing the original
 						newShape.vertices[j] = shapeSelection.shapes[key][2][i].vertices[j];
 						newShape.referenceVertices[j] = shapeSelection.shapes[key][2][i].referenceVertices[j];
 					}
-					
+
 					for(var n = 0; n < shapeSelection.shapes[key][2][i].pointsArray.length; n++){ //pointsArray must be reset for each copy otherwise it would be fixed for all the descendants of a copied shape
 						newShape.pointsArray[n] = [[],[]];
 						newShape.pointsArray[n][0] = shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[n][0];
 						newShape.pointsArray[n][1] = shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[n][1];
 					}
-					
+
 					newShape.X = 0; // newShape's X and Y coordinates are set to zero so that the centralize function can work properly
 					newShape.Y = 0;
-					
+
 					var k;
 					centralize(newShape, newShape.pointsArray, k);
 				//}
@@ -994,19 +995,19 @@ function rotateObject(shape, angle){
 		shape[i][0] += rotation[0];
 		shape[i][1] += rotation[1];
 	}
-} 
+}
 
 
 //calculates the closest vertex to a given point from an array of vertices
 function closestPoint(point, array){
-	var distances = array.map(function(ele){ 
+	var distances = array.map(function(ele){
 		return distance(ele[0] - point[0], ele[1] - point[1]);
 	})
-	
+
 	var min = function(){
 		return Math.min.apply(null, distances);
 	}
-	
+
 	for(var i = 0; i < distances.length; i++){
 		if(distances[i] === min()){
 			return array[i];
@@ -1025,7 +1026,7 @@ function animator(){
 						var rot = rotater2(0, 0, shapeSelection.shapes[key][2][i].vertices[n][0], shapeSelection.shapes[key][2][i].vertices[n][1], shapeSelection.shapes[key][2][i].angularVelocity);
 						shapeSelection.shapes[key][2][i].vertices[n][0] += rot[0];
 						shapeSelection.shapes[key][2][i].vertices[n][1] += rot[1];
-					}		
+					}
 				}
 			}
 		}
@@ -1048,7 +1049,7 @@ function rotationRecalculation(shape){
 		rotVertices2[i] = [0,0];
 		rotVertices2[i][0] = rot[0];
 		rotVertices2[i][1] = rot[1];
-	} 
+	}
 }
 
 var side = 55;
@@ -1086,58 +1087,58 @@ function CustomShape(){
 	}
 
 	this.boundingRectangle = {minX:0, minY:0, width:0, height:0};
-	
+
 	/**** Bounding Rectangle X coordinates ****/
 	this.distancesX = [];
 	this.findBoundingRectX = function(){
 		this.distancesX = this.vertices.map(function(vertex){
 			return vertex[0];
-		})	
+		})
 	};
 	this.boundingRectMaxX = 0;
-	
+
 	this.findBoundingRectMaxX = function(){
 		this.findBoundingRectX();
 		this.boundingRectMaxX = Math.max.apply(null, this.distancesX);
 		return this.boundingRectMaxX;
 	};
-	
+
 	this.boundingRectMinX = 0;
-	
+
 	this.findBoundingRectMinX = function(){
 		this.findBoundingRectX();
 		this.boundingRectMinX = Math.min.apply(null, this.distancesX);
 		return this.boundingRectMinX;
 	};
-	
-	
+
+
 	/**** Bounding Rectangle Y coordinates ****/
 	this.distancesY = [];
 	this.findBoundingRectY = function(){
 		this.distancesY = this.vertices.map(function(vertex){
 			return vertex[1];
-		});	
+		});
 	};
-	
+
 	this.boundingRectMaxY = 0;
-	
+
 	this.findBoundingRectMaxY = function(){
 		this.findBoundingRectY();
 		this.boundingRectMaxY = Math.max.apply(null, this.distancesY);
 		return this.boundingRectMaxY;
 	};
 	this.boundingRectMinY = 0;
-	
+
 	this.findBoundingRectMinY = function(){
 		this.findBoundingRectY();
 		this.boundingRectMinY = Math.min.apply(null, this.distancesY);
 		return this.boundingRectMinY;
 	};
-	
+
 	this.makeBoundingRect = function(){
 		this.boundingRectangle = {minX:this.findBoundingRectMinX(), minY:this.findBoundingRectMinY(), width:this.findBoundingRectMaxX() - this.findBoundingRectMinX(), height:this.findBoundingRectMaxY() - this.findBoundingRectMinY()};
 	};
-	
+
 	this.preCollision = false;
 	this.collision = false;
 	this.collisionPoint = {x:0, y:0, velocity:[0,0]};
@@ -1157,47 +1158,47 @@ function CustomShape(){
 	this.lineColour = 'black';
 	this.lineWidth = 0.7;
 	this.touchPoints = [0,0];
-	
+
 	this.locateTouchPoint = function(){
 		this.touchPoints = [mousePos.x - this.X, mousePos.y - this.Y];
 	}
-	
+
 	this.pickColour = function(){
 		this.colour = chooseColour();
 	}
 
 	this.resize = function(){
-		
+
 		var gap;
-		
+
 		var rotVertices_2 = [];
 		for(var i = 0; i < this.pointsArray.length; i++){
 
 		/** Apply change of size transformation **/
-			
+
 			if(this.expand){
 				gap = Math.sqrt(2)*(this.stretchRadius + selectSize) - this.stretchRadius;
 				this.vertices[i][0] *= (distance(mousePos.x - this.X, mousePos.y - this.Y) - gap)/this.stretchRadius;
 				this.vertices[i][1] *= (distance(mousePos.x - this.X, mousePos.y - this.Y) - gap)/this.stretchRadius;
 				this.findOuterRadius();
 			}
-		
+
 		/** Apply change of size transformation to the horizonal axis **/
-		
+
 			if(this.h_expand){
 				gap = selectSize;
 				this.vertices[i][0] *= (distance(mousePos.x - this.X, mousePos.y - this.Y) - gap)/this.stretchRadius;
 				this.findOuterRadius();
 			}
-		
+
 		/** Apply change of size transformation to the vertical axis **/
-		
+
 			if(this.v_expand){
 				gap = selectSize;
 				this.vertices[i][1] *= (distance(mousePos.x - this.X, mousePos.y - this.Y) - gap)/this.stretchRadius;
 				this.findOuterRadius();
 			}
-			
+
 		}
 		if(this.expand){
 			this.radius *= (distance(mousePos.x - this.X, mousePos.y - this.Y) - gap)/this.radius};
@@ -1216,7 +1217,7 @@ function CustomShape(){
 		this.sliderPosition = 0;
 		rotationRecalculation(this); // this function makes sure that the values in the rotVertices2 array are changed to match sliderPosition = 0
 	}
-	
+
 	this.rotate = function(){ // this.rotate uses this.referenceVertices as a point of reference for calculating rotated points
 		var rot = [];
 		if(rotVertices2[0]){
@@ -1225,22 +1226,22 @@ function CustomShape(){
 					this.vertices[I][1] -= rotVertices2[I][1];
 				}
 			}
-		
+
 		for(var i = 0; i < this.pointsArray.length; i++){
 			var rot = rotater2(0, 0, this.referenceVertices[i][0], this.referenceVertices[i][1], sliderPosition*2*Math.PI/sliderButtonWidth);
 				rotVertices2[i] = [0,0];
 				rotVertices2[i][0] = rot[0];
 				rotVertices2[i][1] = rot[1];
-				
+
 				this.vertices[i][0] += rot[0];
 				this.vertices[i][1] += rot[1];
 			}
 		}
 
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices 
-	
-	
+	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
+
+
 	this.reverseX = function(vertices){
 		for(var n = 0; n < vertices.length; n++){
 			vertices[n][0] *= -1;
@@ -1264,7 +1265,7 @@ function CustomShape(){
 		}
 		this.referencer();
 	}
-	
+
 	this.rotate90 = function(vertices){
 			for(var n = 0; n < vertices.length; n++){
 				var rot = rotater2(0, 0, this.vertices[n][0], this.vertices[n][1], Math.PI*sliderButtonWidth/4);
@@ -1273,14 +1274,14 @@ function CustomShape(){
 			}
 		this.referencer();
 	}
-	
+
 	// set initial collision state to false for each vertex
 	this.setVertexCollision = function(vertices){
 		for(var n = 0; n < vertices.length; n++){
 			this.vertices[n][3] = {collision: false};
 		}
 	}
-	
+
 	this.calculateMass = function(vertices, width, height, resolution){
 		var unitSquares = 0;
 		var mass = 0;
@@ -1290,15 +1291,15 @@ function CustomShape(){
 		var checkPoint = []; //checkPoint is the point that is currently being checked
 		var squaresX = Math.ceil(width/resolution);
 		var squaresY = Math.ceil(height/resolution);
-		
-		
+
+
 		/** Calculate mass **/
-		
+
 		for(var i = 0; i < squaresY; i++){// code repetition(see below): consider using a function
 			for(var j = 0; j < squaresX; j++){
 				checkPoint[0] = resolution * j + this.boundingRectangle.minX;
 				checkPoint[1] = resolution * i + this.boundingRectangle.minY;
-				
+
 				bufferCtx.beginPath();
 				bufferCtx.moveTo(vertices[0][0], vertices[0][1]);
 				for(var m = 0; m < vertices.length; m++){// these lines draw out the shape that is being checked
@@ -1313,30 +1314,30 @@ function CustomShape(){
 		}
 		centroid[0] = centroid[0]/unitSquares;
 		centroid[1] = centroid[1]/unitSquares;
-		
+
 		centroidOffset[0] = this.X - centroid[0];
 		centroidOffset[1] = this.Y - centroid[1];
-		
+
 		this.X = centroid[0];
 		this.Y = centroid[1];
-		
+
 		for(var n = 0; n < this.vertices.length; n++){
 			this.vertices[n][0] += centroidOffset[0];
 			this.vertices[n][1] += centroidOffset[1];
 		}
-		
+
 		mass = (resolution * resolution) * unitSquares * massToPixelRatio;
-		
+
 		this.mass = mass;
-		
-		
+
+
 		/** Calculate moment of inertia **/
-		
+
 		for(var i = 0; i < squaresY; i++){// code repetition(see above): consider using a function
 			for(var j = 0; j < squaresX; j++){
 				checkPoint[0] = resolution * j + this.boundingRectangle.minX;
 				checkPoint[1] = resolution * i + this.boundingRectangle.minY;
-				
+
 				bufferCtx.beginPath();
 				bufferCtx.moveTo(vertices[0][0], vertices[0][1]);
 				for(var m = 0; m < vertices.length; m++){// these lines draw out the shape that is being checked
@@ -1347,11 +1348,11 @@ function CustomShape(){
 				}
 			}
 		}
-		
+
 		this.momentOfInertia = momentOfInertia;
 		//console.log('unitSquares:', unitSquares, 'squaresX: ', squaresX, 'squaresY: ', squaresY, 'mass: ', mass, 'momentOfInertia: ', momentOfInertia, 'vertices:', vertices, 'centroid:', centroid, 'boundingRectangle:', this.boundingRectangle, 'centroidOffset:' ,centroidOffset);
 	};
-	
+
 }
 
 function customShapeGen(){
@@ -1377,7 +1378,7 @@ function Walls(){
 	this.stretchRadius = this.side/2;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices 
+	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
 }
 
 function wallGen(){
@@ -1396,7 +1397,7 @@ function Curves(){
 	this.copy = true;
 	this.stroking = pointStroking;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices 
+	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
 
 function curveGen(){
@@ -1420,13 +1421,13 @@ function Square(){
 						[mousePos.x - this.side/2, mousePos.y - this.side/2],
 						[mousePos.x - this.side/2, mousePos.y + this.side/2]
 					];
-					
+
 	this.vertices = [];
 	this.radius = 2*this.side/3 - 5;
 	this.stretchRadius = 2*this.side/3;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices 
+	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
 }
 
 Square.prototype = new CustomShape();
@@ -1459,13 +1460,13 @@ function Circle(){
 	this.pointsArray[points] = [0,0];
 	this.pointsArray[points][0] = mousePos.x + circularArray[0][0];
 	this.pointsArray[points][1] = mousePos.y + circularArray[0][1];
-	
+
 	this.vertices = [];
 	this.radius = 2*this.side/3 - 5;
 	this.stretchRadius = 2*this.side/3;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices 
+	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
 }
 
 Circle.prototype = new CustomShape();
@@ -1499,7 +1500,7 @@ function Triangle(){
 	this.stretchRadius = this.side/2;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices 
+	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
 }
 
 Triangle.prototype = new CustomShape();
@@ -1522,7 +1523,7 @@ function Pencil(array){
 	if(superPencilPoints[0]){
 		this.pointsArray = superPencilPoints[pointsLength - 1];
 	}else{
-		this.pointsArray = array; //the array parameter is used when loading from mongodb database 
+		this.pointsArray = array; //the array parameter is used when loading from mongodb database
 	}
 	this.centroid = [0, 0];
 	this.vertices = [0, 0];
@@ -1534,7 +1535,7 @@ function Pencil(array){
 		this.stroking = false;
 	}
 	var j;
-	if(pencils)centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices 
+	if(pencils)centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
 }
 
 Pencil.prototype = new CustomShape();
@@ -1581,10 +1582,10 @@ function draw(){
 	triangleDrawer();
 	customShapeDrawer();
 	pencilDrawer();
-	curveDrawer(); 
+	curveDrawer();
 	wallDrawer();
 	shapeTransforms(pencilArray);
-	
+
 	var i;
 	blueprint(customShapeArray, i);
 	blueprint(circleArray, i);
@@ -1593,12 +1594,12 @@ function draw(){
 	blueprint(pencilArray, i);
 	blueprint(curveArray, i);
 	blueprint(wallArray, i);
-	
+
 	context.drawImage(bufferCanvas, 0, 0, canvas.width, canvas.height);
-	
+
 	/*if(saving){
 		image.style.visibility = 'visible';
-		
+
 		// save canvas image as data url (png format by default)
 		var dataURL = canvas.toDataURL();
 		// set canvasImg image src to dataURL
@@ -1629,17 +1630,17 @@ function shadow(Array, i){
 	Array[i].makeBoundingRect(); // Rewrite using the MVC pattern: currently the view is talking directly to the model
 	bufferCtx.fillStyle = Array[i].colour;
 	bufferCtx.strokeStyle = Array[i].lineColour;
-	bufferCtx.beginPath();  
+	bufferCtx.beginPath();
 	if(Array[i].selected){
 		bufferCtx.lineWidth = 1.4;
 		bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
 		bufferCtx.shadowOffsetX = 10;
 		bufferCtx.shadowOffsetY = 10;
-		bufferCtx.shadowBlur = 10; 
+		bufferCtx.shadowBlur = 10;
 	}else{
 		bufferCtx.shadowColor = "transparent";
 		bufferCtx.lineWidth = Array[i].lineWidth;
-	} 
+	}
 
 	//if(dragging && Array[i].selected && !onSlider){
 	if(dragging && Array[i].selected){
@@ -1650,18 +1651,18 @@ function shadow(Array, i){
 			bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
 			bufferCtx.shadowOffsetX = 10;
 			bufferCtx.shadowOffsetY = 10;
-			bufferCtx.shadowBlur = 10; 
+			bufferCtx.shadowBlur = 10;
 		}
 	}
 }
 
 /* Call resize() method when changing size */
 function changeSize(Array, i){
-		
+
 		if(reSize && (Array[i].expand || Array[i].v_expand || Array[i].h_expand)){
 			Array[i].resize();
 		}
-		
+
 		/* Draws the re-size box */
 		if(reSize && Array[i].expandBox){
 			bufferCtx.save();
@@ -1674,11 +1675,11 @@ function changeSize(Array, i){
 			var gap = 14;
 			var ants = 0;
 			//bufferCtx.globalAlpha = 0.3;
-			
+
 			bufferCtx.lineWidth = 0.7;
-			
+
 			/**(ants+1)*antLength + ants*(gap - antLength) = (antLength + ants*gap)**/
-			
+
 			/** top-left to top-right **/
 			while((antLength + ants*gap) < 2*(Array[i].stretchRadius + selectSize)){
 				bufferCtx.beginPath();
@@ -1713,13 +1714,13 @@ function changeSize(Array, i){
 			}
 			bufferCtx.lineWidth = 1.4;
 			bufferCtx.globalAlpha = 1
-			
+
 																				// this section draws the small white squares at the corners
-			
+
 			/** top-left **/
 			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
 			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
-			
+
 			/** bottom-left **/
 			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
 			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
@@ -1729,10 +1730,10 @@ function changeSize(Array, i){
 			/** top-right **/
 			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
 			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
-			
-			
+
+
 																				// this section draws the small white squares at the sides
-			
+
 			/** top **/
 			bufferCtx.strokeRect(Array[i].X - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
 			bufferCtx.fillRect(Array[i].X - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
@@ -1759,21 +1760,21 @@ function changeColour(Array, i){
 /* Animating the slider */
 function rotateShape(Array, i){
 	if(rotate && Array[i].rotationLine){
-		
+
 		var startPoint = Array[i].X - sliderButtonWidth/2;
 		var endPoint = Array[i].X + sliderButtonWidth/2;
 		var yCoordinates = Array[i].Y + Array[i].radius + 45;
 		var radius = 20;
-		
+
 		bufferCtx.save();
 		//bufferCtx.globalAlpha = 0.3;
 		bufferCtx.globalAlpha = 0.7;
-		
+
 		bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.4)';
 		bufferCtx.shadowOffsetX = 10;
 		bufferCtx.shadowOffsetY = 10;
 		bufferCtx.shadowBlur = 10;
-			
+
 		bufferCtx.fillStyle = 'lightblue';
 		bufferCtx.lineWidth = 1;
 		bufferCtx.beginPath();
@@ -1784,25 +1785,25 @@ function rotateShape(Array, i){
 		bufferCtx.stroke();
 		bufferCtx.fill();
 		bufferCtx.restore();
-		
+
 		/** Horizontal slider line **/
 		bufferCtx.save();
-		
+
 		bufferCtx.lineWidth = 1;
 		bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.4)';
 		bufferCtx.shadowOffsetX = 10;
 		bufferCtx.shadowOffsetY = 10;
 		bufferCtx.shadowBlur = 10;
-		
+
 		bufferCtx.beginPath();
 		bufferCtx.moveTo(startPoint, yCoordinates);
 		bufferCtx.lineTo(endPoint, yCoordinates);
 		bufferCtx.stroke();
-			
+
 		/** Slider **/
 		Array[i].slider[0] = startPoint + sliderPosition;
 		Array[i].slider[1] = yCoordinates;
-			
+
 		/** Slider follows the cursor along the line **/
 		if(rotate && onSlider && mousePos.x >= startPoint && mousePos.x <= endPoint){
 			Array[i].slider[0] = mousePos.x;
@@ -1847,7 +1848,7 @@ function circleDrawer(){
 	bufferCtx.strokeStyle = 'black';
 	bufferCtx.globalAlpha = 1
 	shapeTransforms(circleArray);
-} 
+}
 
 
 function squareDrawer(){
@@ -1857,14 +1858,14 @@ function squareDrawer(){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
-			
+
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(mousePos.x - 27.5, mousePos.y + 27.5);
 			bufferCtx.lineTo(mousePos.x + 27.5, mousePos.y + 27.5);
 			bufferCtx.lineTo(mousePos.x + 27.5, mousePos.y - 27.5);
 			bufferCtx.lineTo(mousePos.x - 27.5, mousePos.y - 27.5);
 			bufferCtx.closePath();
-			
+
 			bufferCtx.stroke();
 			bufferCtx.fill();
 		}
@@ -1878,7 +1879,7 @@ function triangleDrawer(){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
-			
+
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(mousePos.x - 30, mousePos.y + Math.sqrt(3)/6 * 60);
 			bufferCtx.lineTo(mousePos.x + 30, mousePos.y + Math.sqrt(3)/6 * 60);
@@ -1905,18 +1906,18 @@ function customShapeDrawer(){
 		bufferCtx.fill();
 
 		if(startDraw){bufferCtx.moveTo(pointsArray[0][0], pointsArray[0][1]);} // first point of the custom shape is drawn here
-		
+
 		closedPath = false;
 		for(var i = 0; i < pointsArray.length; i++){
 			if(i != 0){
 				bufferCtx.lineTo(pointsArray[i][0], pointsArray[i][1]); // all the other points are drawn here
 			}
 		}
-		
+
 		if(startDraw){ // closes path if startDraw is false: this happens when mousedowns runs whilst closedPath = true
 			bufferCtx.lineTo(mousePos.x, mousePos.y);
 			}else if(pointsArray[0]) {
-				bufferCtx.closePath(); 
+				bufferCtx.closePath();
 				customShapeGen();
 				pointsArray = []; // pointArray is emptied out to get it ready for the next shape
 			}
@@ -1948,30 +1949,30 @@ function curveDrawer(){
 		bufferCtx.fill();
 
 		if(startDraw){bufferCtx.moveTo(pointsArray[0][0], pointsArray[0][1]);} // first point of the custom shape is drawn here
-		
+
 		closedPath = false;
 		for(var i = 0; i < pointsArray.length; i++){
 			if(i != 0){
 				bufferCtx.lineTo(pointsArray[i][0], pointsArray[i][1]); // all the other points are drawn here
 			}
 		}
-		
+
 		if(startDraw){ // closes path if startDraw is false: this happens when mousedowns runs whilst closedPath = true
 			bufferCtx.lineTo(mousePos.x, mousePos.y);
 			}else if(pointsArray[0]) {
-				bufferCtx.closePath(); 
+				bufferCtx.closePath();
 				curveGen();
 				pointsArray = []; // pointArray is emptied out to get it ready for the next shape
 			}
-			
+
 		var lastpoint = pointsArray[pointsArray.length - 1];
-			
-			
-			
-		if(clickCount == 2 && pointsArray[0] && distance(mousePos.x - lastpoint[0], mousePos.y - lastpoint[1]) < closePathRadius){ 
+
+
+
+		if(clickCount == 2 && pointsArray[0] && distance(mousePos.x - lastpoint[0], mousePos.y - lastpoint[1]) < closePathRadius){
 			//bufferCtx.lineTo(mousePos.x, mousePos.y);
 			//}else if(pointsArray[0]) {
-				//bufferCtx.closePath(); 
+				//bufferCtx.closePath();
 				if(pointsArray.length > 2){
 					curveGen();
 					pointsArray = [];
@@ -1980,7 +1981,7 @@ function curveDrawer(){
 			}
 
 		bufferCtx.stroke();
-		if(pointsArray[0]){ 
+		if(pointsArray[0]){
 			pointStroking = true;
 			if(distance(pointsArray[0][0] - mousePos.x, pointsArray[0][1] - mousePos.y) < closePathRadius){ // sets closedPath = true if the cursor is hovering over the first set of points and also creates the lightgreen highlight
 				bufferCtx.save();
@@ -2010,16 +2011,16 @@ function pencilDrawer(){
 				bufferCtx.lineTo(pencilPointsArray[j][0], pencilPointsArray[j][1]);
 			}
 		bufferCtx.stroke();
-		
+
 		}
 
 	for(var j = 0; j < pencilArray.length; j++){
-	
+
 	if(pencilPointsArray[0]){
 		bufferCtx.beginPath();
 		//bufferCtx.lineJoin='round';
 		bufferCtx.moveTo(pencilArray[j].X + pencilArray[j].vertices[0][0], pencilArray[j].Y + pencilArray[j].vertices[0][1]);
-		
+
 		for(var k = 0; k < pencilArray[j].vertices.length; k++){
 			if(pencilArray[j].vertices[k])
 				bufferCtx.lineTo(pencilArray[j].X + pencilArray[j].vertices[k][0], pencilArray[j].Y + pencilArray[j].vertices[k][1]);
@@ -2028,6 +2029,17 @@ function pencilDrawer(){
 	}
 }
 
+window.addEventListener('keydown', zoomer);
+
+function zoomer(e){
+	e.preventDefault();
+	if(e.which === 38){
+		zoom *= 1.1;
+	}
+	if(e.which === 40){
+		zoom /= 1.1;
+	}
+}
 
 function shapeTransforms(Array){
 	if(Array[0]){
@@ -2035,12 +2047,20 @@ function shapeTransforms(Array){
 			//bufferCtx.fillStyle = Array[i].colour;
 			shadow(Array, i);
 			changeColour(Array, i);
-			
+
 			bufferCtx.save();
 			//bufferCtx.fillStyle = Array[i].colour;
-			
+
 			var Xpoint_0 = Array[i].vertices[0][0] + Array[i].X;
 			var Ypoint_0 = Array[i].vertices[0][1] + Array[i].Y;
+
+			var projectionX = (Array[i].X - window.canvas.width/2) * zoom - (Array[i].X - window.canvas.width/2);
+			var projectionY = (Array[i].Y - window.canvas.height/2) * zoom - (Array[i].Y - window.canvas.height/2);
+
+			if(Array !== wallArray){
+				Xpoint_0 = Array[i].vertices[0][0] * zoom + Array[i].X + projectionX;
+				Ypoint_0 = Array[i].vertices[0][1] * zoom + Array[i].Y + projectionY;
+			}
 
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(Xpoint_0, Ypoint_0); // first point of the custom shape is drawn here
@@ -2048,13 +2068,17 @@ function shapeTransforms(Array){
 			for(var j = 0; j < Array[i].vertices.length; j++){
 					var Xpoint = Array[i].vertices[j][0] + Array[i].X;
 					var Ypoint = Array[i].vertices[j][1] + Array[i].Y;
-				
+
+					if(Array !== wallArray){
+						var Xpoint = Array[i].vertices[j][0] * zoom + Array[i].X + projectionX;
+						var Ypoint = Array[i].vertices[j][1] * zoom + Array[i].Y + projectionY;
+					}
+
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
 					Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
-					
 				}
-				bufferCtx.lineTo(Xpoint, Ypoint); 
+				bufferCtx.lineTo(Xpoint, Ypoint);
 		}
 		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
 			bufferCtx.restore();
@@ -2064,14 +2088,14 @@ function shapeTransforms(Array){
 		}else if(Array != pencilArray){
 			if(!Array[i].stroking)bufferCtx.fill();
 		}
-		
+
 		if(Array == circleArray){
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(Array[i].X + Array[i].vertices[0][0], Array[i].Y + Array[i].vertices[0][1]);
 			bufferCtx.lineTo(Array[i].X, Array[i].Y);
 			bufferCtx.stroke();
 		}
-		
+
 	if(reShape){
 		onReshape = false;
 		for(var j = 0; j < Array[i].vertices.length; j++){
@@ -2089,14 +2113,14 @@ function shapeTransforms(Array){
 							}
 						}
 					}
-				} 
-				
-				
+				}
+
+
 	if(physics && Array != wallArray){
 		if(Array[i].gravity){
 			Array[i].velocity[1] += gravity/20;
 		}
-	}  
+	}
 				changeSize(Array, i);
 				rotateShape(Array, i);
 			}
@@ -2104,9 +2128,9 @@ function shapeTransforms(Array){
 }
 
 function backgroundGradient(icon){
-	$(icon).css({'background-image': '-webkit-linear-gradient(bottom, black , #404040)'}); 
-	$(icon).css({'background-image': '-o-linear-gradient(bottom, black , #404040)'});  
-	$(icon).css({'background-image': '-moz-linear-gradient(bottom, black , #404040)'});  
+	$(icon).css({'background-image': '-webkit-linear-gradient(bottom, black , #404040)'});
+	$(icon).css({'background-image': '-o-linear-gradient(bottom, black , #404040)'});
+	$(icon).css({'background-image': '-moz-linear-gradient(bottom, black , #404040)'});
 	$(icon).css({'background-image': 'linear-gradient(to bottom, #404040 ,black)'});
 }
 
@@ -2116,54 +2140,54 @@ function shapeSelector(id){
 		backgroundGradient('#ChangeColour');
 		return;
 	}
-	
+
 	if(id && id === 'ChangeColour'){
 		colourChange = true;
 	}else if(id !== 'ChangeColour'){
 		colourChange = false;
 	}
-	
+
 	if(id && id === 'physics'){
 		if(physics === true){
 			physics = false;
 		}else if(physics === false){
 			physics = true;
 		}
-	}	
-	
-	
+	}
+
+
 	shapeSelection.shapes.circle[0] = false;
 	shapeSelection.shapes.square[0] = false;
 	shapeSelection.shapes.triangle[0] = false;
 	deletion = false;
 	reSize = false;
-	reShape = false; 
+	reShape = false;
 	rotate = false;
 	shapes = false;
 	pencils = false;
 	copy = false;
 	//physics = false;
-	
+
 	circles = false;
 	triangles = false;
 	squares = false;
 	line = false;
-	
+
 	saving = false;
 	options();
-	
+
 	backgroundGradient('#circle');
 	backgroundGradient('#square');
 	backgroundGradient('#triangle');
 	backgroundGradient('#customShape');
 	backgroundGradient('#Re-Size');
-	backgroundGradient('#Rotate'); 
+	backgroundGradient('#Rotate');
 	backgroundGradient('#ChangeColour');
 	backgroundGradient('#erase');
 	backgroundGradient('#save');
 	backgroundGradient('#pencil_id');
 	backgroundGradient('#Re-Shape');
-	backgroundGradient('#copy'); 
+	backgroundGradient('#copy');
 	backgroundGradient('#physics');
 
 	image.style.visibility = 'hidden';
@@ -2176,26 +2200,26 @@ function shapeSelector(id){
 
 
 function gradient(shape){
-	shape.style.background = '-webkit-linear-gradient(top, black , #404040)'; 
-	shape.style.background = '-o-linear-gradient(top, black , #404040)'; 
-	shape.style.background = '-moz-linear-gradient(top, black , #404040)'; 
-	shape.style.background = 'linear-gradient(to top, #404040 ,black)'; 
+	shape.style.background = '-webkit-linear-gradient(top, black , #404040)';
+	shape.style.background = '-o-linear-gradient(top, black , #404040)';
+	shape.style.background = '-moz-linear-gradient(top, black , #404040)';
+	shape.style.background = 'linear-gradient(to top, #404040 ,black)';
 }
 
 
 function hover(shape){
-	shape.style.background = '-webkit-linear-gradient(top, black , #404040)'; 
-	shape.style.background = '-o-linear-gradient(top, black , #404040)'; 
-	shape.style.background = '-moz-linear-gradient(top, black , #404040)'; 
-	shape.style.background = 'linear-gradient(to top, #404040 ,black)'; 
+	shape.style.background = '-webkit-linear-gradient(top, black , #404040)';
+	shape.style.background = '-o-linear-gradient(top, black , #404040)';
+	shape.style.background = '-moz-linear-gradient(top, black , #404040)';
+	shape.style.background = 'linear-gradient(to top, #404040 ,black)';
 }
 
 function leave(shapes, shape){
 	if(!shapes){
-		shape.style.background = '-webkit-linear-gradient(bottom, black , #404040)'; 
-		shape.style.background = '-o-linear-gradient(bottom, black , #404040)'; 
-		shape.style.background = '-moz-linear-gradient(bottom, black , #404040)'; 
-		shape.style.background = 'linear-gradient(to bottom, #404040 ,black)'; 
+		shape.style.background = '-webkit-linear-gradient(bottom, black , #404040)';
+		shape.style.background = '-o-linear-gradient(bottom, black , #404040)';
+		shape.style.background = '-moz-linear-gradient(bottom, black , #404040)';
+		shape.style.background = 'linear-gradient(to bottom, #404040 ,black)';
 	}
 }
 
@@ -2241,7 +2265,7 @@ function chooseColour(){
 }
 
 wallConfig = {clearWall: false};
-	
+
 function clearAll(obj){
 	for(e in shapeSelection.shapes){ //if(unit != 'userID' && unit != 'isPublic'){
 		if(e != 'wall' || e == 'wall' && obj.clearWall){
@@ -2255,9 +2279,9 @@ function clearAll(obj){
 function loadShapes(sim){
 	for(key in sim.shapes){
 		for(var i = 0; i < sim.shapes[key][2].length; i++){ //populate sim with shapes from e.g circleArray
-			
+
 			shapeSelection.shapes[key][2][i] = {};
-			
+
 			if(key == 'circle'){
 				var circle = new Circle();
 				shapeSelection.shapes[key][2][i] = circle;
@@ -2279,16 +2303,16 @@ function loadShapes(sim){
 				var pencil = new Pencil(pointsArray);
 				shapeSelection.shapes[key][2][i] = pencil;
 			}
-			
+
 			if(key == 'wall'){
 				var wall = new Walls();
 				shapeSelection.shapes[key][2][i] = wall;
 			}
-			
+
 			for(prop in sim.shapes[key][2][i]){ //populate the ith shape (js object) with properties
 				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][2][i][prop];
 			}
-			
+
 			if(key == 'wall' || shapeSelection.shapes[key][2][i].isFixed){ // this part was added because mongodb couldn't store the very high(infinity) values
 				shapeSelection.shapes[key][2][i].mass = Infinity;
 				shapeSelection.shapes[key][2][i].momentOfInertia = Infinity;
@@ -2299,9 +2323,9 @@ function loadShapes(sim){
 
 function loadShapes_idb(sim){
 	for(key in sim.shapes){
-		for(var i = 0; i < sim.shapes[key].length; i++){ //populate sim with shapes from e.g circleArray			
+		for(var i = 0; i < sim.shapes[key].length; i++){ //populate sim with shapes from e.g circleArray
 			shapeSelection.shapes[key][2][i] = {};
-			
+
 			if(key == 'circle'){
 				var circle = new Circle();
 				shapeSelection.shapes[key][2][i] = circle;
@@ -2323,16 +2347,16 @@ function loadShapes_idb(sim){
 				var pencil = new Pencil(pointsArray);
 				shapeSelection.shapes[key][2][i] = pencil;
 			}
-			
+
 			if(key == 'wall'){
 				var wall = new Walls();
 				shapeSelection.shapes[key][2][i] = wall;
 			}
-			
+
 			for(prop in sim.shapes[key][i]){ //populate the ith shape (js object) with properties
 				shapeSelection.shapes[key][2][i][prop] = sim.shapes[key][i][prop];
 			}
-			
+
 			if(key == 'wall' || shapeSelection.shapes[key][2][i].isFixed){ // this part was added because mongodb couldn't store the very high(infinity) values
 				shapeSelection.shapes[key][2][i].mass = Infinity;
 				shapeSelection.shapes[key][2][i].momentOfInertia = Infinity;
