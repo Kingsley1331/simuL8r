@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-10-04 **/ 
+/** simuL8r - v1.0.0 - 2016-10-05 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -1038,10 +1038,20 @@ function animator(){
 
 function getMousePos(canvas, evt) {       //canvas.addEventListener uses this function to calculate mouse position
 	var rect = canvas.getBoundingClientRect();
+
+	var x = evt.clientX - rect.left;
+	var y = evt.clientY - rect.top;
+
+	var centerX = canvas.width/2;
+	var centerY = canvas.height/2;
+
+	var zoomedX = x - (x - centerX) * (zoom - 1)/zoom;
+	var zoomedY = y - (y - centerY) * (zoom - 1)/zoom;
+
 	return {
-		x: evt.clientX - rect.left,
-		y: evt.clientY - rect.top
-		};
+				x: zoomedX,
+				y: zoomedY
+			};
 	}
 
 function rotationRecalculation(shape){
@@ -2055,8 +2065,8 @@ function shapeTransforms(Array){
 			var Xpoint_0 = Array[i].vertices[0][0] + Array[i].X;
 			var Ypoint_0 = Array[i].vertices[0][1] + Array[i].Y;
 
-			var projectionX = (Array[i].X - window.canvas.width/2) * zoom - (Array[i].X - window.canvas.width/2);
-			var projectionY = (Array[i].Y - window.canvas.height/2) * zoom - (Array[i].Y - window.canvas.height/2);
+			var projectionX = (Array[i].X - canvas.width/2) * zoom - (Array[i].X - canvas.width/2);
+			var projectionY = (Array[i].Y - canvas.height/2) * zoom - (Array[i].Y - canvas.height/2);
 
 			if(Array !== wallArray){
 				Xpoint_0 = Array[i].vertices[0][0] * zoom + Array[i].X + projectionX;
@@ -2102,12 +2112,19 @@ function shapeTransforms(Array){
 		for(var j = 0; j < Array[i].vertices.length; j++){
 				var Xpoint = Array[i].vertices[j][0] + Array[i].X;
 				var Ypoint = Array[i].vertices[j][1] + Array[i].Y;
+
+				var Xpoint = Array[i].vertices[j][0] * zoom + Array[i].X + projectionX;
+				var Ypoint = Array[i].vertices[j][1] * zoom + Array[i].Y + projectionY;
 					if(distance(mousePos.x - Xpoint, mousePos.y - Ypoint)< 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
 						onReshape = true;
 						bufferCtx.fillStyle = 'darkblue';
 						for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
 							var Xpoint = Array[i].vertices[k][0] + Array[i].X;
 							var Ypoint = Array[i].vertices[k][1] + Array[i].Y;
+
+							var Xpoint = Array[i].vertices[k][0] * zoom + Array[i].X + projectionX;;
+							var Ypoint = Array[i].vertices[k][1] * zoom + Array[i].Y + projectionY;
+
 							bufferCtx.beginPath();
 							bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
 							bufferCtx.fill();
