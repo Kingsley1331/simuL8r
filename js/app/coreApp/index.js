@@ -22,6 +22,7 @@ var frame_Rate = 100;
 var playScenes;
 var selectedColour = '';
 var zoom = 1;
+var zoomCenter = [];
 
 var shapeSelection = {
 						name: 'untitled',
@@ -463,11 +464,9 @@ function init(){
 	mousePos = 0;
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
-	//alert(window.innerWidth - 230 + 'px');
-
-
 
 	setCanvasSize(canvas, window.innerWidth -230, window.innerHeight - 100);
+	zoomCenter = [canvas.width/2, canvas.height/2];
 	window.onresize = function(event) {
 		/*canvas = document.getElementById('canvas');
 		context = canvas.getContext('2d');*/
@@ -1041,15 +1040,15 @@ function getMousePos(canvas, evt) {       //canvas.addEventListener uses this fu
 	var x = evt.clientX - rect.left;
 	var y = evt.clientY - rect.top;
 
-	var centerX = canvas.width/2;
-	var centerY = canvas.height/2;
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], 1/zoom);
 
-	var zoomedX = x - (x - centerX) * (zoom - 1)/zoom;
-	var zoomedY = y - (y - centerY) * (zoom - 1)/zoom;
+	var zoomedX = proj.x;
+	var zoomedY = proj.y;
+
 	return {
-				x: zoomedX,
-				y: zoomedY
-			};
+			x: zoomedX,
+			y: zoomedY
+		};
 	}
 
 function rotationRecalculation(shape){
@@ -1908,23 +1907,29 @@ function triangleDrawer(){
 function customShapeDrawer(){
 									/** this section draws the initial shape before any changes and transformations are applied to it **/
 	if(shapes){
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
 
 		bufferCtx.fillStyle = 'blue';
 		bufferCtx.beginPath();
-		bufferCtx.arc(mousePos.x, mousePos.y, 2, 0, 2*Math.PI);
+		bufferCtx.arc(proj.x, proj.y, 20, 0, 2*Math.PI);
 		bufferCtx.fill();
 
-		if(startDraw){bufferCtx.moveTo(pointsArray[0][0], pointsArray[0][1]);} // first point of the custom shape is drawn here
+		if(pointsArray[0]){
+			var projPoint = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[0][0], pointsArray[0][1]], zoom);
+		}
+
+		if(startDraw){bufferCtx.moveTo(projPoint.x, projPoint.y);} // first point of the custom shape is drawn here
 
 		closedPath = false;
 		for(var i = 0; i < pointsArray.length; i++){
 			if(i != 0){
-				bufferCtx.lineTo(pointsArray[i][0], pointsArray[i][1]); // all the other points are drawn here
+				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[i][0], pointsArray[i][1]], zoom);
+				bufferCtx.lineTo(projPoints.x, projPoints.y); // all the other points are drawn here
 			}
 		}
 
 		if(startDraw){ // closes path if startDraw is false: this happens when mousedowns runs whilst closedPath = true
-			bufferCtx.lineTo(mousePos.x, mousePos.y);
+			bufferCtx.lineTo(proj.x, proj.y);
 			}else if(pointsArray[0]) {
 				bufferCtx.closePath();
 				customShapeGen();
@@ -1937,7 +1942,7 @@ function customShapeDrawer(){
 				bufferCtx.save();
 				bufferCtx.fillStyle = 'lightgreen';
 				bufferCtx.beginPath();
-				bufferCtx.arc(pointsArray[0][0], pointsArray[0][1], closePathRadius, 0, 2*Math.PI);
+				bufferCtx.arc(projPoint.x, projPoint.y, closePathRadius, 0, 2*Math.PI);
 				bufferCtx.fill();
 				bufferCtx.restore();
 				closedPath = true;
@@ -2050,6 +2055,19 @@ function zoomer(e){
 	}
 }
 
+function applyZoom(center, point, zoom){
+	var x = point[0];
+	var y = point[1];
+	var centerX = center[0];
+	var centerY = center[1];
+	var	Xpoint = x - (x - centerX) * (1 - zoom);
+	var Ypoint = y - (y - centerY) * (1 - zoom);
+	return {
+			x: Xpoint,
+			y: Ypoint
+	};
+}
+
 function shapeTransforms(Array){
 	if(Array[0]){
 		for(var i = 0; i < Array.length; i++){
@@ -2063,25 +2081,26 @@ function shapeTransforms(Array){
 			var Xpoint_0 = Array[i].vertices[0][0] + Array[i].X;
 			var Ypoint_0 = Array[i].vertices[0][1] + Array[i].Y;
 
-			var projectionX = (Array[i].X - canvas.width/2) * zoom - (Array[i].X - canvas.width/2);
-			var projectionY = (Array[i].Y - canvas.height/2) * zoom - (Array[i].Y - canvas.height/2);
+			var x = Array[i].vertices[0][0] + Array[i].X;
+			var y = Array[i].vertices[0][1] + Array[i].Y;
 
-			if(Array !== wallArray){
-				Xpoint_0 = Array[i].vertices[0][0] * zoom + Array[i].X + projectionX;
-				Ypoint_0 = Array[i].vertices[0][1] * zoom + Array[i].Y + projectionY;
-			}
+			var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+
+			Xpoint_0 = proj.x;
+			Ypoint_0 = proj.y;
 
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(Xpoint_0, Ypoint_0); // first point of the custom shape is drawn here
 
 			for(var j = 0; j < Array[i].vertices.length; j++){
-					var Xpoint = Array[i].vertices[j][0] + Array[i].X;
-					var Ypoint = Array[i].vertices[j][1] + Array[i].Y;
 
-					if(Array !== wallArray){
-						var Xpoint = Array[i].vertices[j][0] * zoom + Array[i].X + projectionX;
-						var Ypoint = Array[i].vertices[j][1] * zoom + Array[i].Y + projectionY;
-					}
+					var x = Array[i].vertices[j][0] + Array[i].X;
+					var y = Array[i].vertices[j][1] + Array[i].Y;
+
+					var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+
+					var	Xpoint = proj.x;
+					var Ypoint = proj.y;
 
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
@@ -2089,6 +2108,7 @@ function shapeTransforms(Array){
 				}
 				bufferCtx.lineTo(Xpoint, Ypoint);
 		}
+
 		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
 			bufferCtx.restore();
 			bufferCtx.stroke();
@@ -2108,29 +2128,44 @@ function shapeTransforms(Array){
 	if(reShape){
 		onReshape = false;
 		for(var j = 0; j < Array[i].vertices.length; j++){
-				var Xpoint = Array[i].vertices[j][0] + Array[i].X;
-				var Ypoint = Array[i].vertices[j][1] + Array[i].Y;
+				var x = Array[i].vertices[j][0] + Array[i].X;
+				var y = Array[i].vertices[j][1] + Array[i].Y;
 
-				var Xpoint = Array[i].vertices[j][0] * zoom + Array[i].X + projectionX;
-				var Ypoint = Array[i].vertices[j][1] * zoom + Array[i].Y + projectionY;
-					if(distance(mousePos.x - Xpoint, mousePos.y - Ypoint)< 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
+				var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+
+				var Xpoint = proj.x;
+				var Ypoint = proj.y;
+
+				var mouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+
+					if(distance(mouse.x - Xpoint, mouse.y - Ypoint) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
 						onReshape = true;
 						bufferCtx.fillStyle = 'darkblue';
 						for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
-							var Xpoint = Array[i].vertices[k][0] + Array[i].X;
-							var Ypoint = Array[i].vertices[k][1] + Array[i].Y;
+							var x = Array[i].vertices[k][0] + Array[i].X;
+							var y = Array[i].vertices[k][1] + Array[i].Y;
 
-							var Xpoint = Array[i].vertices[k][0] * zoom + Array[i].X + projectionX;;
-							var Ypoint = Array[i].vertices[k][1] * zoom + Array[i].Y + projectionY;
+							var proj1 = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+
+							var Xpoint1 = proj1.x;
+							var Ypoint1 = proj1.y;
 
 							bufferCtx.beginPath();
-							bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
+							bufferCtx.arc(Xpoint1, Ypoint1, 3, 0, 2*Math.PI);
 							bufferCtx.fill();
 							}
 						}
 					}
 				}
 
+				bufferCtx.beginPath();
+				bufferCtx.arc(mousePos.x, mousePos.y, 10, 0, 2*Math.PI);
+				bufferCtx.fill();
+
+				bufferCtx.fillStyle = 'black';
+				bufferCtx.beginPath();
+				bufferCtx.arc(zoomCenter[0], zoomCenter[1], 10, 0, 2*Math.PI);
+				bufferCtx.fill();
 
 	if(physics && Array != wallArray){
 		if(Array[i].gravity){
