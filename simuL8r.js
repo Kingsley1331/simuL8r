@@ -1048,7 +1048,9 @@ function getMousePos(canvas, evt) {       //canvas.addEventListener uses this fu
 
 	return {
 			x: zoomedX,
-			y: zoomedY
+			y: zoomedY,
+			xPhysical: x,
+			yPhysical: y
 		};
 	}
 
@@ -2054,6 +2056,7 @@ function zoomer(e){
 	if(e.which === 40){
 		zoom /= 1.1;
 	}
+	zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
 }
 
 function applyZoom(center, point, zoom){
