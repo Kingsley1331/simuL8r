@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-10-07 **/ 
+/** simuL8r - v1.0.0 - 2016-10-08 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -733,6 +733,7 @@ function reSizer(){
 				}
 			}
 		}
+
 				// detects if cursor is over any of the small expansion boxes at the corners
 							/** top-left **/
 				if((distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].stretchRadius - selectSize - mousePos.y) <= smallBox/2 ||
@@ -861,7 +862,8 @@ function rotater(){
 				}
 			}
 				} // detects if cursor is hovering over slider
-				if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.x, shapeSelection.shapes[key][2][i].slider[1] - mousePos.y) <= 10){
+				var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+				if(distance(shapeSelection.shapes[key][2][i].slider[0] - projMouse.x, shapeSelection.shapes[key][2][i].slider[1] - projMouse.y) <= 10){
 					onSlider = true;
 				}
 			}
@@ -1692,34 +1694,36 @@ function changeSize(Array, i){
 			/**(ants+1)*antLength + ants*(gap - antLength) = (antLength + ants*gap)**/
 
 			/** top-left to top-right **/
-			while((antLength + ants*gap) < 2*(Array[i].stretchRadius + selectSize)){
+			var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
+
+			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(Array[i].X - Array[i].stretchRadius - selectSize + gap*ants, Array[i].Y - Array[i].stretchRadius - selectSize);
-				bufferCtx.lineTo(Array[i].X - Array[i].stretchRadius - selectSize + antLength + gap*ants, Array[i].Y - Array[i].stretchRadius - selectSize);
+				bufferCtx.moveTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + gap*ants, center.y - zoom * Array[i].stretchRadius - zoom * selectSize);
+				bufferCtx.lineTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants, center.y - zoom * Array[i].stretchRadius - zoom * selectSize);
 				bufferCtx.stroke();
 				ants++;
 			}
 			ants = 0; /** bottom-left to bottom-right **/
-			while((antLength + ants*gap) < 2*(Array[i].stretchRadius + selectSize)){
+			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(Array[i].X - Array[i].stretchRadius - selectSize + gap*ants, Array[i].Y + Array[i].stretchRadius + selectSize);
-				bufferCtx.lineTo(Array[i].X - Array[i].stretchRadius - selectSize + antLength + gap*ants, Array[i].Y + Array[i].stretchRadius + selectSize);
+				bufferCtx.moveTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + gap*ants,center.y + zoom * Array[i].stretchRadius + zoom * selectSize);
+				bufferCtx.lineTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants, center.y + zoom * (Array[i].stretchRadius + selectSize));
 				bufferCtx.stroke();
 				ants++;
 			}
 			ants = 0; /** top-left to top-right **/
-			while((antLength + ants*gap) < 2*(Array[i].stretchRadius + selectSize)){
+			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(Array[i].X - Array[i].stretchRadius - selectSize, Array[i].Y - Array[i].stretchRadius - selectSize + gap*ants);
-				bufferCtx.lineTo(Array[i].X - Array[i].stretchRadius - selectSize, Array[i].Y - Array[i].stretchRadius - selectSize + antLength + gap*ants);
+				bufferCtx.moveTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + gap*ants);
+				bufferCtx.lineTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants);
 				bufferCtx.stroke();
 				ants++;
 			}
 			ants = 0; /** bottom-right to bottom-right **/
-			while((antLength + ants*gap) < 2*(Array[i].stretchRadius + selectSize)){
+			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(Array[i].X + Array[i].stretchRadius + selectSize, Array[i].Y - Array[i].stretchRadius - selectSize + gap*ants);
-				bufferCtx.lineTo(Array[i].X + Array[i].stretchRadius + selectSize, Array[i].Y - Array[i].stretchRadius - selectSize + antLength + gap*ants);
+				bufferCtx.moveTo(center.x + zoom * Array[i].stretchRadius + zoom * selectSize, center.y - zoom *  Array[i].stretchRadius - zoom * selectSize + gap*ants);
+				bufferCtx.lineTo(center.x + zoom * Array[i].stretchRadius + zoom * selectSize, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants);
 				bufferCtx.stroke();
 				ants++;
 			}
@@ -1729,34 +1733,34 @@ function changeSize(Array, i){
 																				// this section draws the small white squares at the corners
 
 			/** top-left **/
-			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
 
 			/** bottom-left **/
-			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
 			/** bottom-right **/
-			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
 			/** top-right **/
-			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
 
 
 																				// this section draws the small white squares at the sides
 
 			/** top **/
-			bufferCtx.strokeRect(Array[i].X - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
 			/** right **/
-			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, Array[i].Y - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
 			/** bottom **/
-			bufferCtx.strokeRect(Array[i].X - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - smallBox/2, Array[i].Y - Array[i].stretchRadius - selectSize + 2*(Array[i].stretchRadius + selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
 			/** left **/
-			bufferCtx.strokeRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(Array[i].X - Array[i].stretchRadius - selectSize - smallBox/2, Array[i].Y - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
 			bufferCtx.restore();
 		}
 	}
@@ -1772,9 +1776,12 @@ function changeColour(Array, i){
 function rotateShape(Array, i){
 	if(rotate && Array[i].rotationLine){
 
-		var startPoint = Array[i].X - sliderButtonWidth/2;
-		var endPoint = Array[i].X + sliderButtonWidth/2;
-		var yCoordinates = Array[i].Y + Array[i].radius + 45;
+		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
+		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+
+		var startPoint = center.x - sliderButtonWidth/2;
+		var endPoint = center.x + sliderButtonWidth/2;
+		var yCoordinates = center.y + Array[i].radius + 45;
 		var radius = 20;
 
 		bufferCtx.save();
@@ -1816,10 +1823,17 @@ function rotateShape(Array, i){
 		Array[i].slider[1] = yCoordinates;
 
 		/** Slider follows the cursor along the line **/
-		if(rotate && onSlider && mousePos.x >= startPoint && mousePos.x <= endPoint){
+		/*if(rotate && onSlider && mousePos.x >= startPoint && mousePos.x <= endPoint){
 			Array[i].slider[0] = mousePos.x;
 			sliderPosition = mousePos.x - startPoint;
 			Array[i].sliderPosition = mousePos.x - startPoint;
+			Array[i].rotate();
+		}*/
+
+		if(rotate && onSlider && projMouse.x >= startPoint && projMouse.x <= endPoint){
+			Array[i].slider[0] = projMouse.x;
+			sliderPosition = projMouse.x - startPoint;
+			Array[i].sliderPosition = projMouse.x - startPoint;
 			Array[i].rotate();
 		}
 
@@ -1847,11 +1861,12 @@ function wallDrawer(){
 function circleDrawer(){
 	bufferCtx.globalAlpha = 1;
 	bufferCtx.lineWidth = 0.5;
-	if(!dragging && shapeSelection.shapes.circle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+	if(!dragging && shapeSelection.shapes.circle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 		bufferCtx.beginPath();
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
-		bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
+		bufferCtx.arc(proj.x, proj.y, zoom * 30, 0, 2*Math.PI);
 		bufferCtx.stroke();
 		bufferCtx.fill();
 		}
@@ -1865,16 +1880,18 @@ function circleDrawer(){
 function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
-		if(!dragging && shapeSelection.shapes.square[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+		//if(!dragging && shapeSelection.shapes.square[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
-			bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
+			//bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
 
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(mousePos.x - 27.5, mousePos.y + 27.5);
-			bufferCtx.lineTo(mousePos.x + 27.5, mousePos.y + 27.5);
-			bufferCtx.lineTo(mousePos.x + 27.5, mousePos.y - 27.5);
-			bufferCtx.lineTo(mousePos.x - 27.5, mousePos.y - 27.5);
+			bufferCtx.moveTo(proj.x - zoom * 27.5, proj.y + zoom * 27.5);
+			bufferCtx.lineTo(proj.x + zoom * 27.5, proj.y + zoom * 27.5);
+			bufferCtx.lineTo(proj.x + zoom * 27.5, proj.y - zoom * 27.5);
+			bufferCtx.lineTo(proj.x - zoom * 27.5, proj.y - zoom * 27.5);
 			bufferCtx.closePath();
 
 			bufferCtx.stroke();
@@ -1886,15 +1903,17 @@ function squareDrawer(){
 
 function triangleDrawer(){
 		bufferCtx.globalAlpha = 1;
-		if(!dragging && shapeSelection.shapes.triangle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+		//if(!dragging && shapeSelection.shapes.triangle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
+		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
-			bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
+			bufferCtx.arc(proj.x, proj.y, 30, 0, 2*Math.PI);
 
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(mousePos.x - 30, mousePos.y + Math.sqrt(3)/6 * 60);
-			bufferCtx.lineTo(mousePos.x + 30, mousePos.y + Math.sqrt(3)/6 * 60);
-			bufferCtx.lineTo(mousePos.x, mousePos.y - 2 * Math.sqrt(3)/6 * 60);
+			bufferCtx.moveTo(proj.x - zoom * 30, proj.y + zoom * Math.sqrt(3)/6 * 60);
+			bufferCtx.lineTo(proj.x + zoom * 30, proj.y + zoom * Math.sqrt(3)/6 * 60);
+			bufferCtx.lineTo(proj.x, proj.y - zoom * 2 * Math.sqrt(3)/6 * 60);
 			bufferCtx.closePath();
 			bufferCtx.stroke();
 			bufferCtx.fill();
@@ -1941,7 +1960,7 @@ function customShapeDrawer(){
 
 		bufferCtx.stroke();
 		if(pointsArray[0]){
-			if(distance(pointsArray[0][0] - mousePos.x, pointsArray[0][1] - mousePos.y) < closePathRadius){ // sets closedPath = true if the cursor is hovering over the first set of points and also creates the lightgreen highlight
+			if(distance(pointsArray[0][0] - mousePos.x, pointsArray[0][1] - mousePos.y) < closePathRadius/zoom){ // sets closedPath = true if the cursor is hovering over the first set of points and also creates the lightgreen highlight
 				bufferCtx.save();
 				bufferCtx.fillStyle = 'lightgreen';
 				bufferCtx.beginPath();
@@ -2022,10 +2041,14 @@ function curveDrawer(){
 function pencilDrawer(){
 
 	if(pencilPointsArray[0] && pencils && !select){
+
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[0][0], pencilPointsArray[0][1]], zoom);
+
 		bufferCtx.beginPath();
-		bufferCtx.moveTo(pencilPointsArray[0][0], pencilPointsArray[0][1]);
+		bufferCtx.moveTo(proj.x, proj.y);
 			for(var j = 0; j < pencilPointsArray.length; j++){
-				bufferCtx.lineTo(pencilPointsArray[j][0], pencilPointsArray[j][1]);
+				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[j][0], pencilPointsArray[j][1]], zoom);
+				bufferCtx.lineTo(projPoints.x, projPoints.y);
 			}
 		bufferCtx.stroke();
 
@@ -2035,12 +2058,17 @@ function pencilDrawer(){
 
 	if(pencilPointsArray[0]){
 		bufferCtx.beginPath();
-		//bufferCtx.lineJoin='round';
-		bufferCtx.moveTo(pencilArray[j].X + pencilArray[j].vertices[0][0], pencilArray[j].Y + pencilArray[j].vertices[0][1]);
+		var x = pencilArray[j].X + pencilArray[j].vertices[0][0];
+		var y = pencilArray[j].Y + pencilArray[j].vertices[0][1];
+		var projPencilPoint = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+		bufferCtx.moveTo(projPencilPoint.x, projPencilPoint.y);
 
 		for(var k = 0; k < pencilArray[j].vertices.length; k++){
 			if(pencilArray[j].vertices[k])
-				bufferCtx.lineTo(pencilArray[j].X + pencilArray[j].vertices[k][0], pencilArray[j].Y + pencilArray[j].vertices[k][1]);
+			  var x = pencilArray[j].X + pencilArray[j].vertices[0][0];
+			  var y = pencilArray[j].Y + pencilArray[j].vertices[0][1];
+				var projPencilPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+				bufferCtx.lineTo(projPencilPoints.x, projPencilPoints.y);
 			}
 		}
 	}
@@ -2049,14 +2077,15 @@ function pencilDrawer(){
 window.addEventListener('keydown', zoomer);
 
 function zoomer(e){
-	e.preventDefault();
-	if(e.which === 38){
+	//e.preventDefault();
+	//alert(e.which);
+	if(e.which === 107){
 		zoom *= 1.1;
 	}
-	if(e.which === 40){
+	if(e.which === 109){
 		zoom /= 1.1;
 	}
-	zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
+	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
 }
 
 function applyZoom(center, point, zoom){
@@ -2123,9 +2152,11 @@ function shapeTransforms(Array){
 		}
 
 		if(Array == circleArray){
+			var projCenter = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
+			var projEdge = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + Array[i].vertices[0][0], Array[i].Y + Array[i].vertices[0][1]], zoom);
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(Array[i].X + Array[i].vertices[0][0], Array[i].Y + Array[i].vertices[0][1]);
-			bufferCtx.lineTo(Array[i].X, Array[i].Y);
+			bufferCtx.lineTo(projEdge.x, projEdge.y);
+			bufferCtx.lineTo(projCenter.x, projCenter.y);
 			bufferCtx.stroke();
 		}
 
