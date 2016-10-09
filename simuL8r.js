@@ -1960,7 +1960,7 @@ function customShapeDrawer(){
 				bufferCtx.save();
 				bufferCtx.fillStyle = 'lightgreen';
 				bufferCtx.beginPath();
-				bufferCtx.arc(projPoint.x, projPoint.y, closePathRadius/zoom, 0, 2*Math.PI);
+				bufferCtx.arc(projPoint.x, projPoint.y, closePathRadius, 0, 2*Math.PI);
 				bufferCtx.fill();
 				bufferCtx.restore();
 				closedPath = true;
