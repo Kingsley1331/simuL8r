@@ -23,6 +23,7 @@ var playScenes;
 var selectedColour = '';
 var zoom = 1;
 var zoomCenter = [];
+var shift = [0, 0];
 
 var shapeSelection = {
 						name: 'untitled',
@@ -861,14 +862,13 @@ function rotater(){
 				}
 			}
 				} // detects if cursor is hovering over slider
-				var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+				var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 				if(distance(shapeSelection.shapes[key][2][i].slider[0] - projMouse.x, shapeSelection.shapes[key][2][i].slider[1] - projMouse.y) <= 10){
 					onSlider = true;
 				}
 			}
 		}
 	}
-
 
 function referencer(){
 	for(key in shapeSelection.shapes){
@@ -1035,12 +1035,11 @@ function animator(){
 	collisionDetector();
 }
 
-
 function getMousePos(canvas, evt) {       //canvas.addEventListener uses this function to calculate mouse position
 	var rect = canvas.getBoundingClientRect();
 
-	var x = evt.clientX - rect.left;
-	var y = evt.clientY - rect.top;
+	var x = evt.clientX - rect.left - zoom * shift[0];
+	var y = evt.clientY - rect.top - zoom * shift[1];
 
 	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], 1/zoom);
 
@@ -1693,7 +1692,7 @@ function changeSize(Array, i){
 			/**(ants+1)*antLength + ants*(gap - antLength) = (antLength + ants*gap)**/
 
 			/** top-left to top-right **/
-			var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
+			var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 
 			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
 				bufferCtx.beginPath();
@@ -1775,8 +1774,8 @@ function changeColour(Array, i){
 function rotateShape(Array, i){
 	if(rotate && Array[i].rotationLine){
 
-		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
-		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
+		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
 		var startPoint = center.x - sliderButtonWidth/2;
 		var endPoint = center.x + sliderButtonWidth/2;
@@ -1928,7 +1927,7 @@ function triangleDrawer(){
 function customShapeDrawer(){
 									/** this section draws the initial shape before any changes and transformations are applied to it **/
 	if(shapes){
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 
 		bufferCtx.fillStyle = 'blue';
 		bufferCtx.beginPath();
@@ -1936,7 +1935,7 @@ function customShapeDrawer(){
 		bufferCtx.fill();
 
 		if(pointsArray[0]){
-			var projPoint = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[0][0], pointsArray[0][1]], zoom);
+			var projPoint = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[0][0] + shift[0], pointsArray[0][1] + shift[1]], zoom);
 		}
 
 		if(startDraw){bufferCtx.moveTo(projPoint.x, projPoint.y);} // first point of the custom shape is drawn here
@@ -1944,7 +1943,7 @@ function customShapeDrawer(){
 		closedPath = false;
 		for(var i = 0; i < pointsArray.length; i++){
 			if(i != 0){
-				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[i][0], pointsArray[i][1]], zoom);
+				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[i][0] + shift[0], pointsArray[i][1] + shift[1]], zoom);
 				bufferCtx.lineTo(projPoints.x, projPoints.y); // all the other points are drawn here
 			}
 		}
@@ -2041,12 +2040,12 @@ function pencilDrawer(){
 
 	if(pencilPointsArray[0] && pencils && !select){
 
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[0][0], pencilPointsArray[0][1]], zoom);
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[0][0] + shift[0], pencilPointsArray[0][1] + shift[1]], zoom);
 
 		bufferCtx.beginPath();
 		bufferCtx.moveTo(proj.x, proj.y);
 			for(var j = 0; j < pencilPointsArray.length; j++){
-				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[j][0], pencilPointsArray[j][1]], zoom);
+				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[j][0] + shift[0], pencilPointsArray[j][1] + shift[1]], zoom);
 				bufferCtx.lineTo(projPoints.x, projPoints.y);
 			}
 		bufferCtx.stroke();
@@ -2073,10 +2072,26 @@ function pencilDrawer(){
 	}
 }
 
-window.addEventListener('keydown', zoomer);
+window.addEventListener('keydown', zoomer , false);
+// IE9, Chrome, Safari, Opera
+window.addEventListener("mousewheel", wheelZoomer, false);
+// Firefox
+window.addEventListener("DOMMouseScroll", wheelZoomer, false);
+
+
+function wheelZoomer(e){
+	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
+	if(e.wheelDelta === 120){
+		zoom *= 1.1;
+	}
+	if(e.wheelDelta === -120){
+		zoom /= 1.1;
+	}
+}
 
 function zoomer(e){
 	//e.preventDefault();
+	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
 	//alert(e.which);
 	if(e.which === 107){
 		zoom *= 1.1;
@@ -2084,7 +2099,18 @@ function zoomer(e){
 	if(e.which === 109){
 		zoom /= 1.1;
 	}
-	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
+	if(e.which === 39){ //left
+		shift[0] += 10;
+	}
+	if(e.which === 37){ //right
+		shift[0] += -10;
+	}
+  if(e.which === 40){ //up
+		shift[1] += 10;
+	}
+	if(e.which === 38){ //down
+		shift[1] += -10;
+	}
 }
 
 function applyZoom(center, point, zoom){
@@ -2102,19 +2128,24 @@ function applyZoom(center, point, zoom){
 
 function shapeTransforms(Array){
 	if(Array[0]){
-		for(var i = 0; i < Array.length; i++){
+		var length = Array.length
+		for(var i = 0; i < length; i++){
 			//bufferCtx.fillStyle = Array[i].colour;
+			//Array[i].X + shift[0];
+			//Array[i].Y + shift[1];
+			//Array[i].X += 1;
+			//Array[i].Y + shift[1];
 			shadow(Array, i);
 			changeColour(Array, i);
 
 			bufferCtx.save();
 			//bufferCtx.fillStyle = Array[i].colour;
 
-			var Xpoint_0 = Array[i].vertices[0][0] + Array[i].X;
-			var Ypoint_0 = Array[i].vertices[0][1] + Array[i].Y;
+			var Xpoint_0 = Array[i].vertices[0][0] + Array[i].X + shift[0];
+			var Ypoint_0 = Array[i].vertices[0][1] + Array[i].Y + shift[1];
 
-			var x = Array[i].vertices[0][0] + Array[i].X;
-			var y = Array[i].vertices[0][1] + Array[i].Y;
+			var x = Array[i].vertices[0][0] + Array[i].X + shift[0];
+			var y = Array[i].vertices[0][1] + Array[i].Y + shift[1];
 
 			var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
@@ -2126,8 +2157,8 @@ function shapeTransforms(Array){
 
 			for(var j = 0; j < Array[i].vertices.length; j++){
 
-					var x = Array[i].vertices[j][0] + Array[i].X;
-					var y = Array[i].vertices[j][1] + Array[i].Y;
+					var x = Array[i].vertices[j][0] + Array[i].X + shift[0];
+					var y = Array[i].vertices[j][1] + Array[i].Y + shift[1];
 
 					var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
@@ -2176,16 +2207,16 @@ function shapeTransforms(Array){
 						onReshape = true;
 						bufferCtx.fillStyle = 'darkblue';
 						for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
-							var x = Array[i].vertices[k][0] + Array[i].X;
-							var y = Array[i].vertices[k][1] + Array[i].Y;
+							var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
+							var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
 
-							var proj1 = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+							var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-							var Xpoint1 = proj1.x;
-							var Ypoint1 = proj1.y;
+							var Xpoint = proj.x;
+							var Ypoint = proj.y;
 
 							bufferCtx.beginPath();
-							bufferCtx.arc(Xpoint1, Ypoint1, 3, 0, 2*Math.PI);
+							bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
 							bufferCtx.fill();
 							}
 						}
