@@ -24,6 +24,7 @@ var selectedColour = '';
 var zoom = 1;
 var zoomCenter = [];
 var shift = [0, 0];
+var centerShift = [0, 0];
 
 var shapeSelection = {
 						name: 'untitled',
@@ -1039,10 +1040,13 @@ function animator(){
 function getMousePos(canvas, evt) {       //canvas.addEventListener uses this function to calculate mouse position
 	var rect = canvas.getBoundingClientRect();
 
-	var x = evt.clientX - rect.left - zoom * shift[0];
-	var y = evt.clientY - rect.top - zoom * shift[1];
+	var x = evt.clientX - rect.left;
+	var y = evt.clientY - rect.top;
 
-	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], 1/zoom);
+	var shiftedX = x - zoom * shift[0];
+	var shiftedY = y - zoom * shift[1];
+
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
 
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
@@ -1924,7 +1928,7 @@ function customShapeDrawer(){
 
 		bufferCtx.fillStyle = 'blue';
 		bufferCtx.beginPath();
-		bufferCtx.arc(proj.x, proj.y, 20, 0, 2*Math.PI);
+		bufferCtx.arc(proj.x, proj.y, 2, 0, 2*Math.PI);
 		bufferCtx.fill();
 
 		if(pointsArray[0]){
@@ -1955,7 +1959,7 @@ function customShapeDrawer(){
 				bufferCtx.save();
 				bufferCtx.fillStyle = 'lightgreen';
 				bufferCtx.beginPath();
-				bufferCtx.arc(projPoint.x, projPoint.y, closePathRadius, 0, 2*Math.PI);
+				bufferCtx.arc(projPoint.x, projPoint.y, closePathRadius/zoom, 0, 2*Math.PI);
 				bufferCtx.fill();
 				bufferCtx.restore();
 				closedPath = true;
@@ -2074,16 +2078,18 @@ window.addEventListener("DOMMouseScroll", wheelZoomer, false);
 
 function wheelZoomer(e){
 	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
-	if(e.wheelDelta === 120){
+	zoomCenter = [mousePos.x, mousePos.y];
+	if(e.wheelDelta === 120){ //check if this actually works for all mice and computers
 		zoom *= 1.1;
 	}
-	if(e.wheelDelta === -120){
+	if(e.wheelDelta === -120){ //check if this actually works for all mice and computers
 		zoom /= 1.1;
 	}
 }
 
 function zoomer(e){
 	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
+	zoomCenter = [mousePos.x, mousePos.y];
 	if(e.which === 107){
 		zoom *= 1.1;
 	}
@@ -2102,6 +2108,13 @@ function zoomer(e){
 	if(e.which === 38){ //down
 		shift[1] += -10/zoom;
 	}
+
+	//centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
+
+}
+
+function logger(text){
+	console.log('%c' + text, 'font-size:30px; color: blue');
 }
 
 function applyZoom(center, point, zoom){
@@ -2140,8 +2153,8 @@ function shapeTransforms(Array){
 
 			var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-			Xpoint_0 = proj.x;
-			Ypoint_0 = proj.y;
+			Xpoint_0 = proj.x + centerShift[0];
+			Ypoint_0 = proj.y + centerShift[1];
 
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(Xpoint_0, Ypoint_0); // first point of the custom shape is drawn here
@@ -2153,8 +2166,8 @@ function shapeTransforms(Array){
 
 					var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-					var	Xpoint = proj.x;
-					var Ypoint = proj.y;
+					var	Xpoint = proj.x + centerShift[0];
+					var Ypoint = proj.y + centerShift[1];
 
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
@@ -2163,6 +2176,7 @@ function shapeTransforms(Array){
 				bufferCtx.lineTo(Xpoint, Ypoint);
 		}
 
+		//if(centerShift[0] !== 0 && centerShift[1] !== 0){logger(centerShift);}
 		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
 			bufferCtx.restore();
 			bufferCtx.stroke();
@@ -2220,7 +2234,7 @@ function shapeTransforms(Array){
 
 				bufferCtx.fillStyle = 'black';
 				bufferCtx.beginPath();
-				bufferCtx.arc(zoomCenter[0], zoomCenter[1], 10, 0, 2*Math.PI);
+				bufferCtx.arc(zoomCenter[0], zoomCenter[1], 5, 0, 2*Math.PI);
 				bufferCtx.fill();
 
 	if(physics && Array != wallArray){
