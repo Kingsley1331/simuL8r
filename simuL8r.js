@@ -864,6 +864,7 @@ function rotater(){
 			}
 				} // detects if cursor is hovering over slider
 				var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
+				//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
 				if(distance(shapeSelection.shapes[key][2][i].slider[0] - projMouse.x, shapeSelection.shapes[key][2][i].slider[1] - projMouse.y) <= 10){
 					onSlider = true;
 				}
@@ -1654,7 +1655,6 @@ function shadow(Array, i){
 		bufferCtx.lineWidth = Array[i].lineWidth;
 	}
 
-	//if(dragging && Array[i].selected && !onSlider){
 	if(dragging && Array[i].selected){
 		Array[i].X = mousePos.x + offcenter[0];
 		Array[i].Y = mousePos.y + offcenter[1];
@@ -1822,13 +1822,6 @@ function rotateShape(Array, i){
 		Array[i].slider[1] = yCoordinates;
 
 		/** Slider follows the cursor along the line **/
-		/*if(rotate && onSlider && mousePos.x >= startPoint && mousePos.x <= endPoint){
-			Array[i].slider[0] = mousePos.x;
-			sliderPosition = mousePos.x - startPoint;
-			Array[i].sliderPosition = mousePos.x - startPoint;
-			Array[i].rotate();
-		}*/
-
 		if(rotate && onSlider && projMouse.x >= startPoint && projMouse.x <= endPoint){
 			Array[i].slider[0] = projMouse.x;
 			sliderPosition = projMouse.x - startPoint;
@@ -2091,9 +2084,7 @@ function wheelZoomer(e){
 }
 
 function zoomer(e){
-	//e.preventDefault();
 	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
-	//alert(e.which);
 	if(e.which === 107){
 		zoom *= 1.1;
 	}
@@ -2101,16 +2092,16 @@ function zoomer(e){
 		zoom /= 1.1;
 	}
 	if(e.which === 39){ //left
-		shift[0] += 10;
+		shift[0] += 10/zoom;
 	}
 	if(e.which === 37){ //right
-		shift[0] += -10;
+		shift[0] += -10/zoom;
 	}
   if(e.which === 40){ //up
-		shift[1] += 10;
+		shift[1] += 10/zoom;
 	}
 	if(e.which === 38){ //down
-		shift[1] += -10;
+		shift[1] += -10/zoom;
 	}
 }
 
