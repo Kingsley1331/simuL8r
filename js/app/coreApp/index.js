@@ -2080,8 +2080,6 @@ window.addEventListener("DOMMouseScroll", wheelZoomer, false);
 
 
 function wheelZoomer(e){
-	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
-	//zoomCenter = [mousePos.x, mousePos.y];
 	zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
 	if(e.wheelDelta === 120){ //check if this actually works for all mice and computers
 		zoom *= 1.1;
@@ -2092,28 +2090,15 @@ function wheelZoomer(e){
 }
 
 function zoomer(e){
-	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
 	var zoomFactor = 1.1;
-	//zoomCenter = [mousePos.x, mousePos.y];
-	//zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
-
 	if(e.which === 107 || e.which === 109){
 		centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
-		shift[0] = 0;
-		shift[1] = 0;
-		var shiftedX = mousePos.xPhysical - zoom * centerShift[0];
-		var shiftedY = mousePos.yPhysical - zoom * centerShift[1];
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
 
-		var zoomedX = proj.x;
-		var zoomedY = proj.y;
+		shift[0] = centerShift[0];
+		shift[1] = centerShift[1];
 
-		shift[0] += centerShift[0];
-		shift[1] += centerShift[1];
-
-		//zoomCenter = [zoomedX + centerShift[0], zoomedY + centerShift[1]];
 		zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
-
+	
 		if(e.which === 107){
 				zoom *= zoomFactor;
 		}
@@ -2135,13 +2120,6 @@ function zoomer(e){
 		shift[1] += -10/zoom;
 	}
 
-	/*if(e.which === 107 || e.which === 109){
-		if(isCenterShifting){
-		//if(false){
-			shift[0] += centerShift[0];
-			shift[1] += centerShift[1];
-		}
-	}*/
 	isCenterShifting = false;
 
 	var shiftedX = mousePos.xPhysical - zoom * shift[0];
@@ -2154,12 +2132,7 @@ function zoomer(e){
 	if(e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40){
 		zoomCenter = [zoomedX + shift[0], zoomedY + shift[1]];
 	}
-	//zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
-
 }
-
-
-
 
 function logger(text){
 	console.log('%c' + text, 'font-size:30px; color: blue');
@@ -2188,10 +2161,6 @@ function shapeTransforms(Array){
 		var length = Array.length
 		for(var i = 0; i < length; i++){
 			//bufferCtx.fillStyle = Array[i].colour;
-			//Array[i].X + shift[0];
-			//Array[i].Y + shift[1];
-			//Array[i].X += 1;
-			//Array[i].Y + shift[1];
 			shadow(Array, i);
 			changeColour(Array, i);
 
