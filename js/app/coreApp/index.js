@@ -25,6 +25,7 @@ var zoom = 1;
 var zoomCenter = [];
 var shift = [0, 0];
 var centerShift = [0, 0];
+var isCenterShifting = false;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -1050,6 +1051,8 @@ function getMousePos(canvas, evt) {       //canvas.addEventListener uses this fu
 
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
+
+	isCenterShifting = true;
 
 	return {
 			x: zoomedX,
@@ -2078,7 +2081,8 @@ window.addEventListener("DOMMouseScroll", wheelZoomer, false);
 
 function wheelZoomer(e){
 	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
-	zoomCenter = [mousePos.x, mousePos.y];
+	//zoomCenter = [mousePos.x, mousePos.y];
+	zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
 	if(e.wheelDelta === 120){ //check if this actually works for all mice and computers
 		zoom *= 1.1;
 	}
@@ -2089,13 +2093,35 @@ function wheelZoomer(e){
 
 function zoomer(e){
 	//zoomCenter = [mousePos.xPhysical, mousePos.yPhysical];
-	zoomCenter = [mousePos.x, mousePos.y];
-	if(e.which === 107){
-		zoom *= 1.1;
+	var zoomFactor = 1.1;
+	//zoomCenter = [mousePos.x, mousePos.y];
+	//zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
+
+	if(e.which === 107 || e.which === 109){
+		centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
+		shift[0] = 0;
+		shift[1] = 0;
+		var shiftedX = mousePos.xPhysical - zoom * centerShift[0];
+		var shiftedY = mousePos.yPhysical - zoom * centerShift[1];
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
+
+		var zoomedX = proj.x;
+		var zoomedY = proj.y;
+
+		shift[0] += centerShift[0];
+		shift[1] += centerShift[1];
+
+		//zoomCenter = [zoomedX + centerShift[0], zoomedY + centerShift[1]];
+		zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
+
+		if(e.which === 107){
+				zoom *= zoomFactor;
+		}
+		if(e.which === 109){
+				zoom /= zoomFactor;
+		}
 	}
-	if(e.which === 109){
-		zoom /= 1.1;
-	}
+
 	if(e.which === 39){ //left
 		shift[0] += 10/zoom;
 	}
@@ -2109,12 +2135,39 @@ function zoomer(e){
 		shift[1] += -10/zoom;
 	}
 
-	//centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
+	/*if(e.which === 107 || e.which === 109){
+		if(isCenterShifting){
+		//if(false){
+			shift[0] += centerShift[0];
+			shift[1] += centerShift[1];
+		}
+	}*/
+	isCenterShifting = false;
+
+	var shiftedX = mousePos.xPhysical - zoom * shift[0];
+	var shiftedY = mousePos.yPhysical - zoom * shift[1];
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
+
+	var zoomedX = proj.x;
+	var zoomedY = proj.y;
+
+	if(e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40){
+		zoomCenter = [zoomedX + shift[0], zoomedY + shift[1]];
+	}
+	//zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
 
 }
 
+
+
+
 function logger(text){
 	console.log('%c' + text, 'font-size:30px; color: blue');
+}
+
+function screenWriter(text, position, context, fontSize, fontFamily){
+	context.font = fontSize +'px ' + fontFamily;
+	context.fillText(text, position[0],position[1]);
 }
 
 function applyZoom(center, point, zoom){
@@ -2153,8 +2206,8 @@ function shapeTransforms(Array){
 
 			var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-			Xpoint_0 = proj.x + centerShift[0];
-			Ypoint_0 = proj.y + centerShift[1];
+			Xpoint_0 = proj.x// + centerShift[0];
+			Ypoint_0 = proj.y// + centerShift[1];
 
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(Xpoint_0, Ypoint_0); // first point of the custom shape is drawn here
@@ -2166,8 +2219,8 @@ function shapeTransforms(Array){
 
 					var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-					var	Xpoint = proj.x + centerShift[0];
-					var Ypoint = proj.y + centerShift[1];
+					var	Xpoint = proj.x// + centerShift[0];
+					var Ypoint = proj.y// + centerShift[1];
 
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
@@ -2176,7 +2229,6 @@ function shapeTransforms(Array){
 				bufferCtx.lineTo(Xpoint, Ypoint);
 		}
 
-		//if(centerShift[0] !== 0 && centerShift[1] !== 0){logger(centerShift);}
 		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
 			bufferCtx.restore();
 			bufferCtx.stroke();
@@ -2236,6 +2288,17 @@ function shapeTransforms(Array){
 				bufferCtx.beginPath();
 				bufferCtx.arc(zoomCenter[0], zoomCenter[1], 5, 0, 2*Math.PI);
 				bufferCtx.fill();
+
+				bufferCtx.beginPath();
+				bufferCtx.moveTo(mousePos.x, mousePos.y);
+				bufferCtx.lineTo(mousePos.x + centerShift[0], mousePos.y + centerShift[1]);
+				bufferCtx.stroke();
+
+				var magCenterShift = distance(centerShift[0], centerShift[1]);
+
+				screenWriter('centerShift ' + centerShift, [0, 50], bufferCtx, '30', 'Arial');
+				screenWriter('Zoom ' + zoom, [0, 100], bufferCtx, '30', 'Arial');
+
 
 	if(physics && Array != wallArray){
 		if(Array[i].gravity){
