@@ -1046,7 +1046,7 @@ function getMousePos(evt, canvas) {       //canvas.addEventListener uses this fu
 	}
 
 	//if(evt.which === 37 || evt.which === 38 || evt.which === 39 || evt.which === 40){
-	if(isShifting(evt)){	
+	if(isShifting(evt)){
 		var x = mousePos.xPhysical;
 		var y = mousePos.yPhysical;
 	}
@@ -2079,24 +2079,14 @@ function pencilDrawer(){
 
 window.addEventListener('keydown', zoomer , false);
 // IE9, Chrome, Safari, Opera
-window.addEventListener("mousewheel", wheelZoomer, false);
+window.addEventListener("mousewheel", zoomer, false);
 // Firefox
-window.addEventListener("DOMMouseScroll", wheelZoomer, false);
+window.addEventListener("DOMMouseScroll", zoomer, false);
 
-
-function wheelZoomer(e){
-	zoomCenter = [mousePos.x + shift[0], mousePos.y + shift[1]];
-	if(e.wheelDelta === 120){ //check if this actually works for all mice and computers
-		zoom *= 1.1;
-	}
-	if(e.wheelDelta === -120){ //check if this actually works for all mice and computers
-		zoom /= 1.1;
-	}
-}
 
 function zoomer(e){
 	var zoomFactor = 1.1;
-	if(e.which === 107 || e.which === 109){
+	if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
 		centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
 
 		shift[0] = centerShift[0];
@@ -2104,10 +2094,10 @@ function zoomer(e){
 
 		zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
 
-		if(e.which === 107){
+		if(e.which === 107 || e.wheelDelta === 120){
 				zoom *= zoomFactor;
 		}
-		if(e.which === 109){
+		if(e.which === 109 || e.wheelDelta === -120){
 				zoom /= zoomFactor;
 		}
 	}
@@ -2146,7 +2136,8 @@ function isShifting(e){
 	return e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40;
 }
 
-function screenWriter(text, position, context, fontSize, fontFamily){
+function screenWriter(text, position, context, fontSize, fontFamily, colour){
+	context.fillStyle = colour;
 	context.font = fontSize +'px ' + fontFamily;
 	context.fillText(text, position[0],position[1]);
 }
@@ -2257,26 +2248,8 @@ function shapeTransforms(Array){
 					}
 				}
 
-				bufferCtx.beginPath();
-				bufferCtx.arc(mousePos.x, mousePos.y, 10, 0, 2*Math.PI);
-				bufferCtx.fill();
 
-				bufferCtx.fillStyle = 'black';
-				bufferCtx.beginPath();
-				bufferCtx.arc(zoomCenter[0], zoomCenter[1], 5, 0, 2*Math.PI);
-				bufferCtx.fill();
-
-				bufferCtx.beginPath();
-				bufferCtx.moveTo(mousePos.x, mousePos.y);
-				bufferCtx.lineTo(mousePos.x + centerShift[0], mousePos.y + centerShift[1]);
-				bufferCtx.stroke();
-
-				var magCenterShift = distance(centerShift[0], centerShift[1]);
-
-				screenWriter('centerShift ' + centerShift, [0, 50], bufferCtx, '30', 'Arial');
-				screenWriter('Zoom ' + zoom, [0, 100], bufferCtx, '30', 'Arial');
-				screenWriter('mousePos ' + mousePos.x + ' ' + mousePos.y, [500, 100], bufferCtx, '30', 'Arial');
-
+ 	screenWriter('Zoom ' + zoom, [0, 100], bufferCtx, '30', 'Arial', 'black');
 
 	if(physics && Array != wallArray){
 		if(Array[i].gravity){
