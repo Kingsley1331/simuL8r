@@ -25,7 +25,6 @@ var zoom = 1;
 var zoomCenter = [];
 var shift = [0, 0];
 var centerShift = [0, 0];
-var isCenterShifting = false;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -568,7 +567,7 @@ function locate(){
 
 function mouseMove(){
 	canvas.addEventListener('mousemove', function(evt){
-	mousePos = getMousePos(canvas, evt);
+	mousePos = getMousePos(evt, canvas);
 	if(!select){copying = true;}
 	locate();
 	pencilPoints();
@@ -1038,11 +1037,19 @@ function animator(){
 	collisionDetector();
 }
 
-function getMousePos(canvas, evt) {       //canvas.addEventListener uses this function to calculate mouse position
+function getMousePos(evt, canvas) {       //canvas.addEventListener uses this function to calculate mouse position
 	var rect = canvas.getBoundingClientRect();
 
-	var x = evt.clientX - rect.left;
-	var y = evt.clientY - rect.top;
+	if(evt.clientX && evt.clientY){
+		var x = evt.clientX - rect.left;
+		var y = evt.clientY - rect.top;
+	}
+
+	//if(evt.which === 37 || evt.which === 38 || evt.which === 39 || evt.which === 40){
+	if(isShifting(evt)){	
+		var x = mousePos.xPhysical;
+		var y = mousePos.yPhysical;
+	}
 
 	var shiftedX = x - zoom * shift[0];
 	var shiftedY = y - zoom * shift[1];
@@ -1051,8 +1058,6 @@ function getMousePos(canvas, evt) {       //canvas.addEventListener uses this fu
 
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
-
-	isCenterShifting = true;
 
 	return {
 			x: zoomedX,
@@ -2098,7 +2103,7 @@ function zoomer(e){
 		shift[1] = centerShift[1];
 
 		zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
-	
+
 		if(e.which === 107){
 				zoom *= zoomFactor;
 		}
@@ -2120,8 +2125,6 @@ function zoomer(e){
 		shift[1] += -10/zoom;
 	}
 
-	isCenterShifting = false;
-
 	var shiftedX = mousePos.xPhysical - zoom * shift[0];
 	var shiftedY = mousePos.yPhysical - zoom * shift[1];
 	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
@@ -2129,13 +2132,18 @@ function zoomer(e){
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
 
-	if(e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40){
-		zoomCenter = [zoomedX + shift[0], zoomedY + shift[1]];
+	//if(e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40){
+	if(isShifting(e)){
+		mousePos = getMousePos(e, canvas);
 	}
 }
 
 function logger(text){
 	console.log('%c' + text, 'font-size:30px; color: blue');
+}
+
+function isShifting(e){
+	return e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40;
 }
 
 function screenWriter(text, position, context, fontSize, fontFamily){
@@ -2267,6 +2275,7 @@ function shapeTransforms(Array){
 
 				screenWriter('centerShift ' + centerShift, [0, 50], bufferCtx, '30', 'Arial');
 				screenWriter('Zoom ' + zoom, [0, 100], bufferCtx, '30', 'Arial');
+				screenWriter('mousePos ' + mousePos.x + ' ' + mousePos.y, [500, 100], bufferCtx, '30', 'Arial');
 
 
 	if(physics && Array != wallArray){
