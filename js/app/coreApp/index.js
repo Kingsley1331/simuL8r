@@ -1621,18 +1621,6 @@ function draw(){
 
 	context.drawImage(bufferCanvas, 0, 0, canvas.width, canvas.height);
 
-	/*if(saving){
-		image.style.visibility = 'visible';
-
-		// save canvas image as data url (png format by default)
-		var dataURL = canvas.toDataURL();
-		// set canvasImg image src to dataURL
-		// so it can be saved as an image
-		//document.getElementById('canvasImg').src = dataURL;
-		image.src = dataURL;
-		console.log(dataURL);
-		//window.location.replace(dataURL);
-	}*/
 }
 
 function calcAngle(x1, y1, x2, y2){
@@ -1884,7 +1872,6 @@ function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
 		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-		//if(!dragging && shapeSelection.shapes.square[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
 		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
@@ -1907,7 +1894,6 @@ function squareDrawer(){
 function triangleDrawer(){
 		bufferCtx.globalAlpha = 1;
 		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-		//if(!dragging && shapeSelection.shapes.triangle[0] && mousePos.x <= canvas.width - 25 && mousePos.y <= canvas.height - 25 && !onObject){
 		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
@@ -2030,7 +2016,6 @@ function curveDrawer(){
 				bufferCtx.fill();
 				bufferCtx.restore();
 				closedPath = true;
-				//shapeSelection[key][2][i].mergeCurves.openCurve = true;
 				if(pointsArray.length > 1){
 					pointStroking = false;
 				}
@@ -2087,6 +2072,7 @@ window.addEventListener("DOMMouseScroll", zoomer, false);
 function zoomer(e){
 	var zoomFactor = 1.1;
 	if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
+		e.preventDefault();
 		centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
 
 		shift[0] = centerShift[0];
@@ -2122,7 +2108,6 @@ function zoomer(e){
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
 
-	//if(e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40){
 	if(isShifting(e)){
 		mousePos = getMousePos(e, canvas);
 	}
@@ -2133,6 +2118,7 @@ function logger(text){
 }
 
 function isShifting(e){
+	e.preventDefault();
 	return e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40;
 }
 
@@ -2143,12 +2129,16 @@ function screenWriter(text, position, context, fontSize, fontFamily, colour){
 }
 
 function applyZoom(center, point, zoom){
-	var x = point[0];
-	var y = point[1];
-	var centerX = center[0];
-	var centerY = center[1];
-	var	Xpoint = x - (x - centerX) * (1 - zoom);
-	var Ypoint = y - (y - centerY) * (1 - zoom);
+	var Xpoint = point[0];
+	var Ypoint = point[1];
+	if(zoom !== 1){
+		var x = point[0];
+		var y = point[1];
+		var centerX = center[0];
+		var centerY = center[1];
+		Xpoint = x - (x - centerX) * (1 - zoom);
+		Ypoint = y - (y - centerY) * (1 - zoom);
+	}
 	return {
 			x: Xpoint,
 			y: Ypoint
@@ -2157,44 +2147,33 @@ function applyZoom(center, point, zoom){
 
 function shapeTransforms(Array){
 	if(Array[0]){
-		var length = Array.length
+		var length = Array.length;
+		var proj = {};
 		for(var i = 0; i < length; i++){
 			//bufferCtx.fillStyle = Array[i].colour;
 			shadow(Array, i);
 			changeColour(Array, i);
-
 			bufferCtx.save();
-			//bufferCtx.fillStyle = Array[i].colour;
-
-			var Xpoint_0 = Array[i].vertices[0][0] + Array[i].X + shift[0];
-			var Ypoint_0 = Array[i].vertices[0][1] + Array[i].Y + shift[1];
-
 			var x = Array[i].vertices[0][0] + Array[i].X + shift[0];
 			var y = Array[i].vertices[0][1] + Array[i].Y + shift[1];
 
-			var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-
-			Xpoint_0 = proj.x// + centerShift[0];
-			Ypoint_0 = proj.y// + centerShift[1];
+			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(Xpoint_0, Ypoint_0); // first point of the custom shape is drawn here
+			bufferCtx.moveTo(proj.x, proj.y); // first point of the custom shape is drawn here
 
 			for(var j = 0; j < Array[i].vertices.length; j++){
 
 					var x = Array[i].vertices[j][0] + Array[i].X + shift[0];
 					var y = Array[i].vertices[j][1] + Array[i].Y + shift[1];
 
-					var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-
-					var	Xpoint = proj.x// + centerShift[0];
-					var Ypoint = proj.y// + centerShift[1];
+					proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
 					Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
 				}
-				bufferCtx.lineTo(Xpoint, Ypoint);
+				bufferCtx.lineTo(proj.x, proj.y);
 		}
 
 		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
@@ -2228,25 +2207,25 @@ function shapeTransforms(Array){
 
 				var mouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
 
-					if(distance(mouse.x - Xpoint, mouse.y - Ypoint) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
-						onReshape = true;
-						bufferCtx.fillStyle = 'darkblue';
-						for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
-							var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
-							var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
+				if(distance(mouse.x - Xpoint, mouse.y - Ypoint) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
+					onReshape = true;
+					bufferCtx.fillStyle = 'darkblue';
+					for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
+						var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
+						var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
 
-							var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+						var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-							var Xpoint = proj.x;
-							var Ypoint = proj.y;
+						var Xpoint = proj.x;
+						var Ypoint = proj.y;
 
-							bufferCtx.beginPath();
-							bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
-							bufferCtx.fill();
-							}
+						bufferCtx.beginPath();
+						bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
+						bufferCtx.fill();
 						}
 					}
 				}
+			}
 
 
  	screenWriter('Zoom ' + zoom, [0, 100], bufferCtx, '30', 'Arial', 'black');
@@ -2386,14 +2365,6 @@ function colourPicker(){
 	colours['grey'][1] = false;
 	colours['pink'][1] = false;
 }
-/*
-function chooseColour(){
-	for(colour in colours){
-		if(colours[colour][1]){
-			return colours[colour][0];
-		}
-	}
-}*/
 
 function chooseColour(){
 	return selectedColour;
