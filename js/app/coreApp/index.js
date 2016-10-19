@@ -14,7 +14,8 @@ var circles = false;
 var triangles = false;
 var squares = false;
 var onObject = false;
-var dragging = false;var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || "grabbing" || 'move';
+var dragging = false;
+var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || "grabbing" || 'move';
 var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
 var mousePos;
 var selectedShape = [];
@@ -25,6 +26,8 @@ var zoom = 1;
 var zoomCenter = [];
 var shift = [0, 0];
 var centerShift = [0, 0];
+var isZooming = false;
+var zoomDisplay;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -390,6 +393,16 @@ function wallMaker(){
 			};
 		}
 	}
+/*	wallGen();
+	wallArray[0].vertices = [[0, 0], [canvas.width, 0], [canvas.width, canvas.height], [0, canvas.height], [0, 1], [-500, 1], [-500, canvas.height + 500],
+	 													[canvas.width + 500, canvas.height + 500], [canvas.width + 500, -500], [-500, -500], [-500, 0], [0, 0]];
+	wallArray[0].colour = 'red';
+	wallArray[0].setOuterRadius = function(){
+																return wallCollisionRadius;
+														};
+	wallArray[0].mass = Infinity;
+	wallArray[0].momentOfInertia = Infinity;*/
+
 	shapeSelection.shapes.wall[2] = wallArray;
 }
 
@@ -1852,7 +1865,7 @@ function wallDrawer(){
 function circleDrawer(){
 	bufferCtx.globalAlpha = 1;
 	bufferCtx.lineWidth = 0.5;
-	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 	if(!dragging && shapeSelection.shapes.circle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 		bufferCtx.beginPath();
 		bufferCtx.globalAlpha = 0.1;
@@ -1871,7 +1884,7 @@ function circleDrawer(){
 function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
@@ -1893,7 +1906,7 @@ function squareDrawer(){
 
 function triangleDrawer(){
 		bufferCtx.globalAlpha = 1;
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
@@ -2063,13 +2076,16 @@ function pencilDrawer(){
 }
 
 window.addEventListener('keydown', zoomer , false);
+//window.addEventListener('keyup', function(){}, false);
 // IE9, Chrome, Safari, Opera
 window.addEventListener("mousewheel", zoomer, false);
 // Firefox
 window.addEventListener("DOMMouseScroll", zoomer, false);
 
-
 function zoomer(e){
+	isZooming = true;
+	//$('canvas').css('cursor', 'url(images/pencil_cursor.png) 0 15, auto');
+	clearTimeout(zoomDisplay);
 	var zoomFactor = 1.1;
 	if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
 		e.preventDefault();
@@ -2081,9 +2097,11 @@ function zoomer(e){
 		zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
 
 		if(e.which === 107 || e.wheelDelta === 120){
+				$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-in.png) 25 25, auto');
 				zoom *= zoomFactor;
 		}
 		if(e.which === 109 || e.wheelDelta === -120){
+				$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) 25 25, auto');
 				zoom /= zoomFactor;
 		}
 	}
@@ -2111,6 +2129,16 @@ function zoomer(e){
 	if(isShifting(e)){
 		mousePos = getMousePos(e, canvas);
 	}
+
+	zoomDisplay = setTimeout(function(){
+		isZooming = false;
+		if(pencils) {
+			$('canvas').css('cursor', 'url(images/pencil_cursor.png) 0 15, auto');
+		}else{
+			$('canvas').css('cursor', 'default');
+		}
+
+	}, 1500);
 }
 
 function logger(text){
@@ -2189,8 +2217,8 @@ function shapeTransforms(Array){
 			var projCenter = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
 			var projEdge = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + Array[i].vertices[0][0], Array[i].Y + Array[i].vertices[0][1]], zoom);
 			bufferCtx.beginPath();
-			bufferCtx.lineTo(projEdge.x, projEdge.y);
-			bufferCtx.lineTo(projCenter.x, projCenter.y);
+			bufferCtx.lineTo(projEdge.x + zoom*shift[0], projEdge.y + zoom*shift[1]);
+			bufferCtx.lineTo(projCenter.x + zoom*shift[0], projCenter.y + zoom*shift[1]);
 			bufferCtx.stroke();
 		}
 
@@ -2227,9 +2255,9 @@ function shapeTransforms(Array){
 				}
 			}
 
-
- 	screenWriter('Zoom ' + zoom, [0, 100], bufferCtx, '30', 'Arial', 'black');
-
+if(isZooming){
+ 	screenWriter('x ' + Math.round(zoom * 10)/10, [mousePos.xPhysical + 48, mousePos.yPhysical + 5], bufferCtx, '30', 'Arial', 'black');
+}
 	if(physics && Array != wallArray){
 		if(Array[i].gravity){
 			Array[i].velocity[1] += gravity/20;
