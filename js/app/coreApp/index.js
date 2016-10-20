@@ -68,7 +68,8 @@ var colours = {
 				lightgreen:['lightgreen', false], orange:['orange', false], purple:['purple', false], violet:['violet',
 				false], beige:['beige', false],
 				aqua:['aqua', false], grey:['grey', false], pink:['pink', false]
-			}
+			};
+var zoomerizer = false;
 var rotate = false;
 var physics = false;
 var pencils = true;
@@ -496,9 +497,9 @@ function init(){
 	//tips = document.getElementById('tips');
 
 	bufferCanvas = document.createElement('canvas');
-    bufferCtx = bufferCanvas.getContext("2d");
-    bufferCtx.canvas.width = context.canvas.width;
-    bufferCtx.canvas.height = context.canvas.height;
+  bufferCtx = bufferCanvas.getContext("2d");
+  bufferCtx.canvas.width = context.canvas.width;
+  bufferCtx.canvas.height = context.canvas.height;
 
 	shapeSelection.canvas = {
 		width: context.canvas.width,
@@ -526,6 +527,7 @@ function options(){
 	square = document.getElementById('square');
 	triangle = document.getElementById('triangle');
 	ReSize = document.getElementById('Re-Size');
+	Zoom = document.getElementById('zoom');
 	ReShape = document.getElementById('Re-Shape');
 	Rotate = document.getElementById('Rotate');
 	ChangeColour = document.getElementById('ChangeColour');
@@ -2083,29 +2085,29 @@ window.addEventListener("mousewheel", zoomer, false);
 window.addEventListener("DOMMouseScroll", zoomer, false);
 
 function zoomer(e){
-	isZooming = true;
-	//$('canvas').css('cursor', 'url(images/pencil_cursor.png) 0 15, auto');
-	clearTimeout(zoomDisplay);
-	var zoomFactor = 1.1;
-	if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
-		e.preventDefault();
-		centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
+	if(zoomerizer){
+		clearTimeout(zoomDisplay);
+		var zoomFactor = 1.1;
+		if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
+			e.preventDefault();
+			isZooming = true;
+			centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
 
-		shift[0] = centerShift[0];
-		shift[1] = centerShift[1];
+			shift[0] = centerShift[0];
+			shift[1] = centerShift[1];
 
-		zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
+			zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
 
-		if(e.which === 107 || e.wheelDelta === 120){
-				$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-in.png) 25 25, auto');
-				zoom *= zoomFactor;
-		}
-		if(e.which === 109 || e.wheelDelta === -120){
-				$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) 25 25, auto');
-				zoom /= zoomFactor;
+			if(e.which === 107 || e.wheelDelta === 120){
+					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-in.png) -20 15, auto');
+					zoom *= zoomFactor;
+			}
+			if(e.which === 109 || e.wheelDelta === -120){
+					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) -20 15, auto');
+					zoom /= zoomFactor;
+			}
 		}
 	}
-
 	if(e.which === 39){ //left
 		shift[0] += 10/zoom;
 	}
@@ -2137,7 +2139,6 @@ function zoomer(e){
 		}else{
 			$('canvas').css('cursor', 'default');
 		}
-
 	}, 1500);
 }
 
@@ -2308,6 +2309,7 @@ function shapeSelector(id){
 	shapes = false;
 	pencils = false;
 	copy = false;
+	zoomerizer = false;
 	//physics = false;
 
 	circles = false;
@@ -2331,6 +2333,7 @@ function shapeSelector(id){
 	backgroundGradient('#Re-Shape');
 	backgroundGradient('#copy');
 	backgroundGradient('#physics');
+	backgroundGradient('#zoom');
 
 	image.style.visibility = 'hidden';
 	//PickColor.style.visibility = 'hidden';
