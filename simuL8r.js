@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-10-21 **/ 
+/** simuL8r - v1.0.0 - 2016-10-27 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2088,10 +2088,11 @@ window.addEventListener("DOMMouseScroll", zoomer, false);
 function zoomer(e){
 	if(zoomerizer){
 		clearTimeout(zoomDisplay);
-		var zoomFactor = 1.1;
+		var zoomFactor = 1.05;
 		if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
 			e.preventDefault();
 			isZooming = true;
+			resolution = 1/zoom;
 			centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
 
 			shift[0] = centerShift[0];
