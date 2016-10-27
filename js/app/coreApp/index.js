@@ -137,30 +137,6 @@ function checkParameters(){
 	}
 }*/
 
-function circleMaker(){
-	var points = 50;
-	var radius = 30;
-	for(var i = 0; i < points; i++){
-		x = radius * Math.cos(i*2*Math.PI/points);
-		y = radius * Math.sin(i*2*Math.PI/points);
-		circularArray.push([x, y]);
-	}
-}
-/*
-$(document).ready(function(){
-  $("#tipsRemove").click(function(){
-    $("#tips").fadeOut("slow");
-	$("#tipsSee").fadeIn("slow");
-  });
-})
-
-$(document).ready(function(){
-  $("#tipsSee").click(function(){
-    $("#tipsSee").fadeOut("slow");
-	$("#tips").fadeIn("slow");
-  });
-})*/
-
 // the function below determines whether the pencil draws shapes or strokes
 $(document).ready(function(){
 	$('#strokes').click(function(){
@@ -471,7 +447,6 @@ function init(){
 };
 	window.addEventListener("keydown", arrow_keys_handler, false);*/
 
-	circleMaker();
 	selectPencilStroke();
 
 	pencilCursor();
@@ -1450,8 +1425,8 @@ Curves.prototype = new CustomShape();
 
 
 function Square(){
-	this.side = 55;
-	this.defaultSide = 55;
+	this.side = 55/zoom;
+	this.defaultSide = 55/zoom;
 	this.velocity = [0, 0];
 	this.pointsArray = [
 						[mousePos.x - this.side/2, mousePos.y + this.side/2],
@@ -1486,11 +1461,18 @@ function squareGen(){
 
 
 function Circle(){
-	this.side = 55;
-	this.defaultSide = 55;
+	circularArray = [];
+	this.side = 55/zoom;
+	this.defaultSide = 55/zoom;
 	this.velocity = [0,0];
 	this.pointsArray = [];
-	var points = circularArray.length;
+	var points = 50;
+	var radius = 30/zoom;
+	for(var i = 0; i < points; i++){
+		var x = radius * Math.cos(i*2*Math.PI/points);
+		var y = radius * Math.sin(i*2*Math.PI/points);
+		circularArray.push([x, y]);
+	}
 	for(var i = 0; i < points; i++){
 		this.pointsArray[i] = [0,0];
 		this.pointsArray[i][0] = mousePos.x + circularArray[i][0];
@@ -1527,8 +1509,8 @@ function circleGen(){
 /******************************************************************************************************************************************************/
 
 function Triangle(){
-	this.side = 60;
-	this.defaultSide = 60;
+	this.side = 60/zoom;
+	this.defaultSide = 60/zoom;
 	this.velocity = [0,0];
 	this.pointsArray = [[mousePos.x - this.side/2, mousePos.y + Math.sqrt(3)/6 * this.side],
 						[mousePos.x + this.side/2, mousePos.y + Math.sqrt(3)/6 * this.side],
@@ -1872,7 +1854,7 @@ function circleDrawer(){
 		bufferCtx.beginPath();
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
-		bufferCtx.arc(proj.x, proj.y, zoom * 30, 0, 2*Math.PI);
+		bufferCtx.arc(proj.x, proj.y, 30, 0, 2*Math.PI);
 		bufferCtx.stroke();
 		bufferCtx.fill();
 		}
@@ -1891,14 +1873,12 @@ function squareDrawer(){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			//bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
-
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(proj.x - zoom * 27.5, proj.y + zoom * 27.5);
-			bufferCtx.lineTo(proj.x + zoom * 27.5, proj.y + zoom * 27.5);
-			bufferCtx.lineTo(proj.x + zoom * 27.5, proj.y - zoom * 27.5);
-			bufferCtx.lineTo(proj.x - zoom * 27.5, proj.y - zoom * 27.5);
+			bufferCtx.moveTo(proj.x - 27.5, proj.y + 27.5);
+			bufferCtx.lineTo(proj.x + 27.5, proj.y + 27.5);
+			bufferCtx.lineTo(proj.x + 27.5, proj.y - 27.5);
+			bufferCtx.lineTo(proj.x - 27.5, proj.y - 27.5);
 			bufferCtx.closePath();
-
 			bufferCtx.stroke();
 			bufferCtx.fill();
 		}
@@ -1913,11 +1893,10 @@ function triangleDrawer(){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			bufferCtx.arc(proj.x, proj.y, 30, 0, 2*Math.PI);
-
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(proj.x - zoom * 30, proj.y + zoom * Math.sqrt(3)/6 * 60);
-			bufferCtx.lineTo(proj.x + zoom * 30, proj.y + zoom * Math.sqrt(3)/6 * 60);
-			bufferCtx.lineTo(proj.x, proj.y - zoom * 2 * Math.sqrt(3)/6 * 60);
+			bufferCtx.moveTo(proj.x - 30, proj.y + Math.sqrt(3)/6 * 60);
+			bufferCtx.lineTo(proj.x + 30, proj.y + Math.sqrt(3)/6 * 60);
+			bufferCtx.lineTo(proj.x, proj.y - 2 * Math.sqrt(3)/6 * 60);
 			bufferCtx.closePath();
 			bufferCtx.stroke();
 			bufferCtx.fill();
