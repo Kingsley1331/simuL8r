@@ -2086,6 +2086,8 @@ function zoomer(e){
 					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) -20 15, auto');
 					zoom /= zoomFactor;
 			}
+		}else{
+			return true;
 		}
 	}
 	if(e.which === 39){ //left

@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-10-27 **/ 
+/** simuL8r - v1.0.0 - 2016-10-28 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2087,6 +2087,8 @@ function zoomer(e){
 					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) -20 15, auto');
 					zoom /= zoomFactor;
 			}
+		}else{
+			return true;
 		}
 	}
 	if(e.which === 39){ //left
