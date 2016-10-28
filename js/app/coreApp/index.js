@@ -2079,7 +2079,6 @@ function zoomer(e){
 		clearTimeout(zoomDisplay);
 		var zoomFactor = 1.05;
 		if(e.which === 107 || e.which === 109 || e.wheelDelta === 120 || e.wheelDelta === -120){
-			e.preventDefault();
 			isZooming = true;
 			resolution = 1/zoom;
 			centerShift = [mousePos.xPhysical - mousePos.x, mousePos.yPhysical - mousePos.y];
@@ -2097,8 +2096,6 @@ function zoomer(e){
 					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) 8 15, auto');
 					zoom /= zoomFactor;
 			}
-		}else{
-			return true;
 		}
 	}
 	if(e.which === 39){ //left
@@ -2140,7 +2137,6 @@ function logger(text){
 }
 
 function isShifting(e){
-	e.preventDefault();
 	return e.which === 37 || e.which === 38 || e.which === 39 || e.which === 40;
 }
 
