@@ -33,7 +33,7 @@
 		</ul>-->
 	 </li>
 	 <li data-toggle="tooltip" data-placement="bottom" title="" class = 'shapes' id = 'copy' onmouseover = "hover(Copy);" onmouseout = "leave(copy, Copy);" onclick = "if(copy){shapeSelector(this.id);}else{shapeSelector(this.id); copy = true;} gradient(Copy);"><img class = 'icons' src = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/copy.png'></img></li>
-   <li data-toggle="tooltip" data-placement="bottom" title="" class = 'shapes' id = 'zoom' onmouseover = "hover(Zoom);" onmouseout = "leave(zoomerizer, Zoom);" onclick = "if(zoomerizer){shapeSelector(this.id);}else{shapeSelector(this.id); zoomerizer = true;} gradient(Zoom);"><img class = 'icons' src = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom.png'></img></li>
+   <li data-toggle="tooltip" data-placement="bottom" title="" class = 'shapes' id = 'zoom' onmouseover = "hover(Zoom);" onmouseout = "leave(zoomerizer, Zoom);" onclick = "if(zoomerizer){shapeSelector(this.id);}else{shapeSelector(this.id); zoomerizer = true;} gradient(Zoom); zoomCursor();"><img class = 'icons' src = 'https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom.png'></img></li>
    <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable(); reset(); getAll(); getAll_i();'> {{scenesVisibility}} </button></li>
    <li><button type='button' class='btn btn-info' id = 'showScenes' ng-click='toggleSceneTable(); reset(); getAll(); getAll_i();'> {{scenesVisibility}} </button></li>
    <li><button type='button' class='btn btn-info' id = 'showOptions'> show settings </button></li>

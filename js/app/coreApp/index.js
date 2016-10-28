@@ -450,6 +450,7 @@ function init(){
 	selectPencilStroke();
 
 	pencilCursor();
+	zoomCursor();
 	//if(tipping){tips.style.visibility = 'visible';}
 
 	mousePos = 0;
@@ -542,13 +543,14 @@ function locate(){
 		if(shapeSelection.shapes[key][2][i].selected){
 			onObject = true;
 		if(!dragging){
-			if(!pencils){
+			//if(!pencils){
+			if(!pencils && !zoomerizer){
 				canvas.style.cursor = cursor_drag;
 				}
 			}
 		}
-		}if(onObject == false){
-			if(!pencils){
+	}if(onObject == false){
+			if(!pencils && !zoomerizer){
 				canvas.style.cursor = "auto";
 			}
 		}
@@ -619,9 +621,18 @@ function pencilCursor(){
 	if(pencils) {
 		$('canvas').css('cursor', 'url(images/pencil_cursor.png) 0 15, auto');
 	}else{
-		$('canvas').css('cursor', 'pointer');
+		$('canvas').css('cursor', 'default');
 	}
 }
+
+function zoomCursor(){
+	if(zoomerizer) {
+		$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-cursor.png) 8 15, auto');
+	}else{
+		$('canvas').css('cursor', 'default');
+	}
+}
+
 
 function selectPencilStroke(){
 	$('#shapes').css('color', 'white');
@@ -641,7 +652,7 @@ function drag(){
 				shapeSelection.shapes[key][2][i].onObject = true;
 				shapeSelection.shapes[key][2][i].locateTouchPoint();
 				shapeSelection.shapes[key][2][i].velocity = [0, 0];
-				if(!pencils) {canvas.style.cursor = cursor_grab;}
+				if(!pencils && !zoomerizer) {canvas.style.cursor = cursor_grab;}
 				//if(physics){
 					//shapeSelection.shapes[key][2][i].lineWidth = 4;
 					selectedShape[0] = shapeSelection.shapes[key][2][i];
@@ -686,7 +697,7 @@ function drop(){
 			dragging = false;
 			shapeSelection.shapes[key][2][i].dragging = false;
 			shapeSelection.shapes[key][2][i].onObject = false;
-			if(!pencils) canvas.style.cursor = cursor_drag;
+			if(!pencils && !zoomerizer) canvas.style.cursor = cursor_drag;
 		}
 	}
 }
@@ -2079,11 +2090,11 @@ function zoomer(e){
 			zoomCenter = [mousePos.x + centerShift[0], mousePos.y + centerShift[1]];
 
 			if(e.which === 107 || e.wheelDelta === 120){
-					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-in.png) -20 15, auto');
+					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-in.png) 8 15, auto');
 					zoom *= zoomFactor;
 			}
 			if(e.which === 109 || e.wheelDelta === -120){
-					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) -20 15, auto');
+					$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-out.png) 8 15, auto');
 					zoom /= zoomFactor;
 			}
 		}else{
@@ -2119,7 +2130,7 @@ function zoomer(e){
 		if(pencils) {
 			$('canvas').css('cursor', 'url(images/pencil_cursor.png) 0 15, auto');
 		}else{
-			$('canvas').css('cursor', 'default');
+			$('canvas').css('cursor', 'url(https://s3.amazonaws.com/simuL8rBucket/images/icons/zoom-cursor.png) 8 15, auto');
 		}
 	}, 1500);
 }
@@ -2322,7 +2333,7 @@ function shapeSelector(id){
 	$('#pencilList').css('display', 'none');
 	$('#rotateList').css('display', 'none');
 	pencilCursor();
-
+	zoomCursor();
 }
 
 
