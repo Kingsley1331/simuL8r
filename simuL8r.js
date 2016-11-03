@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-10-28 **/ 
+/** simuL8r - v1.0.0 - 2016-11-03 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -76,6 +76,7 @@ var physics = false;
 var pencils = true;
 var copy = false;
 var onSlider = false;
+var onRotator = false;
 var sliderPosition = 0;
 var sliderButtonWidth = 250;
 var startDraw = false;
@@ -594,6 +595,7 @@ function mouseUp(){
 	canvas.addEventListener('mouseup', function(evt){
 	mouse_down = false;
 	onSlider = false;
+	onRotator = false;
 	startPencil = false;
 	superPencilPointsMachine();
 	copyShape();
@@ -645,7 +647,7 @@ function selectPencilStroke(){
 function drag(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
-			if(shapeSelection.shapes[key][2][i].selected && !dragging && !onReshape && !onSlider && !shapeSelection.shapes[key][2][i].expand && !shapeSelection.shapes[key][2][i].v_expand && !shapeSelection.shapes[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
+			if(shapeSelection.shapes[key][2][i].selected && !dragging && !onReshape && !onSlider && !onRotator && !shapeSelection.shapes[key][2][i].expand && !shapeSelection.shapes[key][2][i].v_expand && !shapeSelection.shapes[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
 				offcenter[0] = shapeSelection.shapes[key][2][i].X - mousePos.x;
 				offcenter[1] = shapeSelection.shapes[key][2][i].Y - mousePos.y;
 				dragging = true;
@@ -1849,6 +1851,45 @@ function rotateShape(Array, i){
 	}
 }
 
+function rotateShape2(Array, i){
+	if(rotate && Array[i].rotationLine){
+
+		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
+		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
+
+
+		bufferCtx.save();
+
+
+		bufferCtx.setLineDash([6, 8]);
+		bufferCtx.lineWidth = 1;
+		bufferCtx.beginPath();
+		bufferCtx.arc(Array[i].X, Array[i].Y, 100, 0, 2*Math.PI);
+		bufferCtx.closePath();
+		bufferCtx.stroke();
+		bufferCtx.restore();
+
+		bufferCtx.beginPath();
+		bufferCtx.arc(Array[i].X, Array[i].Y - 205, 10, 0, 2*Math.PI);
+		bufferCtx.closePath();
+		bufferCtx.stroke();
+		bufferCtx.restore();
+
+
+		bufferCtx.beginPath();
+		bufferCtx.moveTo(Array[i].X, Array[i].Y - 100);
+		bufferCtx.lineTo(Array[i].X, Array[i].Y - 200);
+		bufferCtx.stroke();
+
+
+
+
+	}
+}
+
+
+
+
 function wallDrawer(){
 	bufferCtx.lineWidth = 0.5;
 	bufferCtx.strokeStyle = 'black';
@@ -2256,6 +2297,7 @@ if(isZooming){
 	}
 				changeSize(Array, i);
 				rotateShape(Array, i);
+				rotateShape2(Array, i);
 			}
 		}
 }
