@@ -844,10 +844,9 @@ function rotater(){
 				shapeSelection.shapes[key][2][i].referencer();
 				var vertices = shapeSelection.shapes[key][2][i].vertices;
 				rotateListSwitch(key, vertices, i);
-				if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
+				/*if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
 					sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition;
-				}
-
+				}*/
 			shapeSelection.shapes[key][2][i].rotationLine = true;
 
 			// makes sure that only one object at time can be rotated
@@ -874,6 +873,44 @@ function rotater(){
 			}
 		}
 	}
+
+	function rotation20(){
+		for(key in shapeSelection.shapes){
+			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+				if(shapeSelection.shapes[key][2][i].selected && rotate){
+					//shapeSelection.shapes[key][2][i].referencer();
+					var vertices = shapeSelection.shapes[key][2][i].vertices;
+					rotateListSwitch(key, vertices, i);
+					if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
+						sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition;
+					}
+
+				shapeSelection.shapes[key][2][i].rotationLine = true;
+
+				// makes sure that only one object at time can be rotated
+				for(keys in shapeSelection.shapes){
+					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
+						for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
+							if(key != keys){
+								shapeSelection.shapes[keys][2][j].rotationLine = false;
+							}
+							else{
+								if(j != i){
+									shapeSelection.shapes[keys][2][j].rotationLine = false;
+								}
+							}
+						}
+					}
+				}
+					} // detects if cursor is hovering over slider
+					var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
+					//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
+					if(distance(shapeSelection.shapes[key][2][i].slider[0] - projMouse.x, shapeSelection.shapes[key][2][i].slider[1] - projMouse.y) <= 10){
+						onSlider = true;
+					}
+				}
+			}
+		}
 
 function referencer(){
 	for(key in shapeSelection.shapes){
@@ -1180,7 +1217,8 @@ function CustomShape(){
 	this.sliderPosition = 0;
 	this.rotationLine = false;
 	this.selected = false;
-	this.slider = [0,0];
+	this.slider = [0, 0];
+	this.rotater = [0, 0];
 	this.copy = true;
 	this.lineColour = 'black';
 	this.lineWidth = 0.7;
