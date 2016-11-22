@@ -1894,6 +1894,15 @@ function rotateShape2(Array, i){
 		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
+		var innerRadiusX = 100;
+		var outerRadiusX = 200;
+		var mousePosDistance = distance(mousePos.x - Array[i].X, mousePos.y - Array[i].Y);
+		var outerRingRatio = outerRadiusX / mousePosDistance;
+		var innerRingRatio = innerRadiusX / mousePosDistance;
+		var outerDialPositionX = Array[i].X + (mousePos.x - Array[i].X) * outerRingRatio;
+		var outerDialPositionY = Array[i].Y + (mousePos.y - Array[i].Y) * outerRingRatio;
+		var innerDialPositionX = Array[i].X + (mousePos.x - Array[i].X) * innerRingRatio;
+		var innerDialPositionY = Array[i].Y + (mousePos.y - Array[i].Y) * innerRingRatio;
 
 		bufferCtx.save();
 
@@ -1901,21 +1910,33 @@ function rotateShape2(Array, i){
 		bufferCtx.setLineDash([6, 8]);
 		bufferCtx.lineWidth = 1;
 		bufferCtx.beginPath();
-		bufferCtx.arc(Array[i].X, Array[i].Y, 100, 0, 2*Math.PI);
+		bufferCtx.arc(Array[i].X, Array[i].Y, innerRadiusX, 0, 2*Math.PI);
 		bufferCtx.closePath();
 		bufferCtx.stroke();
 		bufferCtx.restore();
 
+		bufferCtx.lineWidth = 1;
 		bufferCtx.beginPath();
-		bufferCtx.arc(Array[i].X, Array[i].Y - 205, 10, 0, 2*Math.PI);
+		bufferCtx.arc(Array[i].X, Array[i].Y, 200, 0, 2*Math.PI);
 		bufferCtx.closePath();
 		bufferCtx.stroke();
 		bufferCtx.restore();
 
+    var xRing = mousePos.x - Array[i].X;
+		var yRing = mousePos.y - Array[i].Y;
+
+		bufferCtx.fillStyle = 'blue';
+		bufferCtx.beginPath();
+		bufferCtx.arc(outerDialPositionX, outerDialPositionY, 10, 0, 2*Math.PI);
+		bufferCtx.closePath();
+		bufferCtx.stroke();
+		bufferCtx.fill();
+		bufferCtx.restore();
+
 
 		bufferCtx.beginPath();
-		bufferCtx.moveTo(Array[i].X, Array[i].Y - 100);
-		bufferCtx.lineTo(Array[i].X, Array[i].Y - 200);
+		bufferCtx.moveTo(innerDialPositionX, innerDialPositionY);
+		bufferCtx.lineTo(outerDialPositionX, outerDialPositionY);
 		bufferCtx.stroke();
 
 
