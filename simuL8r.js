@@ -76,6 +76,7 @@ var physics = false;
 var pencils = true;
 var copy = false;
 var onSlider = false;
+var onRotateDial = false;
 var onRotator = false;
 var sliderPosition = 0;
 var sliderButtonWidth = 250;
@@ -579,11 +580,13 @@ function mouseDown(){
 	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
 	rotater();
+	rotation20();
 	reSizer();
 	drag();
 	pointStart();
 	reShaper();
 	physTest();
+	//onRotateDial = true;
 	var points = [1,1];
 	var arrays = [[1,2], [2,2], [3,3]];
 	if(pencils){startPencil = true;}
@@ -596,6 +599,7 @@ function mouseUp(){
 	mouse_down = false;
 	onSlider = false;
 	onRotator = false;
+	onRotateDial = false;
 	startPencil = false;
 	superPencilPointsMachine();
 	copyShape();
@@ -886,30 +890,37 @@ function rotater(){
 						sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition;
 					}
 
-				shapeSelection.shapes[key][2][i].rotationLine = true;
+				// shapeSelection.shapes[key][2][i].rotationLine = true;
 
 				// makes sure that only one object at time can be rotated
-				for(keys in shapeSelection.shapes){
-					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
-						for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
-							if(key != keys){
-								shapeSelection.shapes[keys][2][j].rotationLine = false;
-							}
-							else{
-								if(j != i){
-									shapeSelection.shapes[keys][2][j].rotationLine = false;
-								}
-							}
-						}
-					}
-				}
+				// for(keys in shapeSelection.shapes){
+				// 	if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
+				//
+				//
+				// 		for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
+				// 			if(key != keys){
+				// 				shapeSelection.shapes[keys][2][j].rotationLine = false;
+				// 			}
+				// 			// else{
+				// 			// 	if(j != i){
+				// 			// 		shapeSelection.shapes[keys][2][j].rotationLine = false;
+				// 			// 	}
+				// 			// }
+				//
+				//
+				// 		}
+				// 	}
+				// }
 					} // detects if cursor is hovering over slider
 					var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 					//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-					if(distance(shapeSelection.shapes[key][2][i].slider[0] - projMouse.x, shapeSelection.shapes[key][2][i].slider[1] - projMouse.y) <= 10){
-						onSlider = true;
+					if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - 200 - projMouse.y) <= 10){
+						onRotateDial = true;
+						console.log('onRotateDial=====================================>', onRotateDial);
 					}
 				}
+
+
 			}
 		}
 
@@ -1897,13 +1908,17 @@ function rotateShape2(Array, i){
 
 		var innerRadiusX = 100;
 		var outerRadiusX = 200;
+		var outerRadiusMinX = 190;
 		var mousePosDistance = distance(mousePos.x - Array[i].X, mousePos.y - Array[i].Y);
 		var outerRingRatio = outerRadiusX / mousePosDistance;
 		var innerRingRatio = innerRadiusX / mousePosDistance;
+		var outerRingRatioMinX = outerRadiusMinX / mousePosDistance;;
 		var outerDialPositionX = Array[i].X + (mousePos.x - Array[i].X) * outerRingRatio;
 		var outerDialPositionY = Array[i].Y + (mousePos.y - Array[i].Y) * outerRingRatio;
 		var innerDialPositionX = Array[i].X + (mousePos.x - Array[i].X) * innerRingRatio;
 		var innerDialPositionY = Array[i].Y + (mousePos.y - Array[i].Y) * innerRingRatio;
+		var outerDialPositionMinX = Array[i].X + (mousePos.x - Array[i].X) * outerRingRatioMinX;
+		var outerDialPositionMinY = Array[i].Y + (mousePos.y - Array[i].Y) * outerRingRatioMinX;
 
 		bufferCtx.save();
 
@@ -1923,21 +1938,29 @@ function rotateShape2(Array, i){
 		bufferCtx.stroke();
 		bufferCtx.restore();
 
-    var xRing = mousePos.x - Array[i].X;
-		var yRing = mousePos.y - Array[i].Y;
-
-		bufferCtx.fillStyle = 'blue';
+		if(onRotateDial){
+				bufferCtx.fillStyle = 'red';
+		} else {
+				bufferCtx.fillStyle = 'blue';
+		}
 		bufferCtx.beginPath();
-		bufferCtx.arc(outerDialPositionX, outerDialPositionY, 10, 0, 2*Math.PI);
+		if(onRotateDial){
+					bufferCtx.arc(outerDialPositionX, outerDialPositionY, 10, 0, 2*Math.PI);
+		} else {
+					bufferCtx.arc(Array[i].X, Array[i].Y - outerRadiusMinX - 10, 10, 0, 2*Math.PI);
+		}
 		bufferCtx.closePath();
 		bufferCtx.stroke();
 		bufferCtx.fill();
 		bufferCtx.restore();
-
-
 		bufferCtx.beginPath();
-		bufferCtx.moveTo(innerDialPositionX, innerDialPositionY);
-		bufferCtx.lineTo(outerDialPositionX, outerDialPositionY);
+		if(onRotateDial){
+					bufferCtx.moveTo(innerDialPositionX, innerDialPositionY);
+					bufferCtx.lineTo(outerDialPositionMinX, outerDialPositionMinY);
+		} else {
+					bufferCtx.moveTo(Array[i].X, Array[i].Y - innerRadiusX);
+					bufferCtx.lineTo(Array[i].X, Array[i].Y - outerRadiusX + 10);
+		}
 		bufferCtx.stroke();
 
 
