@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-11-22 **/ 
+/** simuL8r - v1.0.0 - 2016-11-23 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -914,7 +914,7 @@ function rotater(){
 					} // detects if cursor is hovering over slider
 					var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 					//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-					if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - 200 - projMouse.y) <= 10){
+					if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].setOuterRadius()-100 - projMouse.y) <= 10){
 						onRotateDial = true;
 						console.log('onRotateDial=====================================>', onRotateDial);
 					}
@@ -1227,6 +1227,7 @@ function CustomShape(){
 	this.v_expand = false;
 	this.expandBox = false;
 	this.sliderPosition = 0;
+	this.rotateDialPosition = [0, 0];
 	this.rotationLine = false;
 	this.selected = false;
 	this.slider = [0, 0];
@@ -1906,9 +1907,9 @@ function rotateShape2(Array, i){
 		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
-		var innerRadiusX = 100;
-		var outerRadiusX = 200;
-		var outerRadiusMinX = 190;
+		var innerRadiusX = Array[i].setOuterRadius();
+		var outerRadiusX = innerRadiusX + 100;
+		var outerRadiusMinX = outerRadiusX - 10;
 		var mousePosDistance = distance(mousePos.x - Array[i].X, mousePos.y - Array[i].Y);
 		var outerRingRatio = outerRadiusX / mousePosDistance;
 		var innerRingRatio = innerRadiusX / mousePosDistance;
@@ -1933,7 +1934,7 @@ function rotateShape2(Array, i){
 
 		bufferCtx.lineWidth = 1;
 		bufferCtx.beginPath();
-		bufferCtx.arc(Array[i].X, Array[i].Y, 200, 0, 2*Math.PI);
+		bufferCtx.arc(Array[i].X, Array[i].Y, outerRadiusX, 0, 2*Math.PI);
 		bufferCtx.closePath();
 		bufferCtx.stroke();
 		bufferCtx.restore();
@@ -1944,17 +1945,17 @@ function rotateShape2(Array, i){
 				bufferCtx.fillStyle = 'blue';
 		}
 		bufferCtx.beginPath();
-		if(onRotateDial){
+		if(onRotateDial){// knob
 					bufferCtx.arc(outerDialPositionX, outerDialPositionY, 10, 0, 2*Math.PI);
 		} else {
-					bufferCtx.arc(Array[i].X, Array[i].Y - outerRadiusMinX - 10, 10, 0, 2*Math.PI);
+					bufferCtx.arc(Array[i].X, Array[i].Y - outerRadiusX, 10, 0, 2*Math.PI);
 		}
 		bufferCtx.closePath();
 		bufferCtx.stroke();
 		bufferCtx.fill();
 		bufferCtx.restore();
 		bufferCtx.beginPath();
-		if(onRotateDial){
+		if(onRotateDial){ // line
 					bufferCtx.moveTo(innerDialPositionX, innerDialPositionY);
 					bufferCtx.lineTo(outerDialPositionMinX, outerDialPositionMinY);
 		} else {
