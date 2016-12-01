@@ -28,6 +28,7 @@ var shift = [0, 0];
 var centerShift = [0, 0];
 var isZooming = false;
 var zoomDisplay;
+var leverLength = 100;
 
 var shapeSelection = {
 						name: 'untitled',
@@ -913,10 +914,13 @@ function rotater(){
 					} // detects if cursor is hovering over slider
 					var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 					//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-					if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].setOuterRadius()-100 - projMouse.y) <= 10){
-						onRotateDial = true;
-						console.log('onRotateDial=====================================>', onRotateDial);
-					}
+					//if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].setOuterRadius()-100 - projMouse.y) <= 10){
+
+						if(distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].rotater.outerDialPositionX - projMouse.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].rotater.outerDialPositionY - projMouse.y) <= 10){
+							shapeSelection.shapes[key][2][i].rotater.isRotated = true;
+							onRotateDial = true;
+							console.log('onRotateDial=====================================>', onRotateDial);
+					  }
 				}
 
 
@@ -1226,11 +1230,20 @@ function CustomShape(){
 	this.v_expand = false;
 	this.expandBox = false;
 	this.sliderPosition = 0;
-	this.rotateDialPosition = [0, 0];
+	this.rotationDialPosition = [0, -100];
 	this.rotationLine = false;
 	this.selected = false;
 	this.slider = [0, 0];
-	this.rotater = [0, 0];
+	this.rotater = {
+		outerDialPositionX: 0,
+		isRotated: false,
+		outerDialPositionY: 0,
+		innerDialPositionX: 0,
+		innerDialPositionY: 0,
+		outerDialPositionMinX: 0,
+		outerDialPositionMinY: 0,
+		test: 0
+	};
 	this.copy = true;
 	this.lineColour = 'black';
 	this.lineWidth = 0.7;
@@ -1902,41 +1915,40 @@ function rotateShape(Array, i){
 
 function rotateShape2(Array, i){
 	if(rotate && Array[i].rotationLine){
-
 		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
-		var innerRadiusX = Array[i].setOuterRadius();
-		var outerRadiusX = innerRadiusX + 100;
-		var outerRadiusMinX = outerRadiusX - 10;
+		var innerRadius = Array[i].setOuterRadius();
+		var outerRadius = innerRadius + leverLength;
 		var mousePosDistance = distance(mousePos.x - Array[i].X, mousePos.y - Array[i].Y);
-		var outerRingRatio = outerRadiusX / mousePosDistance;
-		var innerRingRatio = innerRadiusX / mousePosDistance;
-		var outerRingRatioMinX = outerRadiusMinX / mousePosDistance;;
-		var outerDialPositionX = Array[i].X + (mousePos.x - Array[i].X) * outerRingRatio;
-		var outerDialPositionY = Array[i].Y + (mousePos.y - Array[i].Y) * outerRingRatio;
-		var innerDialPositionX = Array[i].X + (mousePos.x - Array[i].X) * innerRingRatio;
-		var innerDialPositionY = Array[i].Y + (mousePos.y - Array[i].Y) * innerRingRatio;
-		var outerDialPositionMinX = Array[i].X + (mousePos.x - Array[i].X) * outerRingRatioMinX;
-		var outerDialPositionMinY = Array[i].Y + (mousePos.y - Array[i].Y) * outerRingRatioMinX;
+		var outerRingRatio = outerRadius / mousePosDistance;
+		var innerRingRatio = innerRadius / mousePosDistance;
+		var outerRingRatioMin = (outerRadius - 10) / mousePosDistance;;
+		var outerDialPositionX = (mousePos.x - Array[i].X) * outerRingRatio;
+		var outerDialPositionY = (mousePos.y - Array[i].Y) * outerRingRatio;
+		var innerDialPositionX = (mousePos.x - Array[i].X) * innerRingRatio;
+		var innerDialPositionY = (mousePos.y - Array[i].Y) * innerRingRatio;
+		var outerDialPositionMinX = (mousePos.x - Array[i].X) * outerRingRatioMin;
+		var outerDialPositionMinY = (mousePos.y - Array[i].Y) * outerRingRatioMin;
 
 		bufferCtx.save();
-
 
 		bufferCtx.setLineDash([6, 8]);
 		bufferCtx.lineWidth = 1;
 		bufferCtx.beginPath();
-		bufferCtx.arc(Array[i].X, Array[i].Y, innerRadiusX, 0, 2*Math.PI);
+		bufferCtx.arc(Array[i].X, Array[i].Y, innerRadius, 0, 2*Math.PI);
 		bufferCtx.closePath();
 		bufferCtx.stroke();
 		bufferCtx.restore();
 
-		bufferCtx.lineWidth = 1;
-		bufferCtx.beginPath();
-		bufferCtx.arc(Array[i].X, Array[i].Y, outerRadiusX, 0, 2*Math.PI);
-		bufferCtx.closePath();
-		bufferCtx.stroke();
-		bufferCtx.restore();
+		// bufferCtx.lineWidth = 1;
+		// bufferCtx.beginPath();
+		// bufferCtx.arc(Array[i].X, Array[i].Y, outerRadiusX, 0, 2*Math.PI);
+		// bufferCtx.closePath();
+		// bufferCtx.stroke();
+		// bufferCtx.restore();
+
+
 
 		if(onRotateDial){
 				bufferCtx.fillStyle = 'red';
@@ -1945,9 +1957,16 @@ function rotateShape2(Array, i){
 		}
 		bufferCtx.beginPath();
 		if(onRotateDial){// knob
-					bufferCtx.arc(outerDialPositionX, outerDialPositionY, 10, 0, 2*Math.PI);
+					Array[i].rotater.outerDialPositionX = outerDialPositionX;
+					Array[i].rotater.outerDialPositionY = outerDialPositionY;
+					bufferCtx.arc(Array[i].X + outerDialPositionX, Array[i].Y + outerDialPositionY, 10, 0, 2*Math.PI);
+					Array[i].test = mousePos.x;
 		} else {
-					bufferCtx.arc(Array[i].X, Array[i].Y - outerRadiusX, 10, 0, 2*Math.PI);
+					if(!Array[i].rotater.isRotated){
+							bufferCtx.arc(Array[i].X, Array[i].Y - outerRadius, 10, 0, 2*Math.PI);
+					} else if (Array[i].rotater.isRotated) {
+							bufferCtx.arc(Array[i].X + Array[i].rotater.outerDialPositionX, Array[i].Y + Array[i].rotater.outerDialPositionY, 10, 0, 2*Math.PI);
+					}
 		}
 		bufferCtx.closePath();
 		bufferCtx.stroke();
@@ -1955,17 +1974,25 @@ function rotateShape2(Array, i){
 		bufferCtx.restore();
 		bufferCtx.beginPath();
 		if(onRotateDial){ // line
-					bufferCtx.moveTo(innerDialPositionX, innerDialPositionY);
-					bufferCtx.lineTo(outerDialPositionMinX, outerDialPositionMinY);
+
+					Array[i].rotater.innerDialPositionX = innerDialPositionX;
+					Array[i].rotater.innerDialPositionY = innerDialPositionY;
+
+					Array[i].rotater.outerDialPositionMinX = outerDialPositionMinX;
+					Array[i].rotater.outerDialPositionMinY = outerDialPositionMinY;
+
+					bufferCtx.moveTo(Array[i].X + innerDialPositionX, Array[i].Y + innerDialPositionY);
+					bufferCtx.lineTo(Array[i].X + outerDialPositionMinX, Array[i].Y + outerDialPositionMinY);
 		} else {
-					bufferCtx.moveTo(Array[i].X, Array[i].Y - innerRadiusX);
-					bufferCtx.lineTo(Array[i].X, Array[i].Y - outerRadiusX + 10);
+				if(!Array[i].rotater.isRotated){
+					  bufferCtx.moveTo(Array[i].X, Array[i].Y - innerRadius);
+				  	bufferCtx.lineTo(Array[i].X, Array[i].Y - outerRadius + 10);
+				} else {
+				    bufferCtx.moveTo(Array[i].X + Array[i].rotater.innerDialPositionX, Array[i].Y + Array[i].rotater.innerDialPositionY);
+			    	bufferCtx.lineTo(Array[i].X + Array[i].rotater.outerDialPositionMinX, Array[i].Y + Array[i].rotater.outerDialPositionMinY);
+			  }
 		}
 		bufferCtx.stroke();
-
-
-
-
 	}
 }
 
