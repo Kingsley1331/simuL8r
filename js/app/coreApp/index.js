@@ -886,44 +886,43 @@ function rotater(){
 					//shapeSelection.shapes[key][2][i].referencer();
 					var vertices = shapeSelection.shapes[key][2][i].vertices;
 					rotateListSwitch(key, vertices, i);
-					if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
-						sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition;
+					// if(!shapeSelection.shapes[key][2][i].rotationLine){  										//sets the global sliderPosition equal to the objects sliderPosition
+					// 	sliderPosition = shapeSelection.shapes[key][2][i].sliderPosition;
+					// }
+
+				shapeSelection.shapes[key][2][i].rotationLine = true;
+
+				//makes sure that only one object at time can be rotated
+				for(keys in shapeSelection.shapes){
+					if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
+
+
+						for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
+							if(key != keys){
+								shapeSelection.shapes[keys][2][j].rotationLine = false;
+							}
+							else{
+								if(j != i){
+									shapeSelection.shapes[keys][2][j].rotationLine = false;
+								}
+							}
+						}
 					}
+				}
 
-				// shapeSelection.shapes[key][2][i].rotationLine = true;
 
-				// makes sure that only one object at time can be rotated
-				// for(keys in shapeSelection.shapes){
-				// 	if(keys != 'userID' && keys != 'isPublic' && keys != 'name'){
-				//
-				//
-				// 		for(var j = 0; j < shapeSelection.shapes[keys][2].length; j++){
-				// 			if(key != keys){
-				// 				shapeSelection.shapes[keys][2][j].rotationLine = false;
-				// 			}
-				// 			// else{
-				// 			// 	if(j != i){
-				// 			// 		shapeSelection.shapes[keys][2][j].rotationLine = false;
-				// 			// 	}
-				// 			// }
-				//
-				//
-				// 		}
-				// 	}
-				// }
 					} // detects if cursor is hovering over slider
 					var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
 					//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
 					//if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].setOuterRadius()-100 - projMouse.y) <= 10){
-
+						if(shapeSelection.shapes[key][2][i].rotater.isRotated === false){
+								shapeSelection.shapes[key][2][i].rotater.outerDialPositionY = -(shapeSelection.shapes[key][2][i].outerRadius + leverLength);
+						}
 						if(distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].rotater.outerDialPositionX - projMouse.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].rotater.outerDialPositionY - projMouse.y) <= 10){
 							shapeSelection.shapes[key][2][i].rotater.isRotated = true;
 							onRotateDial = true;
-							console.log('onRotateDial=====================================>', onRotateDial);
 					  }
 				}
-
-
 			}
 		}
 
@@ -1235,8 +1234,8 @@ function CustomShape(){
 	this.selected = false;
 	this.slider = [0, 0];
 	this.rotater = {
-		outerDialPositionX: 0,
 		isRotated: false,
+		outerDialPositionX: 0,
 		outerDialPositionY: 0,
 		innerDialPositionX: 0,
 		innerDialPositionY: 0,
@@ -1846,7 +1845,6 @@ function changeColour(Array, i){
 /* Animating the slider */
 function rotateShape(Array, i){
 	if(rotate && Array[i].rotationLine){
-
 		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
@@ -1941,15 +1939,6 @@ function rotateShape2(Array, i){
 		bufferCtx.stroke();
 		bufferCtx.restore();
 
-		// bufferCtx.lineWidth = 1;
-		// bufferCtx.beginPath();
-		// bufferCtx.arc(Array[i].X, Array[i].Y, outerRadiusX, 0, 2*Math.PI);
-		// bufferCtx.closePath();
-		// bufferCtx.stroke();
-		// bufferCtx.restore();
-
-
-
 		if(onRotateDial){
 				bufferCtx.fillStyle = 'red';
 		} else {
@@ -1974,7 +1963,7 @@ function rotateShape2(Array, i){
 		bufferCtx.restore();
 		bufferCtx.beginPath();
 		if(onRotateDial){ // line
-
+		console.log('i =>', i);
 					Array[i].rotater.innerDialPositionX = innerDialPositionX;
 					Array[i].rotater.innerDialPositionY = innerDialPositionY;
 
