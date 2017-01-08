@@ -2395,7 +2395,7 @@ if(isZooming){
 	}
 				changeSize(Array, i);
 				rotateShape(Array, i);
-				rotateShape2(Array, i);
+				//rotateShape2(Array, i);
 			}
 		}
 }

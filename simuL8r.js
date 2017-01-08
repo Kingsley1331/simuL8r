@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2016-12-03 **/ 
+/** simuL8r - v1.0.0 - 2017-01-08 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2396,7 +2396,7 @@ if(isZooming){
 	}
 				changeSize(Array, i);
 				rotateShape(Array, i);
-				rotateShape2(Array, i);
+				//rotateShape2(Array, i);
 			}
 		}
 }
