@@ -1996,19 +1996,18 @@ function wallDrawer(){
 	shapeTransforms(wallArray);
 }
 
-
-
 function circleDrawer(){
 	bufferCtx.globalAlpha = 1;
 	bufferCtx.lineWidth = 0.5;
 	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-	if(!dragging && shapeSelection.shapes.circle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
+	if(!dragging && shapeSelection.shapes.circle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
 		bufferCtx.beginPath();
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
 		bufferCtx.arc(proj.x, proj.y, 30, 0, 2*Math.PI);
 		bufferCtx.stroke();
 		bufferCtx.fill();
+		shapeCursor(bufferCtx, proj, Circle);
 		}
 	bufferCtx.lineWidth = 0.5;
 	bufferCtx.strokeStyle = 'black';
@@ -2021,12 +2020,12 @@ function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
 		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-		//if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !cursorOverlap){
-		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
+		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			shapeCursor(bufferCtx, proj, Square);
 		}
+
 		bufferCtx.globalAlpha = 1;
 		shapeTransforms(squareArray);
 }
@@ -2042,8 +2041,8 @@ function shapeCursor(buffer, projection, template){
 		buffer.lineTo(points[i][0], points[i][1]);
 	}
 	buffer.closePath();
-	buffer.stroke();
-	buffer.fill();
+		buffer.stroke();
+		buffer.fill();
 	checkOverlap(shape, points, numPoints);
 }
 //bufferCtx.lineTo(proj.x - 27.5, proj.y - 27.5); shapeTransforms
@@ -2075,9 +2074,11 @@ function checkOverlap(shape, points, length){
 				for(var j = 0; j < length; j++) {
 					if(bufferCtx.isPointInPath(points[j][0], points[j][1])) {
 						cursorOverlap = true;
+						onObject = true;
 						break;
 					} else {
 						cursorOverlap = false;
+						onObject = false;
 					}
 				}
 			}
@@ -2102,28 +2103,26 @@ function checkOverlap(shape, points, length){
 						}
 						if(bufferCtx.isPointInPath(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1])){
 							cursorOverlap = true;
+							onObject = true;
 							break;
 						} else {
 							cursorOverlap = false;
+							onObject = false;
 						}
 					}
 				}
 			}
 		}
 	}
-
 	if(cursorOverlap){
-		screenWriter('isPointInPath: true', [400, 400], bufferCtx, '30', 'Arial', 'black');
-	} else {
-		screenWriter('isPointInPath: false', [400, 500], bufferCtx, '30', 'Arial', 'black');
+		canvas.style.cursor = 'not-allowed';
 	}
-
 }
 
 function triangleDrawer(){
 		bufferCtx.globalAlpha = 1;
 		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
+		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
 			shapeCursor(bufferCtx, proj, Triangle);
