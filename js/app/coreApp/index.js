@@ -1099,7 +1099,7 @@ function getMousePos(evt, canvas) {       //canvas.addEventListener uses this fu
 		var y = evt.clientY - rect.top;
 	}
 
-	//if(evt.which === 37 || evt.which === 38 || evt.which === 39 || evt.which === 40){
+	//if(evt.which === 37 || evt.which === 38 || evt.which === 39 || evt.which === 40)
 	if(isShifting(evt)){
 		var x = mousePos.xPhysical;
 		var y = mousePos.yPhysical;
@@ -2020,21 +2020,62 @@ function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
 		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
+		//var projInv = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], 1/zoom);
 		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
-			//bufferCtx.arc(mousePos.x, mousePos.y, 30, 0, 2*Math.PI);
-			bufferCtx.beginPath();
-			bufferCtx.moveTo(proj.x - 27.5, proj.y + 27.5);
-			bufferCtx.lineTo(proj.x + 27.5, proj.y + 27.5);
-			bufferCtx.lineTo(proj.x + 27.5, proj.y - 27.5);
-			bufferCtx.lineTo(proj.x - 27.5, proj.y - 27.5);
-			bufferCtx.closePath();
-			bufferCtx.stroke();
-			bufferCtx.fill();
+			shapeCursor(bufferCtx, proj, Square);
 		}
 		bufferCtx.globalAlpha = 1;
 		shapeTransforms(squareArray);
+}
+
+function shapeCursor(buffer, projection, template){
+	var shape = new template(); // no need to do this for every frame
+	var sides = shape.side/2;
+	var points = shape.pointsArray.map(function(e){return [(e[0] - mousePos.x) * zoom + projection.x, (e[1] - mousePos.y) * zoom + projection.y]});
+	var numPoints = points.length;
+	buffer.beginPath();
+	buffer.moveTo(points[0][0], points[0][1]);
+	for(var i = 0; i < numPoints; i++){
+		buffer.lineTo(points[i][0], points[i][1]);
+	}
+	buffer.closePath();
+	buffer.stroke();
+	buffer.fill();
+	checkOverlap(shape, points, numPoints);
+}
+//bufferCtx.lineTo(proj.x - 27.5, proj.y - 27.5); shapeTransforms
+
+// this.pointsArray = [
+// 					[mousePos.x - this.side/2, mousePos.y + this.side/2],
+// 					[mousePos.x + this.side/2, mousePos.y + this.side/2],
+// 					[mousePos.x + this.side/2, mousePos.y - this.side/2],
+// 					[mousePos.x - this.side/2, mousePos.y - this.side/2],
+// 					[mousePos.x - this.side/2, mousePos.y + this.side/2]
+// 				];
+
+function checkOverlap(shape, points, length){
+		for(key in shapeSelection.shapes){ //key = circle, square, triangle,....... etc
+			if(key !== 'wall'){
+			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+				bufferCtx.beginPath();
+				bufferCtx.moveTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[0][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[0][1]);
+				for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){
+						bufferCtx.lineTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0],shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1]);
+				}
+				for(var j = 0; j < length; j++) {
+					if(bufferCtx.isPointInPath(points[j][0], points[j][1])) {
+						screenWriter('isPointInPath: true', [400, 400], bufferCtx, '30', 'Arial', 'black')
+					}
+				}
+
+
+			}
+		}
+	}
+
+
 }
 
 function triangleDrawer(){
@@ -2043,14 +2084,7 @@ function triangleDrawer(){
 		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
-			bufferCtx.arc(proj.x, proj.y, 30, 0, 2*Math.PI);
-			bufferCtx.beginPath();
-			bufferCtx.moveTo(proj.x - 30, proj.y + Math.sqrt(3)/6 * 60);
-			bufferCtx.lineTo(proj.x + 30, proj.y + Math.sqrt(3)/6 * 60);
-			bufferCtx.lineTo(proj.x, proj.y - 2 * Math.sqrt(3)/6 * 60);
-			bufferCtx.closePath();
-			bufferCtx.stroke();
-			bufferCtx.fill();
+			shapeCursor(bufferCtx, proj, Triangle);
 		}
 
 		bufferCtx.strokeStyle = 'black';
