@@ -15,6 +15,7 @@ var circles = false;
 var triangles = false;
 var squares = false;
 var onObject = false;
+var cursorOverlap = false;
 var dragging = false;
 var cursor_grab = "-webkit-grabbing" || "-moz-grabbing" || "grabbing" || 'move';
 var cursor_drag = "-webkit-grab" || "-moz-grab" || "grab" || 'move';
@@ -2021,7 +2022,7 @@ function squareDrawer(){
 		bufferCtx.globalAlpha = 1;
 		/* Drawing the shape cursor */
 		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-		//var projInv = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], 1/zoom);
+		//if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !cursorOverlap){
 		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25 && !onObject){
 			bufferCtx.globalAlpha = 0.1;
 			bufferCtx.fillStyle = 'blue';
@@ -2057,9 +2058,16 @@ function shapeCursor(buffer, projection, template){
 // 				];
 
 function checkOverlap(shape, points, length){
-		for(key in shapeSelection.shapes){ //key = circle, square, triangle,....... etc
+		cursorOverlap = false;
+		for(key in shapeSelection.shapes){
 			if(key !== 'wall'){
+				if(cursorOverlap){
+					break;
+				}
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+				if(cursorOverlap){
+					break;
+				}
 				bufferCtx.beginPath();
 				bufferCtx.moveTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[0][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[0][1]);
 				for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){
@@ -2067,15 +2075,21 @@ function checkOverlap(shape, points, length){
 				}
 				for(var j = 0; j < length; j++) {
 					if(bufferCtx.isPointInPath(points[j][0], points[j][1])) {
-						screenWriter('isPointInPath: true', [400, 400], bufferCtx, '30', 'Arial', 'black')
+						cursorOverlap = true;
+						break;
+					} else {
+						cursorOverlap = false;
 					}
 				}
-
-
 			}
 		}
 	}
 
+	if(cursorOverlap){
+		screenWriter('isPointInPath: true', [400, 400], bufferCtx, '30', 'Arial', 'black');
+	} else {
+		screenWriter('isPointInPath: false', [400, 500], bufferCtx, '30', 'Arial', 'black');
+	}
 
 }
 
