@@ -1674,9 +1674,9 @@ function draw(){
 	bufferCtx.fillStyle = '#E0E0E0';
 	bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-	circleDrawer();
-	squareDrawer();
-	triangleDrawer();
+	shapeDrawer(circleArray, Circle, 'circle');
+	shapeDrawer(squareArray, Square, 'square');
+	shapeDrawer(triangleArray, Triangle, 'triangle');
 	customShapeDrawer();
 	pencilDrawer();
 	curveDrawer();
@@ -1986,9 +1986,6 @@ function rotateShape2(Array, i){
 	}
 }
 
-
-
-
 function wallDrawer(){
 	bufferCtx.lineWidth = 0.5;
 	bufferCtx.strokeStyle = 'black';
@@ -1996,41 +1993,20 @@ function wallDrawer(){
 	shapeTransforms(wallArray);
 }
 
-function circleDrawer(){
-	bufferCtx.globalAlpha = 1;
-	bufferCtx.lineWidth = 0.5;
+function shapeDrawer(shapeArray, Shape, shapeProp){
+	/* Drawing the shape cursor */
 	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-	if(!dragging && shapeSelection.shapes.circle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
-		bufferCtx.beginPath();
+	if(!dragging && shapeSelection.shapes[shapeProp][0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
-		bufferCtx.arc(proj.x, proj.y, 30, 0, 2*Math.PI);
-		bufferCtx.stroke();
-		bufferCtx.fill();
-		shapeCursor(bufferCtx, proj, Circle);
+		shapeCursor(bufferCtx, proj, Shape);
 		}
-	bufferCtx.lineWidth = 0.5;
-	bufferCtx.strokeStyle = 'black';
 	bufferCtx.globalAlpha = 1
-	shapeTransforms(circleArray);
-}
-
-
-function squareDrawer(){
-		bufferCtx.globalAlpha = 1;
-		/* Drawing the shape cursor */
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-		if(!dragging && shapeSelection.shapes.square[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
-			bufferCtx.globalAlpha = 0.1;
-			bufferCtx.fillStyle = 'blue';
-			shapeCursor(bufferCtx, proj, Square);
-		}
-
-		bufferCtx.globalAlpha = 1;
-		shapeTransforms(squareArray);
+	shapeTransforms(shapeArray);
 }
 
 function shapeCursor(buffer, projection, template){
+	bufferCtx.lineWidth = 0.5;
 	var shape = new template(); // no need to do this for every frame
 	var sides = shape.side/2;
 	var points = shape.pointsArray.map(function(e){return [(e[0] - mousePos.x) * zoom + projection.x, (e[1] - mousePos.y) * zoom + projection.y]});
@@ -2043,7 +2019,7 @@ function shapeCursor(buffer, projection, template){
 	buffer.closePath();
 		buffer.stroke();
 		buffer.fill();
-	checkOverlap(shape, points, numPoints);
+		checkOverlap(shape, points, numPoints);
 }
 //bufferCtx.lineTo(proj.x - 27.5, proj.y - 27.5); shapeTransforms
 
@@ -2119,20 +2095,7 @@ function checkOverlap(shape, points, length){
 	}
 }
 
-function triangleDrawer(){
-		bufferCtx.globalAlpha = 1;
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-		if(!dragging && shapeSelection.shapes.triangle[0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
-			bufferCtx.globalAlpha = 0.1;
-			bufferCtx.fillStyle = 'blue';
-			shapeCursor(bufferCtx, proj, Triangle);
-		}
 
-		bufferCtx.strokeStyle = 'black';
-		bufferCtx.globalAlpha = 1;
-		bufferCtx.lineWidth = 0.5;
-		shapeTransforms(triangleArray);
-}
 
 
 function customShapeDrawer(){
