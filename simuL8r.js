@@ -32,7 +32,7 @@ var isZooming = false;
 var zoomDisplay;
 var leverLength = 100;
 
-var shapeSelection = {
+var shapeSelection = {                    //shapeSelection.shapes[shape][2]
 						name: 'untitled',
 						userID: null,
 						isPublic: true,
@@ -115,6 +115,40 @@ var circularArray = [];
 var numberOfShapes = 0;
 
 var currentlyReshaping = null; //there must be a better way to do this
+
+var shapesController = (function(){
+
+	// function getCircleArray(){
+	// 	var shapeArray = shapeSelection.shapes.circle[2].map(function(e){
+	// 		return e;
+	// 	});
+	// 	return shapeArray;
+	// }
+
+	function getShapeArray(shape, i){
+			if(shapeSelection.shapes[shape][2][0] !== undefined){
+				var shapeArray = shapeSelection.shapes[shape][2][i].vertices.map(function(e){
+					return e;
+				});
+			return shapeArray;
+		}
+	}
+
+	return {
+		getCircleArray: getShapeArray,
+		getSquareArray: getShapeArray('square'),
+		getTriangleArray: getShapeArray('triangle'),
+		getPencilArray: getShapeArray('pencil'),
+		getCustomShapesArray: getShapeArray('customShape'),
+		getWallArray: getShapeArray('wall')
+	};
+})()
+
+
+
+//var testArray = [1, 2, 3, 4, 5];
+
+
 
 
 function getQueryVariable(variable){
@@ -578,6 +612,7 @@ function mouseMove(){
 
 function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
+	console.log('============================>testArray1:', shapesController.getCircleArray('circle', 0));
 	mouse_down = true;
 	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
