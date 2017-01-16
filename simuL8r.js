@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2017-01-15 **/ 
+/** simuL8r - v1.0.0 - 2017-01-16 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -2032,6 +2032,8 @@ function shapeCursor(buffer, projection, template){
 // 					[mousePos.x - this.side/2, mousePos.y + this.side/2]
 // 				];
 
+//TODO 1: use shape.outerRadius to decide which shape should be checked in detail
+//TODO 2: highlight shapes with shadow when shape cursor overlaps them
 function checkOverlap(shape, points, length){
 		cursorOverlap = false;
 		for(key in shapeSelection.shapes){

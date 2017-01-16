@@ -2031,6 +2031,8 @@ function shapeCursor(buffer, projection, template){
 // 					[mousePos.x - this.side/2, mousePos.y + this.side/2]
 // 				];
 
+//TODO 1: use shape.outerRadius to decide which shape should be checked in detail
+//TODO 2: highlight shapes with shadow when shape cursor overlaps them
 function checkOverlap(shape, points, length){
 		cursorOverlap = false;
 		for(key in shapeSelection.shapes){
