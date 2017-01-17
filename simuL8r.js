@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2017-01-16 **/ 
+/** simuL8r - v1.0.0 - 2017-01-17 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -118,38 +118,25 @@ var currentlyReshaping = null; //there must be a better way to do this
 
 var shapesController = (function(){
 
-	// function getCircleArray(){
-	// 	var shapeArray = shapeSelection.shapes.circle[2].map(function(e){
-	// 		return e;
-	// 	});
-	// 	return shapeArray;
-	// }
+	function getShapeArray(shape){
+		var shapes = [];
+		var length = shapeSelection.shapes[shape][2].length;
 
-	function getShapeArray(shape, i){
+		for(var i = 0; i < length; i++){
 			if(shapeSelection.shapes[shape][2][0] !== undefined){
 				var shapeArray = shapeSelection.shapes[shape][2][i].vertices.map(function(e){
-					return e;
+					return [e[0], e[1], e[2], {collision: false}];
 				});
-			return shapeArray;
-		}
+			  shapes.push(shapeArray);
+		  }
+	  }
+		return shapes;
 	}
-
 	return {
-		getCircleArray: getShapeArray,
-		getSquareArray: getShapeArray('square'),
-		getTriangleArray: getShapeArray('triangle'),
-		getPencilArray: getShapeArray('pencil'),
-		getCustomShapesArray: getShapeArray('customShape'),
-		getWallArray: getShapeArray('wall')
+		getShapeArray: getShapeArray
 	};
-})()
 
-
-
-//var testArray = [1, 2, 3, 4, 5];
-
-
-
+})();
 
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
@@ -612,7 +599,7 @@ function mouseMove(){
 
 function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
-	console.log('============================>testArray1:', shapesController.getCircleArray('circle', 0));
+	console.log('============================>testArray1:', shapesController.getShapeArray('square'));
 	mouse_down = true;
 	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
@@ -2132,9 +2119,6 @@ function checkOverlap(shape, points, length){
 		canvas.style.cursor = 'not-allowed';
 	}
 }
-
-
-
 
 function customShapeDrawer(){
 									/** this section draws the initial shape before any changes and transformations are applied to it **/
