@@ -118,19 +118,21 @@ var currentlyReshaping = null; //there must be a better way to do this
 var shapesController = (function(){
 
 	function getShapeArray(shape){
-		var shapes = [];
+		var shapesArray = [];
 		var length = shapeSelection.shapes[shape][2].length;
 
 		for(var i = 0; i < length; i++){
 			if(shapeSelection.shapes[shape][2][0] !== undefined){
-				var shapeArray = shapeSelection.shapes[shape][2][i].vertices.map(function(e){
+				var vertices = shapeSelection.shapes[shape][2][i].vertices.map(function(e){
 					return [e[0], e[1], e[2], {collision: false}];
 				});
-			  shapes.push(shapeArray);
+				vertices.splice(0, 0, {id: shapeSelection.shapes[shape][2][i].id});
+			  shapesArray.push(vertices);
 		  }
 	  }
-		return shapes;
+		return shapesArray;
 	}
+	
 	return {
 		getShapeArray: getShapeArray
 	};
