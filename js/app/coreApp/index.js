@@ -132,9 +132,21 @@ var shapesController = (function(){
 	  }
 		return shapesArray;
 	}
-	
+
+	function getVertex(group, shapeIndex, vertexIndex){
+		if(shapeSelection.shapes[group][2][0] !== undefined){
+			var centroid = [shapeSelection.shapes[group][2][shapeIndex].X, shapeSelection.shapes[group][2][shapeIndex].Y];
+			var vertex = shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex];
+			var x = vertex[0] + centroid[0] + shift[0];
+			var y = vertex[1] + centroid[1] + shift[1];
+			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+			return [proj.x, proj.y];
+		}
+	}
+
 	return {
-		getShapeArray: getShapeArray
+		getShapeArray: getShapeArray,
+		getVertex: getVertex
 	};
 
 })();
@@ -600,7 +612,9 @@ function mouseMove(){
 
 function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
-	console.log('============================>testArray1:', shapesController.getShapeArray('square'));
+	//console.log('============================>testArray1:', shapesController.getShapeArray('square'));
+	//getVertex(group, shapeIndex, vertexIndex)
+	//console.log('============================>testArray1:', shapesController.getVertex('square',0,0));
 	mouse_down = true;
 	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
@@ -1705,7 +1719,7 @@ function draw(){
 	pencilDrawer();
 	curveDrawer();
 	wallDrawer();
-	shapeTransforms(pencilArray);
+	shapeTransforms(pencilArray, 'pencil');
 
 	var i;
 	blueprint(customShapeArray, i);
@@ -2014,7 +2028,7 @@ function wallDrawer(){
 	bufferCtx.lineWidth = 0.5;
 	bufferCtx.strokeStyle = 'black';
 	bufferCtx.globalAlpha = 1
-	shapeTransforms(wallArray);
+	shapeTransforms(wallArray, 'wall');
 }
 
 function shapeDrawer(shapeArray, Shape, shapeProp){
@@ -2026,7 +2040,7 @@ function shapeDrawer(shapeArray, Shape, shapeProp){
 		shapeCursor(bufferCtx, proj, Shape);
 		}
 	bufferCtx.globalAlpha = 1
-	shapeTransforms(shapeArray);
+	shapeTransforms(shapeArray, shapeProp);
 }
 
 function shapeCursor(buffer, projection, template){
@@ -2166,7 +2180,7 @@ function customShapeDrawer(){
 			}
 		}
 	}										/** this section applies all of the changes and transformations that have been made to the shape **/
-	shapeTransforms(customShapeArray);
+	shapeTransforms(customShapeArray, 'customShape');
 }
 
 
@@ -2364,7 +2378,7 @@ function applyZoom(center, point, zoom){
 	};
 }
 
-function shapeTransforms(Array){
+function shapeTransforms(Array, group){
 	if(Array[0]){
 		var length = Array.length;
 		var proj = {};
@@ -2373,26 +2387,24 @@ function shapeTransforms(Array){
 			shadow(Array, i);
 			changeColour(Array, i);
 			bufferCtx.save();
-			var x = Array[i].vertices[0][0] + Array[i].X + shift[0];
-			var y = Array[i].vertices[0][1] + Array[i].Y + shift[1];
 
-			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+			if(shapesController.getVertex(group, i, 0)){
+				var x = shapesController.getVertex(group, i, 0)[0];
+				var y = shapesController.getVertex(group, i, 0)[1];
+			}
 
 			bufferCtx.beginPath();
-			bufferCtx.moveTo(proj.x, proj.y); // first point of the custom shape is drawn here
+			bufferCtx.moveTo(x, y); // first point of the custom shape is drawn here
 
 			for(var j = 0; j < Array[i].vertices.length; j++){
-
-					var x = Array[i].vertices[j][0] + Array[i].X + shift[0];
-					var y = Array[i].vertices[j][1] + Array[i].Y + shift[1];
-
-					proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+					var x = shapesController.getVertex(group, i, j)[0];
+					var y = shapesController.getVertex(group, i, j)[1];
 
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
 					Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
 				}
-				bufferCtx.lineTo(proj.x, proj.y);
+				bufferCtx.lineTo(x, y);
 		}
 
 		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
