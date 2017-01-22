@@ -134,13 +134,13 @@ var shapesController = (function(){
 	}
 
 	function getVertex(group, shapeIndex, vertexIndex, bool){
-		if(shapeSelection.shapes[group][2][0] !== undefined){
+		if(shapeSelection.shapes[group][2][0] !== undefined /*&& group !== 'wall'*/){
 			var centroid = [shapeSelection.shapes[group][2][shapeIndex].X, shapeSelection.shapes[group][2][shapeIndex].Y];
-			var vertex = shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex];
+			var vertex = shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex]; //console.log('==============================vertex[3]', vertex, group);
 			var x = vertex[0] + centroid[0] + shift[0];
 			var y = vertex[1] + centroid[1] + shift[1];
 			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-			if(bool){
+			if(bool && vertex.length === 4){  // to make it compatible with walls (wall do not have {collision: boolean} in their vertex arrays)
 				return [proj.x, proj.y, vertex[2], {collision: vertex[3].collision}];
 			} else {
 				return [proj.x, proj.y];
@@ -2479,12 +2479,11 @@ function shapeTransforms(Array, group, getGroupSize){
 					var x = shapesController.getVertex(group, i, j)[0];
 					var y = shapesController.getVertex(group, i, j)[1];
 
-				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
-				//if(shapesController.getVertex(group, i, j)[2]){ // checks if a vertex has been clicked
-					console.log('===========================> getVertex');
-					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
-					Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
-					//shapesController.setVertex(group, i, j, [mousePos.x - shapesController.getProperty(group, i, 'X'), mousePos.y - shapesController.getProperty(group, i, 'Y')]);
+				//if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
+				if(shapesController.getVertex(group, i, j, true)[2]){ // checks if a vertex has been clicked
+					// Array[i].vertices[j][0] = mousePos.x - Array[i].X;
+					// Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
+					shapesController.setVertex(group, i, j, [mousePos.x - shapesController.getProperty(group, i, 'X'), mousePos.y - shapesController.getProperty(group, i, 'Y'), shapesController.getVertex(group, i, j, true)[2], shapesController.getVertex(group, i, j, true)[3]]);
 				}
 				bufferCtx.lineTo(x, y);
 		}
@@ -2582,7 +2581,6 @@ function shapeSelector(id){
 			physics = true;
 		}
 	}
-
 
 	shapeSelection.shapes.circle[0] = false;
 	shapeSelection.shapes.square[0] = false;
