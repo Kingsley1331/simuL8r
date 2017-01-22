@@ -124,7 +124,7 @@ var shapesController = (function(){
 		for(var i = 0; i < length; i++){
 			if(shapeSelection.shapes[shape][2][0] !== undefined){
 				var vertices = shapeSelection.shapes[shape][2][i].vertices.map(function(e){
-					return [e[0], e[1], e[2], {collision: false}];
+					return [e[0], e[1], e[2], {collision: e[3].collision}];
 				});
 				vertices.splice(0, 0, {id: shapeSelection.shapes[shape][2][i].id});
 			  shapesArray.push(vertices);
@@ -133,20 +133,68 @@ var shapesController = (function(){
 		return shapesArray;
 	}
 
-	function getVertex(group, shapeIndex, vertexIndex){
+	function getVertex(group, shapeIndex, vertexIndex, bool){
 		if(shapeSelection.shapes[group][2][0] !== undefined){
 			var centroid = [shapeSelection.shapes[group][2][shapeIndex].X, shapeSelection.shapes[group][2][shapeIndex].Y];
 			var vertex = shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex];
 			var x = vertex[0] + centroid[0] + shift[0];
 			var y = vertex[1] + centroid[1] + shift[1];
 			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-			return [proj.x, proj.y];
+			if(bool){
+				return [proj.x, proj.y, vertex[2], {collision: vertex[3].collision}];
+			} else {
+				return [proj.x, proj.y];
+			}
+		}
+	}
+
+	function setVertex(group, shapeIndex, vertexIndex, newVertex){
+		if(shapeSelection.shapes[group][2][0] !== undefined){
+			shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex] = newVertex;
+		}
+	}
+
+	function getProperty(group, shapeIndex, property){
+		var shape = shapeSelection.shapes[group][2][shapeIndex];
+		// for(var prop in shape){
+		// 	if(prop === 'findBoundingRectMaxX' || prop === 'findBoundingRectMinX' || prop === 'findBoundingRectMaxY' || prop === 'findBoundingRectMinY'){
+		// 		console.log(prop + ' ==>', typeof shapeSelection.shapes[group][2][shapeIndex][prop], group);
+		// 	}
+		// }
+		return shape[property];
+	}
+
+	function setProperty(group, shapeIndex, property, newProperty){
+		shapeSelection.shapes[group][2][shapeIndex][property] = newProperty;
+	}
+
+	function getGroupSize(group){
+		if(group){
+			return shapeSelection.shapes[group][2].length;
+		}
+	}
+
+	function getShapeSize(group, shapeIndex){
+		if(group){
+			return shapeSelection.shapes[group][2][shapeIndex].vertices.length;
+		}
+	}
+
+	function isGroupEmpty(group){
+		if(group){
+			return shapeSelection.shapes[group][2].length === 0;
 		}
 	}
 
 	return {
 		getShapeArray: getShapeArray,
-		getVertex: getVertex
+		getVertex: getVertex,
+		getProperty: getProperty,
+		setProperty: setProperty,
+		getGroupSize: getGroupSize,
+		isGroupEmpty: isGroupEmpty,
+		getShapeSize: getShapeSize,
+		setVertex: setVertex
 	};
 
 })();
@@ -614,7 +662,7 @@ function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
 	//console.log('============================>testArray1:', shapesController.getShapeArray('square'));
 	//getVertex(group, shapeIndex, vertexIndex)
-	//console.log('============================>testArray1:', shapesController.getVertex('square',0,0));
+	//console.log('============================>testArray1:', shapesController.getVertex('square',0,0, true));
 	mouse_down = true;
 	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
@@ -1228,7 +1276,6 @@ function CustomShape(){
 		return this.boundingRectMinX;
 	};
 
-
 	/**** Bounding Rectangle Y coordinates ****/
 	this.distancesY = [];
 	this.findBoundingRectY = function(){
@@ -1253,8 +1300,21 @@ function CustomShape(){
 	};
 
 	this.makeBoundingRect = function(){
-		this.boundingRectangle = {minX:this.findBoundingRectMinX(), minY:this.findBoundingRectMinY(), width:this.findBoundingRectMaxX() - this.findBoundingRectMinX(), height:this.findBoundingRectMaxY() - this.findBoundingRectMinY()};
+		if(this.findBoundingRectMinX  || this.findBoundingRectMin || this.findBoundingRectMaxX || this.findBoundingRectMaxY){
+			this.boundingRectangle = {minX:this.findBoundingRectMinX(), minY:this.findBoundingRectMinY(), width:this.findBoundingRectMaxX() - this.findBoundingRectMinX(), height:this.findBoundingRectMaxY() - this.findBoundingRectMinY()};
+		}
 	};
+
+	// this.makeBoundingRect = function(){
+	// 	console.log('typeof this.findBoundingRectMinX', typeof this.findBoundingRectMinX);
+	// 	if(this.findBoundingRectMinX  || this.findBoundingRectMin || this.findBoundingRectMaxX || this.findBoundingRectMaxY){
+	// 		this.findBoundingRectMinX();
+	// 		this.findBoundingRectMinY();
+	// 		this.findBoundingRectMaxX();
+	// 		this.findBoundingRectMaxY();
+	// 		this.boundingRectangle = {minX:this.boundingRectMinX, minY:this.boundingRectMinY, width:this.boundingRectMaxX - this.boundingRectMinX, height:this.boundingRectMaxY - this.boundingRectMinY};
+	// 	}
+	// };
 
 	this.preCollision = false;
 	this.collision = false;
@@ -1749,12 +1809,19 @@ function calcAngle(x1, y1, x2, y2){
 	return angleFinder(x1, y1, x2, y2);
 }
 
-function shadow(Array, i){
-	Array[i].makeBoundingRect(); // Rewrite using the MVC pattern: currently the view is talking directly to the model
-	bufferCtx.fillStyle = Array[i].colour;
-	bufferCtx.strokeStyle = Array[i].lineColour;
+function shadow(group, i){
+	//Array[i].makeBoundingRect(); // Rewrite using the MVC pattern: currently the view is talking directly to the model
+	// var makeBoundingRect = shapesController.getProperty(group, i, 'makeBoundingRect');
+	// if(group !== 'wall'){makeBoundingRect();}
+	shapesController.getProperty(group, i, 'makeBoundingRect')();
+	//console.log('=========================> typeof makeBoundingRect', typeof makeBoundingRect);
+	//bufferCtx.fillStyle = Array[i].colour;
+	bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');
+	//bufferCtx.strokeStyle = Array[i].lineColour;
+	bufferCtx.strokeStyle = shapesController.getProperty(group, i, 'lineColour');
 	bufferCtx.beginPath();
-	if(Array[i].selected){
+	//if(Array[i].selected){
+	if(shapesController.getProperty(group, i, 'selected')){
 		bufferCtx.lineWidth = 1.4;
 		bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
 		bufferCtx.shadowOffsetX = 10;
@@ -1762,12 +1829,19 @@ function shadow(Array, i){
 		bufferCtx.shadowBlur = 10;
 	}else{
 		bufferCtx.shadowColor = "transparent";
-		bufferCtx.lineWidth = Array[i].lineWidth;
+		//bufferCtx.lineWidth = Array[i].lineWidth;
+	  bufferCtx.lineWidth =	shapesController.getProperty(group, i, 'lineWidth')
 	}
 
-	if(dragging && Array[i].selected){
-		Array[i].X = mousePos.x + offcenter[0];
-		Array[i].Y = mousePos.y + offcenter[1];
+	//if(dragging && Array[i].selected){
+	if(dragging && shapesController.getProperty(group, i, 'selected')){
+		// Array[i].X = mousePos.x + offcenter[0];
+		// Array[i].Y = mousePos.y + offcenter[1];
+
+		shapesController.setProperty(group, i, 'X', mousePos.x + offcenter[0]);
+		shapesController.setProperty(group, i, 'Y', mousePos.y + offcenter[1]);
+
+		//setProperty(group, shapeIndex, property, newProperty)
 		if(!select){
 			bufferCtx.lineWidth = 1.4;
 			bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
@@ -2378,14 +2452,18 @@ function applyZoom(center, point, zoom){
 	};
 }
 
-function shapeTransforms(Array, group){
-	if(Array[0]){
-		var length = Array.length;
-		var proj = {};
+function shapeTransforms(Array, group, getGroupSize){
+	//console.log('first group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
+	//if(Array[0]){
+	if(shapesController.isGroupEmpty(group) === false){ //console.log('second group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
+		var length = shapesController.getGroupSize(group); //console.log('=======> getGroupSize', length);
+		//var length = Array.length;
+		//var proj = {};
 		for(var i = 0; i < length; i++){
 			//bufferCtx.fillStyle = Array[i].colour;
-			shadow(Array, i);
-			changeColour(Array, i);
+			shadow(group, i); /*********************** identify shape by id ***************************/
+			//console.log('===============================================================================================================================================>shadow group', group);
+			changeColour(Array, i); /*********************** identify shape by id ***************************/
 			bufferCtx.save();
 
 			if(shapesController.getVertex(group, i, 0)){
@@ -2396,13 +2474,17 @@ function shapeTransforms(Array, group){
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(x, y); // first point of the custom shape is drawn here
 
-			for(var j = 0; j < Array[i].vertices.length; j++){
+			//for(var j = 0; j < Array[i].vertices.length; j++){ /*********************** TO BE RESOLVED ***************************/
+				for(var j = 0; j < shapesController.getShapeSize(group, i); j++){
 					var x = shapesController.getVertex(group, i, j)[0];
 					var y = shapesController.getVertex(group, i, j)[1];
 
 				if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
+				//if(shapesController.getVertex(group, i, j)[2]){ // checks if a vertex has been clicked
+					console.log('===========================> getVertex');
 					Array[i].vertices[j][0] = mousePos.x - Array[i].X;
 					Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
+					//shapesController.setVertex(group, i, j, [mousePos.x - shapesController.getProperty(group, i, 'X'), mousePos.y - shapesController.getProperty(group, i, 'Y')]);
 				}
 				bufferCtx.lineTo(x, y);
 		}
