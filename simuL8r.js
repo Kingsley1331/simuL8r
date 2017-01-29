@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2017-01-22 **/ 
+/** simuL8r - v1.0.0 - 2017-01-29 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -155,14 +155,25 @@ var shapesController = (function(){
 		}
 	}
 
-	function getProperty(group, shapeIndex, property){
+	function getProperty(group, shapeIndex, property, isFunction){
 		var shape = shapeSelection.shapes[group][2][shapeIndex];
+		if(group !== 'wall'){
+			// console.log('================> group', group);
+			// console.log('================> shapeIndex', shapeIndex);
+			// console.log('================> property', property);
+			//console.log('================> colour', shape[property]);
+			//console.log('================> original colour', shapeSelection.shapes['square'][2][0].colour);
+		}
 		// for(var prop in shape){
 		// 	if(prop === 'findBoundingRectMaxX' || prop === 'findBoundingRectMinX' || prop === 'findBoundingRectMaxY' || prop === 'findBoundingRectMinY'){
 		// 		console.log(prop + ' ==>', typeof shapeSelection.shapes[group][2][shapeIndex][prop], group);
 		// 	}
 		// }
-		return shape[property];
+		if(isFunction){
+			return shapeSelection.shapes[group][2][shapeIndex][property]();
+		}else{
+			return shapeSelection.shapes[group][2][shapeIndex][property]
+		}
 	}
 
 	function setProperty(group, shapeIndex, property, newProperty){
@@ -199,6 +210,25 @@ var shapesController = (function(){
 	};
 
 })();
+
+
+// 	 function getProperty2(group, shapeIndex, property){
+// 		//var shape = shapeSelection.shapes[group][2][shapeIndex];
+// 		if(group !== 'wall'){
+// 			console.log('================> group', group);
+// 			console.log('================> shapeIndex', shapeIndex);
+// 			console.log('================> property', property);
+// 			//console.log('================> colour', shape[property]);
+// 			///console.log('================> original colour2', shapeSelection.shapes['square'][2][0].colour);
+// 		// for(var prop in shape){
+// 		// 	if(prop === 'findBoundingRectMaxX' || prop === 'findBoundingRectMinX' || prop === 'findBoundingRectMaxY' || prop === 'findBoundingRectMinY'){
+// 		// 		console.log(prop + ' ==>', typeof shapeSelection.shapes[group][2][shapeIndex][prop], group);
+// 		// 	}
+// 		// }
+// 		return shapeSelection.shapes[group][2][shapeIndex][property]();
+// 		//return shapeSelection.shapes['square'][2][0].pickColour();
+// 	}
+// };
 
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
@@ -1814,10 +1844,13 @@ function shadow(group, i){
 	//Array[i].makeBoundingRect(); // Rewrite using the MVC pattern: currently the view is talking directly to the model
 	// var makeBoundingRect = shapesController.getProperty(group, i, 'makeBoundingRect');
 	// if(group !== 'wall'){makeBoundingRect();}
-	shapesController.getProperty(group, i, 'makeBoundingRect')();
+
+	//shapesController.getProperty(group, i, 'makeBoundingRect')();
+	shapesController.getProperty(group, i, 'makeBoundingRect', true);
+
 	//console.log('=========================> typeof makeBoundingRect', typeof makeBoundingRect);
 	//bufferCtx.fillStyle = Array[i].colour;
-	bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');
+	//bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');
 	//bufferCtx.strokeStyle = Array[i].lineColour;
 	bufferCtx.strokeStyle = shapesController.getProperty(group, i, 'lineColour');
 	bufferCtx.beginPath();
@@ -1950,11 +1983,31 @@ function changeSize(Array, i){
 	}
 
 /* Call pickColour() method when changing colour */
-function changeColour(Array, i){
+function changeColour1(Array, i){
 	if(colourChange && Array[i].onObject){
 		Array[i].pickColour();
 	}
 }
+
+function changeColour(group, i){
+	if(colourChange && shapesController.getProperty(group, i, 'onObject')){
+		var pickColour = shapesController.getProperty(group, i, 'pickColour', true);
+	}
+}
+// function changeColour(group, i, property){
+// 	if(colourChange){
+// 			//shapeSelection.shapes['square'][2][0].pickColour();
+// 			//shapesController2.getProperty('square', 0, 'pickColour', true)();
+// 			getProperty2(group, i, property);
+// 		}
+// }
+// function changeColour(group, i){
+// 	if(colourChange && shapesController.getProperty(group, i, 'onObject')){
+// 			//shapeSelection.shapes['square'][2][0].pickColour();
+// 			//shapesController2.getProperty('square', 0, 'pickColour', true)();
+// 			getProperty2(group, i, 'pickColour');
+// 		}
+// }
 
 /* Animating the slider */
 function rotateShape(Array, i){
@@ -2461,10 +2514,19 @@ function shapeTransforms(Array, group, getGroupSize){
 		//var length = Array.length;
 		//var proj = {};
 		for(var i = 0; i < length; i++){
-			//bufferCtx.fillStyle = Array[i].colour;
+			//bufferCtx.fillStyle = Array[i].colour; //getProperty(group, i, 'pickColour')
+			//bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');
 			shadow(group, i); /*********************** identify shape by id ***************************/
+			//changeColour(group, i, 'pickColour'); /*********************** identify shape by id ***************************/
+			//changeColour1(Array, i);
+			changeColour(group, i);
+			bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');/// console.log(Array[i].colour===shapesController.getProperty(group, i, 'colour'));
+			//bufferCtx.fillStyle = Array[i].colour;
+			// if(group !== 'wall'){
+			// 	console.log('check colour:', shapesController.getProperty(group, i, 'colour') === '#ffffff');
+			// }
+			//bufferCtx.fillStyle = 'black';
 			//console.log('===============================================================================================================================================>shadow group', group);
-			changeColour(Array, i); /*********************** identify shape by id ***************************/
 			bufferCtx.save();
 
 			if(shapesController.getVertex(group, i, 0)){
