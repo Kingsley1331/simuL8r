@@ -2550,48 +2550,64 @@ function shapeTransforms(Array, group, getGroupSize){
 				bufferCtx.lineTo(x, y);
 		}
 
-		if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
+		//if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
+		if(group === 'pencil' && !shapesController.getProperty(group, i, 'stroking')){ //closes the path for the pencil shapes
+			bufferCtx.closePath();
+		 }
 			bufferCtx.restore();
 			bufferCtx.stroke();
-		if(Array == pencilArray && !Array[i].stroking){
+		if(group === 'pencil' && !shapesController.getProperty(group, i, 'stroking')){
 			bufferCtx.fill();
-		}else if(Array != pencilArray){
-			if(!Array[i].stroking)bufferCtx.fill();
+		}else if(group !== 'pencil'){
+			if(!shapesController.getProperty(group, i, 'stroking')){
+				bufferCtx.fill();
+			}
 		}
 
-		if(Array == circleArray){
+		//if(Array == circleArray){
+		if(group === 'circle'){
 			var projCenter = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
 			var projEdge = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + Array[i].vertices[0][0], Array[i].Y + Array[i].vertices[0][1]], zoom);
 			bufferCtx.beginPath();
-			bufferCtx.lineTo(projEdge.x + zoom*shift[0], projEdge.y + zoom*shift[1]);
-			bufferCtx.lineTo(projCenter.x + zoom*shift[0], projCenter.y + zoom*shift[1]);
+			// bufferCtx.lineTo(projEdge.x + zoom*shift[0], projEdge.y + zoom*shift[1]);
+			// bufferCtx.lineTo(projCenter.x + zoom*shift[0], projCenter.y + zoom*shift[1]);
+
+			bufferCtx.lineTo(shapesController.getVertex(group, i, 0, false)[0], shapesController.getVertex(group, i, 0, false)[1]);
+			bufferCtx.lineTo(shapesController.getProperty(group, i, 'X') , shapesController.getProperty(group, i, 'Y'));
+
 			bufferCtx.stroke();
 		}
 
 	if(reShape){
 		onReshape = false;
 		for(var j = 0; j < Array[i].vertices.length; j++){
-				var x = Array[i].vertices[j][0] + Array[i].X;
-				var y = Array[i].vertices[j][1] + Array[i].Y;
+				// var x = Array[i].vertices[j][0] + Array[i].X;
+				// var y = Array[i].vertices[j][1] + Array[i].Y;
+				var x = shapesController.getVertex(group, i, j, false)[0];
+				var y = shapesController.getVertex(group, i, j, false)[1];
 
-				var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-
-				var Xpoint = proj.x;
-				var Ypoint = proj.y;
+				// var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+				//
+				// var Xpoint = proj.x;
+				// var Ypoint = proj.y;
 
 				var mouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
 
-				if(distance(mouse.x - Xpoint, mouse.y - Ypoint) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
+				//if(distance(mouse.x - Xpoint, mouse.y - Ypoint) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
+				if(distance(mouse.x - x, mouse.y - y) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
 					onReshape = true;
 					bufferCtx.fillStyle = 'darkblue';
 					for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
-						var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
-						var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
+						// var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
+						// var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
 
-						var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
+						// var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 
-						var Xpoint = proj.x;
-						var Ypoint = proj.y;
+						// var Xpoint = proj.x;
+						// var Ypoint = proj.y;
+
+						var Xpoint = shapesController.getVertex(group, i, k, false)[0]
+						var Ypoint = shapesController.getVertex(group, i, k, false)[1];
 
 						bufferCtx.beginPath();
 						bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
@@ -2604,11 +2620,19 @@ function shapeTransforms(Array, group, getGroupSize){
 if(isZooming){
  	screenWriter('x ' + Math.round(zoom * 10)/10, [mousePos.xPhysical + 48, mousePos.yPhysical + 5], bufferCtx, '30', 'Arial', 'black');
 }
-	if(physics && Array != wallArray){
-		if(Array[i].gravity){
-			Array[i].velocity[1] += gravity/20;
+	// if(physics && Array != wallArray){
+	// 	if(Array[i].gravity){
+	// 		Array[i].velocity[1] += gravity/20;
+	// 	}
+	// }
+
+	if(physics && group !== 'wall'){
+		if(shapesController.getProperty(group, i, 'gravity')){
+			var newVelocity = [shapesController.getProperty(group, i, 'velocity')[0], shapesController.getProperty(group, i, 'velocity')[1] + gravity/20];
+			shapesController.setProperty(group, i, 'velocity', newVelocity);
 		}
 	}
+
 				changeSize(Array, i);
 				rotateShape(Array, i);
 				//rotateShape2(Array, i);
