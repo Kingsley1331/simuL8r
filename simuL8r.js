@@ -1821,7 +1821,8 @@ function draw(){
 	pencilDrawer();
 	curveDrawer();
 	wallDrawer();
-	shapeTransforms(pencilArray, 'pencil');
+	//shapeTransforms(pencilArray, 'pencil');
+	shapeTransforms('pencil', shapesController.getGroupSize('pencil'));
 
 	var i;
 	blueprint(customShapeArray, i);
@@ -1899,7 +1900,7 @@ function shadow(group, i){
 
 /* Call resize() method when changing size */
 function changeSize(group, i){
-var stretchRadius = shapesController.getProperty(group, i, 'stretchRadius')
+		var stretchRadius = shapesController.getProperty(group, i, 'stretchRadius');
 
 		if(reSize && (shapesController.getProperty(group, i, 'expand') || shapesController.getProperty(group, i, 'v_expand') || shapesController.getProperty(group, i, 'h_expand'))){
 			shapesController.getProperty(group, i, 'resize', true);
@@ -2011,14 +2012,23 @@ function changeColour(group, i){
 }
 
 /* Animating the slider */
-function rotateShape(Array, i){
-	if(rotate && Array[i].rotationLine){
-		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
+function rotateShape(group, i){
+	//shapesController.getProperty(group, i, 'rotationLine');
+	//if(rotate && Array[i].rotationLine){
+	if(rotate && shapesController.getProperty(group, i, 'rotationLine')){
+
+		//var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
+
+		var center = {
+				x: shapesController.getCentroid(group, i).x,
+				y: shapesController.getCentroid(group, i).y
+		 };
+
 		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
 		var startPoint = center.x - sliderButtonWidth/2;
 		var endPoint = center.x + sliderButtonWidth/2;
-		var yCoordinates = center.y + Array[i].radius + 45;
+		var yCoordinates = center.y + shapesController.getProperty(group, i, 'radius')+ 45;
 		var radius = 20;
 
 		bufferCtx.save();
@@ -2056,23 +2066,26 @@ function rotateShape(Array, i){
 		bufferCtx.stroke();
 
 		/** Slider **/
-		Array[i].slider[0] = startPoint + sliderPosition;
-		Array[i].slider[1] = yCoordinates;
-
+		// Array[i].slider[0] = startPoint + sliderPosition;
+		// Array[i].slider[1] = yCoordinates;
+		shapesController.setProperty(group, i, 'slider', [startPoint + sliderPosition, yCoordinates]);
+		var sliderHeight = shapesController.getProperty(group, i, 'slider')[1];
 		/** Slider follows the cursor along the line **/
 		if(rotate && onSlider && projMouse.x >= startPoint && projMouse.x <= endPoint){
-			Array[i].slider[0] = projMouse.x;
+			//Array[i].slider[0] = projMouse.x;
 			sliderPosition = projMouse.x - startPoint;
-			Array[i].sliderPosition = projMouse.x - startPoint;
-			Array[i].rotate();
+		  //Array[i].sliderPosition = projMouse.x - startPoint;
+			//Array[i].rotate();
+			shapesController.getProperty(group, i, 'rotate', true);
 		}
-
+		var slider = shapesController.getProperty(group, i, 'slider');
 		/** draws the actual slider **/
 		bufferCtx.fillStyle = 'red';
 		bufferCtx.beginPath();
-		bufferCtx.moveTo(Array[i].slider[0] - 4, Array[i].slider[1] - 8);
-		bufferCtx.lineTo(Array[i].slider[0] + 4, Array[i].slider[1] - 8);
-		bufferCtx.lineTo(Array[i].slider[0], Array[i].slider[1]);
+		bufferCtx.moveTo(slider[0] - 4, slider[1] - 8);
+		bufferCtx.lineTo(slider[0] + 4, slider[1] - 8);
+		bufferCtx.lineTo(slider[0], slider[1]);
+
 		bufferCtx.closePath();
 		bufferCtx.fill();
 		bufferCtx.restore();
@@ -2158,6 +2171,7 @@ function wallDrawer(){
 	bufferCtx.strokeStyle = 'black';
 	bufferCtx.globalAlpha = 1
 	shapeTransforms(wallArray, 'wall');
+	//shapeTransforms('wall', shapesController.getGroupSize('wall'));
 }
 
 function shapeDrawer(shapeArray, Shape, shapeProp){
@@ -2310,6 +2324,7 @@ function customShapeDrawer(){
 		}
 	}										/** this section applies all of the changes and transformations that have been made to the shape **/
 	shapeTransforms(customShapeArray, 'customShape');
+	//shapeTransforms('pencil', shapesController.getGroupSize('pencil'));
 }
 
 
@@ -2518,6 +2533,7 @@ function applyZoom(center, point, zoom, bool){ // bool is a temporary parameter
 }
 
 function shapeTransforms(Array, group, getGroupSize){
+//function shapeTransforms(group, getGroupSize){
 	//console.log('first group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
 	//if(Array[0]){
 	if(shapesController.isGroupEmpty(group) === false){ //console.log('second group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
@@ -2649,7 +2665,7 @@ function shapeTransforms(Array, group, getGroupSize){
 			}
 
 				changeSize(group, i);
-				rotateShape(Array, i);
+				rotateShape(group, i);
 				//rotateShape2(Array, i);
 			}
 		}
