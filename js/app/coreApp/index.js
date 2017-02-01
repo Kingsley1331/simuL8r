@@ -1897,17 +1897,16 @@ function shadow(group, i){
 }
 
 /* Call resize() method when changing size */
-function changeSize(Array, i){
+function changeSize(group, i){
+var stretchRadius = shapesController.getProperty(group, i, 'stretchRadius')
 
-		if(reSize && (Array[i].expand || Array[i].v_expand || Array[i].h_expand)){
-			Array[i].resize();
+		if(reSize && (shapesController.getProperty(group, i, 'expand') || shapesController.getProperty(group, i, 'v_expand') || shapesController.getProperty(group, i, 'h_expand'))){
+			shapesController.getProperty(group, i, 'resize', true);
 		}
 
 		/* Draws the re-size box */
-		if(reSize && Array[i].expandBox){
+		if(reSize && shapesController.getProperty(group, i, 'expandBox')){
 			bufferCtx.save();
-			//bufferCtx.globalCompositeOperation = "source-over";
-			//bufferCtx.globalCompositeOperation = "destination-over"
 			bufferCtx.fillStyle = 'white';
 			bufferCtx.strokeStyle = 'black';
 			bufferCtx.lineWidth = 0.5;
@@ -1920,37 +1919,42 @@ function changeSize(Array, i){
 
 			/**(ants+1)*antLength + ants*(gap - antLength) = (antLength + ants*gap)**/
 
-			/** top-left to top-right **/
-			var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 
-			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
+			var center = {
+					x: shapesController.getCentroid(group, i).x,
+				 	y: shapesController.getCentroid(group, i).y
+			 };
+
+
+			/** top-left to top-right **/
+			while((antLength + ants*gap) < zoom * 2 * (stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + gap*ants, center.y - zoom * Array[i].stretchRadius - zoom * selectSize);
-				bufferCtx.lineTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants, center.y - zoom * Array[i].stretchRadius - zoom * selectSize);
+				bufferCtx.moveTo(center.x - zoom * stretchRadius - zoom * selectSize + gap*ants, center.y - zoom * stretchRadius - zoom * selectSize);
+				bufferCtx.lineTo(center.x - zoom * stretchRadius - zoom * selectSize + antLength + gap*ants, center.y - zoom * stretchRadius - zoom * selectSize);
 				bufferCtx.stroke();
 				ants++;
 			}
 			ants = 0; /** bottom-left to bottom-right **/
-			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
+			while((antLength + ants*gap) < zoom * 2 * (stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + gap*ants,center.y + zoom * Array[i].stretchRadius + zoom * selectSize);
-				bufferCtx.lineTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants, center.y + zoom * (Array[i].stretchRadius + selectSize));
+				bufferCtx.moveTo(center.x - zoom * stretchRadius - zoom * selectSize + gap*ants,center.y + zoom * stretchRadius + zoom * selectSize);
+				bufferCtx.lineTo(center.x - zoom * stretchRadius - zoom * selectSize + antLength + gap*ants, center.y + zoom * (stretchRadius + selectSize));
 				bufferCtx.stroke();
 				ants++;
 			}
 			ants = 0; /** top-left to top-right **/
-			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
+			while((antLength + ants*gap) < zoom * 2 * (stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + gap*ants);
-				bufferCtx.lineTo(center.x - zoom * Array[i].stretchRadius - zoom * selectSize, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants);
+				bufferCtx.moveTo(center.x - zoom * stretchRadius - zoom * selectSize, center.y - zoom * stretchRadius - zoom * selectSize + gap*ants);
+				bufferCtx.lineTo(center.x - zoom * stretchRadius - zoom * selectSize, center.y - zoom * stretchRadius - zoom * selectSize + antLength + gap*ants);
 				bufferCtx.stroke();
 				ants++;
 			}
 			ants = 0; /** bottom-right to bottom-right **/
-			while((antLength + ants*gap) < zoom * 2 * (Array[i].stretchRadius + selectSize)){
+			while((antLength + ants*gap) < zoom * 2 * (stretchRadius + selectSize)){
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(center.x + zoom * Array[i].stretchRadius + zoom * selectSize, center.y - zoom *  Array[i].stretchRadius - zoom * selectSize + gap*ants);
-				bufferCtx.lineTo(center.x + zoom * Array[i].stretchRadius + zoom * selectSize, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + antLength + gap*ants);
+				bufferCtx.moveTo(center.x + zoom * stretchRadius + zoom * selectSize, center.y - zoom *  stretchRadius - zoom * selectSize + gap*ants);
+				bufferCtx.lineTo(center.x + zoom * stretchRadius + zoom * selectSize, center.y - zoom * stretchRadius - zoom * selectSize + antLength + gap*ants);
 				bufferCtx.stroke();
 				ants++;
 			}
@@ -1960,34 +1964,34 @@ function changeSize(Array, i){
 																				// this section draws the small white squares at the corners
 
 			/** top-left **/
-			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
 
 			/** bottom-left **/
-			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * stretchRadius - zoom * selectSize - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
 			/** bottom-right **/
-			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
 			/** top-right **/
-			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
 
 
 																				// this section draws the small white squares at the sides
 
 			/** top **/
-			bufferCtx.strokeRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize - smallBox/2, smallBox, smallBox);
 			/** right **/
-			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
 			/** bottom **/
-			bufferCtx.strokeRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - smallBox/2, center.y - zoom * Array[i].stretchRadius - zoom * selectSize + 2*(zoom * Array[i].stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - smallBox/2, center.y - zoom * stretchRadius - zoom * selectSize + 2*(zoom * stretchRadius + zoom * selectSize) - smallBox/2, smallBox, smallBox);
 			/** left **/
-			bufferCtx.strokeRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
-			bufferCtx.fillRect(center.x - zoom * Array[i].stretchRadius - zoom * selectSize - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
+			bufferCtx.strokeRect(center.x - zoom * stretchRadius - zoom * selectSize - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
+			bufferCtx.fillRect(center.x - zoom * stretchRadius - zoom * selectSize - smallBox/2, center.y - smallBox/2, smallBox, smallBox);
 			bufferCtx.restore();
 		}
 	}
@@ -2004,20 +2008,6 @@ function changeColour(group, i){
 		var pickColour = shapesController.getProperty(group, i, 'pickColour', true);
 	}
 }
-// function changeColour(group, i, property){
-// 	if(colourChange){
-// 			//shapeSelection.shapes['square'][2][0].pickColour();
-// 			//shapesController2.getProperty('square', 0, 'pickColour', true)();
-// 			getProperty2(group, i, property);
-// 		}
-// }
-// function changeColour(group, i){
-// 	if(colourChange && shapesController.getProperty(group, i, 'onObject')){
-// 			//shapeSelection.shapes['square'][2][0].pickColour();
-// 			//shapesController2.getProperty('square', 0, 'pickColour', true)();
-// 			getProperty2(group, i, 'pickColour');
-// 		}
-// }
 
 /* Animating the slider */
 function rotateShape(Array, i){
@@ -2657,7 +2647,7 @@ function shapeTransforms(Array, group, getGroupSize){
 				}
 			}
 
-				changeSize(Array, i);
+				changeSize(group, i);
 				rotateShape(Array, i);
 				//rotateShape2(Array, i);
 			}
