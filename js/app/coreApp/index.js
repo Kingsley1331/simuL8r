@@ -1820,8 +1820,8 @@ function draw(){
 	pencilDrawer();
 	curveDrawer();
 	wallDrawer();
-	//shapeTransforms(pencilArray, 'pencil');
-	shapeTransforms('pencil', shapesController.getGroupSize('pencil'));
+	shapeTransforms(pencilArray, 'pencil');
+	//shapeTransforms('pencil', shapesController.getGroupSize('pencil'));
 
 	var i;
 	blueprint(customShapeArray, i);
@@ -2531,7 +2531,7 @@ function applyZoom(center, point, zoom, bool){ // bool is a temporary parameter
 		};
 }
 
-function shapeTransforms(Array, group, getGroupSize){
+function shapeTransforms(Array, group){
 //function shapeTransforms(group, getGroupSize){
 	//console.log('first group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
 	//if(Array[0]){
