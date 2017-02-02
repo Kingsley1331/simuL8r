@@ -115,7 +115,7 @@ var numberOfShapes = 0;
 
 var currentlyReshaping = null; //there must be a better way to do this
 
-var shapesController = (function(){
+var ShapesController = (function(){
 
 	function getShapeArray(shape){
 		var shapesArray = [];
@@ -617,11 +617,11 @@ function init(){
 	mouseMove()
 	mouseDown();
 	mouseUp();
-	shapesController.eraser();
+	ShapesController.eraser();
 	animate();
 
 	intervalRunning = true;
-	playScenes = setInterval(shapesController.animator, 1000 / frame_Rate);
+	playScenes = setInterval(ShapesController.animator, 1000 / frame_Rate);
 
 	wallMaker();
 
@@ -694,27 +694,27 @@ function mouseMove(){
 	locate();
 	pencilPoints();
 	if(!dragging) { // The if(!dragging) condition ensures the shape being dragged is the only one that is highlighted
-		shapesController.selected();
+		ShapesController.selected();
 	}
 	//merge();
-	shapesController.physMove();
+	ShapesController.physMove();
 	}, false)
 }
 
 function mouseDown(){
 	canvas.addEventListener('mousedown', function(evt){
-	//console.log('============================>testArray1:', shapesController.getShapeArray('square'));
+	//console.log('============================>testArray1:', ShapesController.getShapeArray('square'));
 	//getVertex(group, shapeIndex, vertexIndex)
-	//console.log('============================>testArray1:', shapesController.getVertex('square',0,0, true));
+	//console.log('============================>testArray1:', ShapesController.getVertex('square',0,0, true));
 	mouse_down = true;
-	shapesController.eraser();
-	shapesController.rotater();
-	//shapesController.rotation20();
-	shapesController.reSizer();
-	shapesController.drag();
+	ShapesController.eraser();
+	ShapesController.rotater();
+	//ShapesController.rotation20();
+	ShapesController.reSizer();
+	ShapesController.drag();
 	pointStart();
-	shapesController.reShaper();
-	shapesController.physTest();
+	ShapesController.reShaper();
+	ShapesController.physTest();
 	//onRotateDial = true;
 	var points = [1,1];
 	var arrays = [[1,2], [2,2], [3,3]];
@@ -731,11 +731,11 @@ function mouseUp(){
 	onRotateDial = false;
 	startPencil = false;
 	superPencilPointsMachine();
-	shapesController.copyShape();
-	shapesController.drop();
-	shapesController.stopResize();
+	ShapesController.copyShape();
+	ShapesController.drop();
+	ShapesController.stopResize();
 	if(reShape){offReshaper();}
-	shapesController.clearPhysMove();
+	ShapesController.clearPhysMove();
 	}, false)
 }
 
@@ -777,7 +777,7 @@ function selectPencilStroke(){
 	hover(pencil_id);
 }
 
-shapesController.drag = function(){
+ShapesController.drag = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && !dragging && !onReshape && !onSlider && !onRotator && !shapeSelection.shapes[key][2][i].expand && !shapeSelection.shapes[key][2][i].v_expand && !shapeSelection.shapes[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
@@ -804,7 +804,7 @@ shapesController.drag = function(){
 	}
 }
 
-shapesController.selected = function (){
+ShapesController.selected = function (){
 	select = false;
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -829,7 +829,7 @@ shapesController.selected = function (){
 
 
 
-shapesController.drop = function(){
+ShapesController.drop = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			dragging = false;
@@ -841,7 +841,7 @@ shapesController.drop = function(){
 }
 
 
-shapesController.eraser = function(){
+ShapesController.eraser = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && deletion){
@@ -853,7 +853,7 @@ shapesController.eraser = function(){
 }
 
 
-shapesController.reSizer = function (){
+ShapesController.reSizer = function (){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && reSize){
@@ -920,7 +920,7 @@ shapesController.reSizer = function (){
 		}
 	}
 
-shapesController.stopResize = function(){
+ShapesController.stopResize = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			expand = false;
@@ -973,7 +973,7 @@ function rotateListSwitch(key, vertices, i){
 	}
 }
 
-shapesController.rotater = function(){
+ShapesController.rotater = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && rotate){
@@ -1010,7 +1010,7 @@ shapesController.rotater = function(){
 		}
 	}
 
-	shapesController.rotation20 = function (){ //This function should probably be deleted as direction has changed
+	ShapesController.rotation20 = function (){ //This function should probably be deleted as direction has changed
 		for(key in shapeSelection.shapes){
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 				if(shapeSelection.shapes[key][2][i].selected && rotate){
@@ -1068,7 +1068,7 @@ function referencer(){
 }
 
 /** this function detects whether or not a user has clicked on a vertex **/
-shapesController.reShaper = function(){
+ShapesController.reShaper = function(){
 	if(reShape){
 		for(key in shapeSelection.shapes){
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -1136,7 +1136,7 @@ function offReshaper(){
 	}
 }
 
- shapesController.copyShape = function(){
+ ShapesController.copyShape = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(copy && copying && shapeSelection.shapes[key][2][i].selected){
@@ -1203,7 +1203,7 @@ function closestPoint(point, array){
 	}
 }
 
-shapesController.animator = function(){
+ShapesController.animator = function(){
 	for(key in shapeSelection.shapes){
 		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -1219,7 +1219,7 @@ shapesController.animator = function(){
 			}
 		}
 	}
-	shapesController.collisionDetector();
+	ShapesController.collisionDetector();
 }
 
 function getMousePos(evt, canvas) {       //canvas.addEventListener uses this function to calculate mouse position
@@ -1859,20 +1859,20 @@ function calcAngle(x1, y1, x2, y2){
 
 function shadow(group, i){
 	//Array[i].makeBoundingRect(); // Rewrite using the MVC pattern: currently the view is talking directly to the model
-	// var makeBoundingRect = shapesController.getProperty(group, i, 'makeBoundingRect');
+	// var makeBoundingRect = ShapesController.getProperty(group, i, 'makeBoundingRect');
 	// if(group !== 'wall'){makeBoundingRect();}
 
-	//shapesController.getProperty(group, i, 'makeBoundingRect')();
-	shapesController.getProperty(group, i, 'makeBoundingRect', true);
+	//ShapesController.getProperty(group, i, 'makeBoundingRect')();
+	ShapesController.getProperty(group, i, 'makeBoundingRect', true);
 
 	//console.log('=========================> typeof makeBoundingRect', typeof makeBoundingRect);
 	//bufferCtx.fillStyle = Array[i].colour;
-	//bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');
+	//bufferCtx.fillStyle = ShapesController.getProperty(group, i, 'colour');
 	//bufferCtx.strokeStyle = Array[i].lineColour;
-	bufferCtx.strokeStyle = shapesController.getProperty(group, i, 'lineColour');
+	bufferCtx.strokeStyle = ShapesController.getProperty(group, i, 'lineColour');
 	bufferCtx.beginPath();
 	//if(Array[i].selected){
-	if(shapesController.getProperty(group, i, 'selected')){
+	if(ShapesController.getProperty(group, i, 'selected')){
 		bufferCtx.lineWidth = 1.4;
 		bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
 		bufferCtx.shadowOffsetX = 10;
@@ -1881,16 +1881,16 @@ function shadow(group, i){
 	}else{
 		bufferCtx.shadowColor = "transparent";
 		//bufferCtx.lineWidth = Array[i].lineWidth;
-	  bufferCtx.lineWidth =	shapesController.getProperty(group, i, 'lineWidth')
+	  bufferCtx.lineWidth =	ShapesController.getProperty(group, i, 'lineWidth')
 	}
 
 	//if(dragging && Array[i].selected){
-	if(dragging && shapesController.getProperty(group, i, 'selected')){
+	if(dragging && ShapesController.getProperty(group, i, 'selected')){
 		// Array[i].X = mousePos.x + offcenter[0];
 		// Array[i].Y = mousePos.y + offcenter[1];
 
-		shapesController.setProperty(group, i, 'X', mousePos.x + offcenter[0]);
-		shapesController.setProperty(group, i, 'Y', mousePos.y + offcenter[1]);
+		ShapesController.setProperty(group, i, 'X', mousePos.x + offcenter[0]);
+		ShapesController.setProperty(group, i, 'Y', mousePos.y + offcenter[1]);
 
 		//setProperty(group, shapeIndex, property, newProperty)
 		if(!select){
@@ -1905,14 +1905,14 @@ function shadow(group, i){
 
 /* Call resize() method when changing size */
 function changeSize(group, i){
-		var stretchRadius = shapesController.getProperty(group, i, 'stretchRadius');
+		var stretchRadius = ShapesController.getProperty(group, i, 'stretchRadius');
 
-		if(reSize && (shapesController.getProperty(group, i, 'expand') || shapesController.getProperty(group, i, 'v_expand') || shapesController.getProperty(group, i, 'h_expand'))){
-			shapesController.getProperty(group, i, 'resize', true);
+		if(reSize && (ShapesController.getProperty(group, i, 'expand') || ShapesController.getProperty(group, i, 'v_expand') || ShapesController.getProperty(group, i, 'h_expand'))){
+			ShapesController.getProperty(group, i, 'resize', true);
 		}
 
 		/* Draws the re-size box */
-		if(reSize && shapesController.getProperty(group, i, 'expandBox')){
+		if(reSize && ShapesController.getProperty(group, i, 'expandBox')){
 			bufferCtx.save();
 			bufferCtx.fillStyle = 'white';
 			bufferCtx.strokeStyle = 'black';
@@ -1928,8 +1928,8 @@ function changeSize(group, i){
 
 
 			var center = {
-					x: shapesController.getCentroid(group, i).x,
-				 	y: shapesController.getCentroid(group, i).y
+					x: ShapesController.getCentroid(group, i).x,
+				 	y: ShapesController.getCentroid(group, i).y
 			 };
 
 
@@ -2011,29 +2011,29 @@ function changeSize(group, i){
 // }
 
 function changeColour(group, i){
-	if(colourChange && shapesController.getProperty(group, i, 'onObject')){
-		var pickColour = shapesController.getProperty(group, i, 'pickColour', true);
+	if(colourChange && ShapesController.getProperty(group, i, 'onObject')){
+		var pickColour = ShapesController.getProperty(group, i, 'pickColour', true);
 	}
 }
 
 /* Animating the slider */
 function rotateShape(group, i){
-	//shapesController.getProperty(group, i, 'rotationLine');
+	//ShapesController.getProperty(group, i, 'rotationLine');
 	//if(rotate && Array[i].rotationLine){
-	if(rotate && shapesController.getProperty(group, i, 'rotationLine')){
+	if(rotate && ShapesController.getProperty(group, i, 'rotationLine')){
 
 		//var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
 
 		var center = {
-				x: shapesController.getCentroid(group, i).x,
-				y: shapesController.getCentroid(group, i).y
+				x: ShapesController.getCentroid(group, i).x,
+				y: ShapesController.getCentroid(group, i).y
 		 };
 
 		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
 		var startPoint = center.x - sliderButtonWidth/2;
 		var endPoint = center.x + sliderButtonWidth/2;
-		var yCoordinates = center.y + shapesController.getProperty(group, i, 'radius')+ 45;
+		var yCoordinates = center.y + ShapesController.getProperty(group, i, 'radius')+ 45;
 		var radius = 20;
 
 		bufferCtx.save();
@@ -2073,17 +2073,17 @@ function rotateShape(group, i){
 		/** Slider **/
 		// Array[i].slider[0] = startPoint + sliderPosition;
 		// Array[i].slider[1] = yCoordinates;
-		shapesController.setProperty(group, i, 'slider', [startPoint + sliderPosition, yCoordinates]);
-		var sliderHeight = shapesController.getProperty(group, i, 'slider')[1];
+		ShapesController.setProperty(group, i, 'slider', [startPoint + sliderPosition, yCoordinates]);
+		var sliderHeight = ShapesController.getProperty(group, i, 'slider')[1];
 		/** Slider follows the cursor along the line **/
 		if(rotate && onSlider && projMouse.x >= startPoint && projMouse.x <= endPoint){
 			//Array[i].slider[0] = projMouse.x;
 			sliderPosition = projMouse.x - startPoint;
 		  //Array[i].sliderPosition = projMouse.x - startPoint;
 			//Array[i].rotate();
-			shapesController.getProperty(group, i, 'rotate', true);
+			ShapesController.getProperty(group, i, 'rotate', true);
 		}
-		var slider = shapesController.getProperty(group, i, 'slider');
+		var slider = ShapesController.getProperty(group, i, 'slider');
 		/** draws the actual slider **/
 		bufferCtx.fillStyle = 'red';
 		bufferCtx.beginPath();
@@ -2540,58 +2540,58 @@ function applyZoom(center, point, zoom, bool){ // bool is a temporary parameter
 }
 
 function shapeTransforms(group){
-	if(shapesController.isGroupEmpty(group) === false){
-		var length = shapesController.getGroupSize(group);
+	if(ShapesController.isGroupEmpty(group) === false){
+		var length = ShapesController.getGroupSize(group);
 		//var length = Array.length;
 		//var proj = {};
 		for(var i = 0; i < length; i++){
 			//bufferCtx.fillStyle = Array[i].colour; //getProperty(group, i, 'pickColour')
-			//bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');
+			//bufferCtx.fillStyle = ShapesController.getProperty(group, i, 'colour');
 			shadow(group, i); /*********************** identify shape by id ***************************/
 			//changeColour(group, i, 'pickColour'); /*********************** identify shape by id ***************************/
 			//changeColour1(Array, i);
 			changeColour(group, i);
-			bufferCtx.fillStyle = shapesController.getProperty(group, i, 'colour');/// console.log(Array[i].colour===shapesController.getProperty(group, i, 'colour'));
+			bufferCtx.fillStyle = ShapesController.getProperty(group, i, 'colour');/// console.log(Array[i].colour===ShapesController.getProperty(group, i, 'colour'));
 			//bufferCtx.fillStyle = Array[i].colour;
 			// if(group !== 'wall'){
-			// 	console.log('check colour:', shapesController.getProperty(group, i, 'colour') === '#ffffff');
+			// 	console.log('check colour:', ShapesController.getProperty(group, i, 'colour') === '#ffffff');
 			// }
 			//bufferCtx.fillStyle = 'black';
 			//console.log('===============================================================================================================================================>shadow group', group);
 			bufferCtx.save();
 
-			if(shapesController.getVertex(group, i, 0)){
-				var x = shapesController.getVertex(group, i, 0)[0];
-				var y = shapesController.getVertex(group, i, 0)[1];
+			if(ShapesController.getVertex(group, i, 0)){
+				var x = ShapesController.getVertex(group, i, 0)[0];
+				var y = ShapesController.getVertex(group, i, 0)[1];
 			}
 
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(x, y); // first point of the custom shape is drawn here
 
 			//for(var j = 0; j < Array[i].vertices.length; j++){ /*********************** TO BE RESOLVED ***************************/
-				for(var j = 0; j < shapesController.getShapeSize(group, i); j++){
-					var x = shapesController.getVertex(group, i, j)[0];
-					var y = shapesController.getVertex(group, i, j)[1];
+				for(var j = 0; j < ShapesController.getShapeSize(group, i); j++){
+					var x = ShapesController.getVertex(group, i, j)[0];
+					var y = ShapesController.getVertex(group, i, j)[1];
 
 				//if(Array[i].vertices[j][2]){ // checks if a vertex has been clicked
-				if(shapesController.getVertex(group, i, j, true)[2]){ // checks if a vertex has been clicked
+				if(ShapesController.getVertex(group, i, j, true)[2]){ // checks if a vertex has been clicked
 					// Array[i].vertices[j][0] = mousePos.x - Array[i].X;
 					// Array[i].vertices[j][1] = mousePos.y - Array[i].Y;
-					shapesController.setVertex(group, i, j, [mousePos.x - shapesController.getProperty(group, i, 'X'), mousePos.y - shapesController.getProperty(group, i, 'Y'), shapesController.getVertex(group, i, j, true)[2], shapesController.getVertex(group, i, j, true)[3]]);
+					ShapesController.setVertex(group, i, j, [mousePos.x - ShapesController.getProperty(group, i, 'X'), mousePos.y - ShapesController.getProperty(group, i, 'Y'), ShapesController.getVertex(group, i, j, true)[2], ShapesController.getVertex(group, i, j, true)[3]]);
 				}
 				bufferCtx.lineTo(x, y);
 		}
 
 		//if(Array == pencilArray && !Array[i].stroking){bufferCtx.closePath();} //closes the path for the pencil shapes
-		if(group === 'pencil' && !shapesController.getProperty(group, i, 'stroking')){ //closes the path for the pencil shapes
+		if(group === 'pencil' && !ShapesController.getProperty(group, i, 'stroking')){ //closes the path for the pencil shapes
 			bufferCtx.closePath();
 		 }
 			bufferCtx.restore();
 			bufferCtx.stroke();
-		if(group === 'pencil' && !shapesController.getProperty(group, i, 'stroking')){
+		if(group === 'pencil' && !ShapesController.getProperty(group, i, 'stroking')){
 			bufferCtx.fill();
 		}else if(group !== 'pencil'){
-			if(!shapesController.getProperty(group, i, 'stroking')){
+			if(!ShapesController.getProperty(group, i, 'stroking')){
 				bufferCtx.fill();
 			}
 		}
@@ -2604,8 +2604,8 @@ function shapeTransforms(group){
 			// bufferCtx.lineTo(projEdge.x + zoom*shift[0], projEdge.y + zoom*shift[1]);
 			// bufferCtx.lineTo(projCenter.x + zoom*shift[0], projCenter.y + zoom*shift[1]);
 
-			bufferCtx.lineTo(shapesController.getVertex(group, i, 0, false)[0], shapesController.getVertex(group, i, 0, false)[1]);
-			bufferCtx.lineTo(shapesController.getCentroid(group, i).x , shapesController.getCentroid(group, i).y);
+			bufferCtx.lineTo(ShapesController.getVertex(group, i, 0, false)[0], ShapesController.getVertex(group, i, 0, false)[1]);
+			bufferCtx.lineTo(ShapesController.getCentroid(group, i).x , ShapesController.getCentroid(group, i).y);
 
 			bufferCtx.stroke();
 		}
@@ -2613,11 +2613,11 @@ function shapeTransforms(group){
 	if(reShape){
 		onReshape = false;
 		//for(var j = 0; j < Array[i].vertices.length; j++){
-		for(var j = 0; j <shapesController.getProperty(group, i, 'vertices').length; j++){
+		for(var j = 0; j <ShapesController.getProperty(group, i, 'vertices').length; j++){
 				// var x = Array[i].vertices[j][0] + Array[i].X;
 				// var y = Array[i].vertices[j][1] + Array[i].Y;
-				var x = shapesController.getVertex(group, i, j, false)[0];
-				var y = shapesController.getVertex(group, i, j, false)[1];
+				var x = ShapesController.getVertex(group, i, j, false)[0];
+				var y = ShapesController.getVertex(group, i, j, false)[1];
 
 				// var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 				//
@@ -2632,7 +2632,7 @@ function shapeTransforms(group){
 				//if(distance(mousePos.x - x, mousePos.y - y) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
 					onReshape = true;
 					bufferCtx.fillStyle = 'darkblue';
-					for(var k = 0; k < shapesController.getProperty(group, i, 'vertices').length; k++){ //draws the small blue dots for each vertex
+					for(var k = 0; k < ShapesController.getProperty(group, i, 'vertices').length; k++){ //draws the small blue dots for each vertex
 					//for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
 						// var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
 						// var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
@@ -2642,8 +2642,8 @@ function shapeTransforms(group){
 						// var Xpoint = proj.x;
 						// var Ypoint = proj.y;
 
-						var Xpoint = shapesController.getVertex(group, i, k, false)[0];
-						var Ypoint = shapesController.getVertex(group, i, k, false)[1];
+						var Xpoint = ShapesController.getVertex(group, i, k, false)[0];
+						var Ypoint = ShapesController.getVertex(group, i, k, false)[1];
 
 						bufferCtx.beginPath();
 						bufferCtx.arc(Xpoint, Ypoint, 3, 0, 2*Math.PI);
@@ -2663,9 +2663,9 @@ function shapeTransforms(group){
 	// }
 
 			if(physics && group !== 'wall'){
-				if(shapesController.getProperty(group, i, 'gravity')){
-					var newVelocity = [shapesController.getProperty(group, i, 'velocity')[0], shapesController.getProperty(group, i, 'velocity')[1] + gravity/20];
-					shapesController.setProperty(group, i, 'velocity', newVelocity);
+				if(ShapesController.getProperty(group, i, 'gravity')){
+					var newVelocity = [ShapesController.getProperty(group, i, 'velocity')[0], ShapesController.getProperty(group, i, 'velocity')[1] + gravity/20];
+					ShapesController.setProperty(group, i, 'velocity', newVelocity);
 				}
 			}
 
