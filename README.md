@@ -16,9 +16,9 @@ Eventually users should be able to the following:
 - create scenes that are physically accurate enough to explore Newtonian mechanics
 
 - create systems of particles capable of demonstrating thermodynamic concepts such as entropy
- 
 
-## Installation (for developers)
+
+## Installation
 
 To run this app on your local machine follow the steps below
 
@@ -33,14 +33,14 @@ To run this app on your local machine follow the steps below
 - download the mongodb database from here https://www.mongodb.org/downloads#production, for setup details visit https://docs.mongodb.org/manual/installation/
 
 
-## Running the Application 
+## Running the Application
 
 - from within the simuL8r directory run "node server" in the Command Prompt to launch the app
 
 - open a web browser and visit http://localhost:5000/ to view and use the app
 
 
-## Next Steps 
+## Next Steps
 
 - improve efficiency of the collision detection function
 
