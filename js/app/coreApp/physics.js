@@ -352,7 +352,7 @@ var scale = 0.1;
 var resolution = 1;
 
 
-function physTest(){
+shapesController.physTest = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(physics && dragging && shapeSelection.shapes[key][2][i].selected){
@@ -363,7 +363,7 @@ function physTest(){
 }
 
 
-function physMove(){
+shapesController.physMove = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(physics && dragging && shapeSelection.shapes[key][2][i].selected && shapeSelection.shapes[key][2][i].mass !== Infinity){
@@ -399,7 +399,7 @@ function physMove(){
 	}
 }
 
-function clearPhysMove(){
+shapesController.clearPhysMove = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(physics && shapeSelection.shapes[key][2][i].selected){
@@ -410,7 +410,7 @@ function clearPhysMove(){
 	}
 }
 
-function collisionDetector(){
+shapesController.collisionDetector = function(){
 if(physics)
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){

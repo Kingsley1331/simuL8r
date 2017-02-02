@@ -618,11 +618,11 @@ function init(){
 	mouseMove()
 	mouseDown();
 	mouseUp();
-	eraser();
+	shapesController.eraser();
 	animate();
 
 	intervalRunning = true;
-	playScenes = setInterval(animator, 1000 / frame_Rate);
+	playScenes = setInterval(shapesController.animator, 1000 / frame_Rate);
 
 	wallMaker();
 
@@ -695,10 +695,10 @@ function mouseMove(){
 	locate();
 	pencilPoints();
 	if(!dragging) { // The if(!dragging) condition ensures the shape being dragged is the only one that is highlighted
-		selected();
+		shapesController.selected();
 	}
 	//merge();
-	physMove();
+	shapesController.physMove();
 	}, false)
 }
 
@@ -708,14 +708,14 @@ function mouseDown(){
 	//getVertex(group, shapeIndex, vertexIndex)
 	//console.log('============================>testArray1:', shapesController.getVertex('square',0,0, true));
 	mouse_down = true;
-	eraser();
-	rotater();
-	rotation20();
-	reSizer();
-	drag();
+	shapesController.eraser();
+	shapesController.rotater();
+	//shapesController.rotation20();
+	shapesController.reSizer();
+	shapesController.drag();
 	pointStart();
-	reShaper();
-	physTest();
+	shapesController.reShaper();
+	shapesController.physTest();
 	//onRotateDial = true;
 	var points = [1,1];
 	var arrays = [[1,2], [2,2], [3,3]];
@@ -732,11 +732,11 @@ function mouseUp(){
 	onRotateDial = false;
 	startPencil = false;
 	superPencilPointsMachine();
-	copyShape();
-	drop();
-	stopResize();
+	shapesController.copyShape();
+	shapesController.drop();
+	shapesController.stopResize();
 	if(reShape){offReshaper();}
-	clearPhysMove();
+	shapesController.clearPhysMove();
 	}, false)
 }
 
@@ -778,7 +778,7 @@ function selectPencilStroke(){
 	hover(pencil_id);
 }
 
-function drag(){
+shapesController.drag = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && !dragging && !onReshape && !onSlider && !onRotator && !shapeSelection.shapes[key][2][i].expand && !shapeSelection.shapes[key][2][i].v_expand && !shapeSelection.shapes[key][2][i].h_expand){ // remove the expand conditions when the expand box is resized around the shape
@@ -805,7 +805,7 @@ function drag(){
 	}
 }
 
-function selected(){
+shapesController.selected = function (){
 	select = false;
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -828,7 +828,9 @@ function selected(){
 	}
 }
 
-function drop(){
+
+
+shapesController.drop = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			dragging = false;
@@ -840,7 +842,7 @@ function drop(){
 }
 
 
-function eraser(){
+shapesController.eraser = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && deletion){
@@ -852,7 +854,7 @@ function eraser(){
 }
 
 
-function reSizer(){
+shapesController.reSizer = function (){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && reSize){
@@ -919,7 +921,7 @@ function reSizer(){
 		}
 	}
 
-function stopResize(){
+shapesController.stopResize = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			expand = false;
@@ -972,7 +974,7 @@ function rotateListSwitch(key, vertices, i){
 	}
 }
 
-function rotater(){
+shapesController.rotater = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(shapeSelection.shapes[key][2][i].selected && rotate){
@@ -1009,7 +1011,7 @@ function rotater(){
 		}
 	}
 
-	function rotation20(){
+	shapesController.rotation20 = function (){ //This function should probably be deleted as direction has changed
 		for(key in shapeSelection.shapes){
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 				if(shapeSelection.shapes[key][2][i].selected && rotate){
@@ -1067,7 +1069,7 @@ function referencer(){
 }
 
 /** this function detects whether or not a user has clicked on a vertex **/
-function reShaper(){
+shapesController.reShaper = function(){
 	if(reShape){
 		for(key in shapeSelection.shapes){
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -1135,7 +1137,7 @@ function offReshaper(){
 	}
 }
 
-function copyShape(){
+ shapesController.copyShape = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(copy && copying && shapeSelection.shapes[key][2][i].selected){
@@ -1202,7 +1204,7 @@ function closestPoint(point, array){
 	}
 }
 
-function animator(){
+shapesController.animator = function(){
 	for(key in shapeSelection.shapes){
 		if(key != 'userID' && key != 'isPublic' && key != 'name'){
 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -1218,7 +1220,7 @@ function animator(){
 			}
 		}
 	}
-	collisionDetector();
+	shapesController.collisionDetector();
 }
 
 function getMousePos(evt, canvas) {       //canvas.addEventListener uses this function to calculate mouse position
@@ -3651,7 +3653,7 @@ var scale = 0.1;
 var resolution = 1;
 
 
-function physTest(){
+shapesController.physTest = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(physics && dragging && shapeSelection.shapes[key][2][i].selected){
@@ -3662,7 +3664,7 @@ function physTest(){
 }
 
 
-function physMove(){
+shapesController.physMove = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(physics && dragging && shapeSelection.shapes[key][2][i].selected && shapeSelection.shapes[key][2][i].mass !== Infinity){
@@ -3698,7 +3700,7 @@ function physMove(){
 	}
 }
 
-function clearPhysMove(){
+shapesController.clearPhysMove = function(){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 			if(physics && shapeSelection.shapes[key][2][i].selected){
@@ -3709,7 +3711,7 @@ function clearPhysMove(){
 	}
 }
 
-function collisionDetector(){
+shapesController.collisionDetector = function(){
 if(physics)
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
