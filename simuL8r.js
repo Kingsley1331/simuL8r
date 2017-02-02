@@ -1,4 +1,4 @@
-/** simuL8r - v1.0.0 - 2017-02-01 **/ 
+/** simuL8r - v1.0.0 - 2017-02-02 **/ 
 var circle;
 var canvas;
 var circleArray = [];
@@ -203,6 +203,8 @@ var shapesController = (function(){
 	}
 
 	function isGroupEmpty(group){
+		//shapeSelection.shapes[group][2]
+		//shapeSelection.shapes['square'][2]
 		if(group){
 			return shapeSelection.shapes[group][2].length === 0;
 		}
@@ -706,7 +708,6 @@ function mouseDown(){
 	//getVertex(group, shapeIndex, vertexIndex)
 	//console.log('============================>testArray1:', shapesController.getVertex('square',0,0, true));
 	mouse_down = true;
-	if(shapeSelection.shapes.curve.curveArray){ console.log(shapeSelection.shapes.curve.curveArray.length);}
 	eraser();
 	rotater();
 	rotation20();
@@ -1814,15 +1815,18 @@ function draw(){
 	bufferCtx.fillStyle = '#E0E0E0';
 	bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-	shapeDrawer(circleArray, Circle, 'circle');
-	shapeDrawer(squareArray, Square, 'square');
-	shapeDrawer(triangleArray, Triangle, 'triangle');
+	// shapeDrawer(circleArray, Circle, 'circle');
+	// shapeDrawer(squareArray, Square, 'square');
+	// shapeDrawer(triangleArray, Triangle, 'triangle');
+	shapeDrawer('circle', Circle);
+	shapeDrawer('square', Square);
+	shapeDrawer('triangle', Triangle);
 	customShapeDrawer();
 	pencilDrawer();
-	curveDrawer();
+	//curveDrawer();
 	wallDrawer();
-	shapeTransforms(pencilArray, 'pencil');
-	//shapeTransforms('pencil', shapesController.getGroupSize('pencil'));
+	//shapeTransforms(pencilArray, 'pencil');
+	shapeTransforms('pencil');
 
 	var i;
 	blueprint(customShapeArray, i);
@@ -2170,20 +2174,22 @@ function wallDrawer(){
 	bufferCtx.lineWidth = 0.5;
 	bufferCtx.strokeStyle = 'black';
 	bufferCtx.globalAlpha = 1
-	shapeTransforms(wallArray, 'wall');
-	//shapeTransforms('wall', shapesController.getGroupSize('wall'));
+	//shapeTransforms(wallArray, 'wall');
+	shapeTransforms('wall');
 }
 
-function shapeDrawer(shapeArray, Shape, shapeProp){
+function shapeDrawer(group, Shape){
 	/* Drawing the shape cursor */
 	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-	if(!dragging && shapeSelection.shapes[shapeProp][0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
+	if(!dragging && shapeSelection.shapes[group][0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
 		shapeCursor(bufferCtx, proj, Shape);
 		}
 	bufferCtx.globalAlpha = 1
-	shapeTransforms(shapeArray, shapeProp);
+	//shapeTransforms(group, shapeProp);
+	//console.log('================================================> shapeDrawer group', group);
+	shapeTransforms(group);
 }
 
 function shapeCursor(buffer, projection, template){
@@ -2323,8 +2329,8 @@ function customShapeDrawer(){
 			}
 		}
 	}										/** this section applies all of the changes and transformations that have been made to the shape **/
-	shapeTransforms(customShapeArray, 'customShape');
-	//shapeTransforms('pencil', shapesController.getGroupSize('pencil'));
+	//shapeTransforms(customShapeArray, 'customShape');
+	shapeTransforms('customShape');
 }
 
 
@@ -2532,12 +2538,9 @@ function applyZoom(center, point, zoom, bool){ // bool is a temporary parameter
 		};
 }
 
-function shapeTransforms(Array, group){
-//function shapeTransforms(group, getGroupSize){
-	//console.log('first group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
-	//if(Array[0]){
-	if(shapesController.isGroupEmpty(group) === false){ //console.log('second group ==> ', group, 'isGroupEmpty ==> ', shapesController.isGroupEmpty(group));
-		var length = shapesController.getGroupSize(group); //console.log('=======> getGroupSize', length);
+function shapeTransforms(group){
+	if(shapesController.isGroupEmpty(group) === false){
+		var length = shapesController.getGroupSize(group);
 		//var length = Array.length;
 		//var proj = {};
 		for(var i = 0; i < length; i++){
@@ -2608,7 +2611,8 @@ function shapeTransforms(Array, group){
 
 	if(reShape){
 		onReshape = false;
-		for(var j = 0; j < Array[i].vertices.length; j++){
+		//for(var j = 0; j < Array[i].vertices.length; j++){
+		for(var j = 0; j <shapesController.getProperty(group, i, 'vertices').length; j++){
 				// var x = Array[i].vertices[j][0] + Array[i].X;
 				// var y = Array[i].vertices[j][1] + Array[i].Y;
 				var x = shapesController.getVertex(group, i, j, false)[0];
