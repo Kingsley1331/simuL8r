@@ -41,14 +41,14 @@ var shapeSelection = {                    //shapeSelection.shapes[shape][2]
 							height:0
 						},
 						shapes: {
-							circle:[false, circleGen, circleArray, 0],
-							square:[false, squareGen, squareArray, 1],
-							triangle:[false, triangleGen, triangleArray, 2],
-							customShape:[false, customShapeGen, customShapeArray, 3],
-							pencil:[true, pencilGen, pencilArray, 4],
-							curve:[false, curveGen, curveArray, 5],
-							wall:[false, wallGen, wallArray, 6]
-						}
+							circle: [false, circleGen, circleArray, 0],
+							square: [false, squareGen, squareArray, 1],
+							triangle: [false, triangleGen, triangleArray, 2],
+							customShape: [false, customShapeGen, customShapeArray, 3],
+							pencil: [true, pencilGen, pencilArray, 4],
+							wall: [false, wallGen, wallArray, 5]
+						},
+						pointsArray: []
 					};
 
 var pencilPointsArray = [];
@@ -82,7 +82,7 @@ var onRotator = false;
 var sliderPosition = 0;
 var sliderButtonWidth = 250;
 var startDraw = false;
-var pointsArray = [];
+//var pointsArray = [];
 var closedPath = false;
 var closePathRadius = 5;
 var rotVertices = 0;
@@ -156,18 +156,6 @@ var ShapesController = (function(){
 
 	function getProperty(group, shapeIndex, property, isFunction){
 		var shape = shapeSelection.shapes[group][2][shapeIndex];
-		if(group !== 'wall'){
-			// console.log('================> group', group);
-			// console.log('================> shapeIndex', shapeIndex);
-			// console.log('================> property', property);
-			//console.log('================> colour', shape[property]);
-			//console.log('================> original colour', shapeSelection.shapes['square'][2][0].colour);
-		}
-		// for(var prop in shape){
-		// 	if(prop === 'findBoundingRectMaxX' || prop === 'findBoundingRectMinX' || prop === 'findBoundingRectMaxY' || prop === 'findBoundingRectMinY'){
-		// 		console.log(prop + ' ==>', typeof shapeSelection.shapes[group][2][shapeIndex][prop], group);
-		// 	}
-		// }
 		if(isFunction){
 			return shapeSelection.shapes[group][2][shapeIndex][property]();
 		}else{
@@ -197,16 +185,26 @@ var ShapesController = (function(){
 			var x = centroid[0] + shift[0];
 			var y = centroid[1] + shift[1];
 			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-			return {x:proj.x, y:proj.y};
-		}
+			return {
+				  x:proj.x,
+				  y:proj.y
+			 };
+		 }
 	}
 
 	function isGroupEmpty(group){
-		//shapeSelection.shapes[group][2]
-		//shapeSelection.shapes['square'][2]
 		if(group){
 			return shapeSelection.shapes[group][2].length === 0;
 		}
+	}
+
+	function getArrayPoint(index){
+		var pointsArray = shapeSelection.pointsArray[index];
+		proj = applyZoom([zoomCenter[0], zoomCenter[1]], pointsArray, zoom, true);
+		return {
+				x:proj.x,
+			  y:proj.y
+		 };
 	}
 
 	return {
@@ -218,7 +216,8 @@ var ShapesController = (function(){
 		isGroupEmpty: isGroupEmpty,
 		getShapeSize: getShapeSize,
 		setVertex: setVertex,
-		getCentroid: getCentroid
+		getCentroid: getCentroid,
+		getArrayPoint: getArrayPoint
 	};
 
 })();
@@ -642,7 +641,7 @@ function options(){
 	save = document.getElementById('save');
 	image = document.getElementById('canvasImg')
 	customShape = document.getElementById('customShape');
-	curve = document.getElementById('line');
+	//curve = document.getElementById('line');
 	pencil_id = document.getElementById('pencil_id');
 	//PickColor = document.getElementById('PickColor');
 	Copy = document.getElementById('copy');
@@ -936,26 +935,6 @@ ShapesController.stopResize = function(){
 		}
 	}
 
-/** pointStart() adds points to the pointsArray on mousedown **/
-function pointStart(){
-	if((shapes || line) && !onObject && !select){
-		startDraw = true;
-		if(!closedPath){
-			var lastpoint = pointsArray[pointsArray.length - 1];
-			pointsArray.push([mousePos.x, mousePos.y]);
-			clickCount = 1;
-			if(pointsArray.length > 1){
-				if(pointsArray[0] && distance(mousePos.x - lastpoint[0], mousePos.y - lastpoint[1]) < closePathRadius){
-					clickCount += 1;
-				}
-			}
-		}else{
-			pointsArray.push([pointsArray[0][0], pointsArray[0][1]]); // adds the coordinates of the first point to the pointsArray again when clicking on them in order to closePath
-			startDraw = false;
-		}
-	}
-}
-
 function rotateListSwitch(key, vertices, i){
 	switch(true){
 		case reversingX:
@@ -1001,9 +980,7 @@ ShapesController.rotater = function(){
 				}
 			}
 				} // detects if cursor is hovering over slider
-				var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-				//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-				if(distance(shapeSelection.shapes[key][2][i].slider[0] - projMouse.x, shapeSelection.shapes[key][2][i].slider[1] - projMouse.y) <= 10){
+					if(distance(shapeSelection.shapes[key][2][i].slider[0] - mousePos.xPhysical, shapeSelection.shapes[key][2][i].slider[1] - mousePos.yPhysical) <= 10){
 					onSlider = true;
 				}
 			}
@@ -1040,16 +1017,12 @@ ShapesController.rotater = function(){
 						}
 					}
 				}
-
-
-					} // detects if cursor is hovering over slider
-					var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-					//var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom);
-					//if(distance(shapeSelection.shapes[key][2][i].X - projMouse.x, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[key][2][i].setOuterRadius()-100 - projMouse.y) <= 10){
+			}
+					// detects if cursor is hovering over slider
 						if(shapeSelection.shapes[key][2][i].rotater.isRotated === false){
 								shapeSelection.shapes[key][2][i].rotater.outerDialPositionY = -(shapeSelection.shapes[key][2][i].outerRadius + leverLength);
 						}
-						if(distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].rotater.outerDialPositionX - projMouse.x, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].rotater.outerDialPositionY - projMouse.y) <= 10){
+						if(distance(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].rotater.outerDialPositionX - mousePos.xPhysical, shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].rotater.outerDialPositionY - mousePos.yPhysical) <= 10){
 							shapeSelection.shapes[key][2][i].rotater.isRotated = true;
 							onRotateDial = true;
 					  }
@@ -1230,11 +1203,10 @@ function getMousePos(evt, canvas) {       //canvas.addEventListener uses this fu
 		var y = evt.clientY - rect.top;
 	}
 
-	//if(evt.which === 37 || evt.which === 38 || evt.which === 39 || evt.which === 40)
-	if(isShifting(evt)){
-		var x = mousePos.xPhysical;
-		var y = mousePos.yPhysical;
-	}
+	// if(isShifting(evt)){
+	// 	var x = mousePos.xPhysical;
+	// 	var y = mousePos.yPhysical;
+	// }
 
 	var shiftedX = x - zoom * shift[0];
 	var shiftedY = y - zoom * shift[1];
@@ -1267,7 +1239,7 @@ function CustomShape(){
 	this.isAsleep = false;
 	this.id = 1;
 	this.contactList = [];
-	this.pointsArray = pointsArray;
+	this.pointsArray = shapeSelection.pointsArray;
 	this.centroid = [0,0];
 	this.vertices = [];
 	this.referenceVertices = [];
@@ -1610,7 +1582,7 @@ function Walls(){
 	this.stretchRadius = this.side/2;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
+	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
 
 function wallGen(){
@@ -1622,7 +1594,7 @@ function wallGen(){
 Walls.prototype = new CustomShape();
 
 function Curves(){
-	this.pointsArray = pointsArray;
+	this.pointsArray = shapeSelection.pointsArray;
 	this.centroid = [0, 0];
 	this.vertices = [0, 0];
 	this.velocity = [0, 0];
@@ -1659,7 +1631,7 @@ function Square(){
 	this.stretchRadius = 2*this.side/3;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
+	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
 
 Square.prototype = new CustomShape();
@@ -1705,7 +1677,7 @@ function Circle(){
 	this.stretchRadius = 2*this.side/3;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
+	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
 
 Circle.prototype = new CustomShape();
@@ -1739,7 +1711,7 @@ function Triangle(){
 	this.stretchRadius = this.side/2;
 	this.copy = true;
 	var j;
-	centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
+	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
 
 Triangle.prototype = new CustomShape();
@@ -1774,7 +1746,7 @@ function Pencil(array){
 		this.stroking = false;
 	}
 	var j;
-	if(pencils)centralize(this, this.pointsArray, j); // the values in this.pointArray are used by the centralize function to calculate this.vertices
+	if(pencils)centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
 
 Pencil.prototype = new CustomShape();
@@ -2018,18 +1990,11 @@ function changeColour(group, i){
 
 /* Animating the slider */
 function rotateShape(group, i){
-	//ShapesController.getProperty(group, i, 'rotationLine');
-	//if(rotate && Array[i].rotationLine){
 	if(rotate && ShapesController.getProperty(group, i, 'rotationLine')){
-
-		//var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
-
 		var center = {
 				x: ShapesController.getCentroid(group, i).x,
 				y: ShapesController.getCentroid(group, i).y
 		 };
-
-		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
 		var startPoint = center.x - sliderButtonWidth/2;
 		var endPoint = center.x + sliderButtonWidth/2;
@@ -2071,16 +2036,11 @@ function rotateShape(group, i){
 		bufferCtx.stroke();
 
 		/** Slider **/
-		// Array[i].slider[0] = startPoint + sliderPosition;
-		// Array[i].slider[1] = yCoordinates;
 		ShapesController.setProperty(group, i, 'slider', [startPoint + sliderPosition, yCoordinates]);
 		var sliderHeight = ShapesController.getProperty(group, i, 'slider')[1];
 		/** Slider follows the cursor along the line **/
-		if(rotate && onSlider && projMouse.x >= startPoint && projMouse.x <= endPoint){
-			//Array[i].slider[0] = projMouse.x;
-			sliderPosition = projMouse.x - startPoint;
-		  //Array[i].sliderPosition = projMouse.x - startPoint;
-			//Array[i].rotate();
+		if(rotate && onSlider && mousePos.xPhysical >= startPoint && mousePos.xPhysical <= endPoint){
+			sliderPosition = mousePos.xPhysical - startPoint;
 			ShapesController.getProperty(group, i, 'rotate', true);
 		}
 		var slider = ShapesController.getProperty(group, i, 'slider');
@@ -2100,7 +2060,6 @@ function rotateShape(group, i){
 function rotateShape2(Array, i){
 	if(rotate && Array[i].rotationLine){
 		var center = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + shift[0], Array[i].Y + shift[1]], zoom);
-		var projMouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + zoom * shift[0], mousePos.y + zoom * shift[1]], zoom);
 
 		var innerRadius = Array[i].setOuterRadius();
 		var outerRadius = innerRadius + leverLength;
@@ -2181,15 +2140,12 @@ function wallDrawer(){
 
 function shapeDrawer(group, Shape){
 	/* Drawing the shape cursor */
-	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-	if(!dragging && shapeSelection.shapes[group][0] && proj.x <= canvas.width - 25 && proj.y <= canvas.height - 25){
+	if(!dragging && shapeSelection.shapes[group][0] && mousePos.xPhysical <= canvas.width - 25 && mousePos.yPhysical <= canvas.height - 25){
 		bufferCtx.globalAlpha = 0.1;
 		bufferCtx.fillStyle = 'blue';
-		shapeCursor(bufferCtx, proj, Shape);
+		shapeCursor(bufferCtx, mousePos, Shape);
 		}
 	bufferCtx.globalAlpha = 1
-	//shapeTransforms(group, shapeProp);
-	//console.log('================================================> shapeDrawer group', group);
 	shapeTransforms(group);
 }
 
@@ -2197,7 +2153,7 @@ function shapeCursor(buffer, projection, template){
 	bufferCtx.lineWidth = 0.5;
 	var shape = new template(); // no need to do this for every frame
 	var sides = shape.side/2;
-	var points = shape.pointsArray.map(function(e){return [(e[0] - mousePos.x) * zoom + projection.x, (e[1] - mousePos.y) * zoom + projection.y]});
+	var points = shape.pointsArray.map(function(point){return [(point[0] - mousePos.x) * zoom + projection.xPhysical, (point[1] - mousePos.y) * zoom + projection.yPhysical]});
 	var numPoints = points.length;
 	buffer.beginPath();
 	buffer.moveTo(points[0][0], points[0][1]);
@@ -2288,114 +2244,70 @@ function checkOverlap(shape, points, length){
 function customShapeDrawer(){
 									/** this section draws the initial shape before any changes and transformations are applied to it **/
 	if(shapes){
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0], mousePos.y + shift[1]], zoom);
-
 		bufferCtx.fillStyle = 'blue';
 		bufferCtx.beginPath();
-		bufferCtx.arc(proj.x, proj.y, 2, 0, 2*Math.PI);
+		//bufferCtx.arc(proj.x, proj.y, 2, 0, 2*Math.PI);
+		bufferCtx.arc(mousePos.xPhysical, mousePos.yPhysical, 2, 0, 2*Math.PI);
 		bufferCtx.fill();
 
-		if(pointsArray[0]){
-			var projPoint = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[0][0] + shift[0], pointsArray[0][1] + shift[1]], zoom);
+		if(shapeSelection.pointsArray[0]){
+			var startPoint = ShapesController.getArrayPoint(0);
 		}
 
-		if(startDraw){bufferCtx.moveTo(projPoint.x, projPoint.y);} // first point of the custom shape is drawn here
+		if(startDraw){bufferCtx.moveTo(startPoint.x, startPoint.y);} // first point of the custom shape is drawn here
 
 		closedPath = false;
-		for(var i = 0; i < pointsArray.length; i++){
+		for(var i = 0; i < shapeSelection.pointsArray.length; i++){
 			if(i != 0){
-				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pointsArray[i][0] + shift[0], pointsArray[i][1] + shift[1]], zoom);
+				var projPoints = ShapesController.getArrayPoint(i);
 				bufferCtx.lineTo(projPoints.x, projPoints.y); // all the other points are drawn here
 			}
 		}
 
 		if(startDraw){ // closes path if startDraw is false: this happens when mousedowns runs whilst closedPath = true
-			bufferCtx.lineTo(proj.x, proj.y);
-			}else if(pointsArray[0]) {
+			bufferCtx.lineTo(mousePos.xPhysical, mousePos.yPhysical);
+			}else if(shapeSelection.pointsArray[0]) {
 				bufferCtx.closePath();
 				customShapeGen();
-				pointsArray = []; // pointArray is emptied out to get it ready for the next shape
+				shapeSelection.pointsArray = []; // pointsArray is emptied out to get it ready for the next shape
 			}
 
 		bufferCtx.stroke();
-		if(pointsArray[0]){
-			if(distance(pointsArray[0][0] - mousePos.x, pointsArray[0][1] - mousePos.y) < closePathRadius/zoom){ // sets closedPath = true if the cursor is hovering over the first set of points and also creates the lightgreen highlight
+		if(shapeSelection.pointsArray[0]){
+			if(distance(shapeSelection.pointsArray[0][0] - mousePos.x, shapeSelection.pointsArray[0][1] - mousePos.y) < closePathRadius/zoom){ // sets closedPath = true if the cursor is hovering over the first set of points and also creates the lightgreen highlight
 				bufferCtx.save();
 				bufferCtx.fillStyle = 'lightgreen';
 				bufferCtx.beginPath();
-				bufferCtx.arc(projPoint.x, projPoint.y, closePathRadius, 0, 2*Math.PI);
+				bufferCtx.arc(startPoint.x, startPoint.y, closePathRadius, 0, 2*Math.PI);
 				bufferCtx.fill();
 				bufferCtx.restore();
 				closedPath = true;
 			}
 		}
-	}										/** this section applies all of the changes and transformations that have been made to the shape **/
-	//shapeTransforms(customShapeArray, 'customShape');
+	}
+	/** this section applies all of the changes and transformations that have been made to the shape **/
 	shapeTransforms('customShape');
 }
 
-
-function curveDrawer(){
-									/** this section draws the initial shape before any changes and transformations are applied to it **/
-	if(line){
-		bufferCtx.strokeStyle = 'red';
-		bufferCtx.fillStyle = 'blue';
-		bufferCtx.beginPath();
-		bufferCtx.arc(mousePos.x, mousePos.y, 2, 0, 2*Math.PI);
-		bufferCtx.fill();
-
-		if(startDraw){bufferCtx.moveTo(pointsArray[0][0], pointsArray[0][1]);} // first point of the custom shape is drawn here
-
-		closedPath = false;
-		for(var i = 0; i < pointsArray.length; i++){
-			if(i != 0){
-				bufferCtx.lineTo(pointsArray[i][0], pointsArray[i][1]); // all the other points are drawn here
-			}
-		}
-
-		if(startDraw){ // closes path if startDraw is false: this happens when mousedowns runs whilst closedPath = true
-			bufferCtx.lineTo(mousePos.x, mousePos.y);
-			}else if(pointsArray[0]) {
-				bufferCtx.closePath();
-				curveGen();
-				pointsArray = []; // pointArray is emptied out to get it ready for the next shape
-			}
-
-		var lastpoint = pointsArray[pointsArray.length - 1];
-
-
-
-		if(clickCount == 2 && pointsArray[0] && distance(mousePos.x - lastpoint[0], mousePos.y - lastpoint[1]) < closePathRadius){
-			//bufferCtx.lineTo(mousePos.x, mousePos.y);
-			//}else if(pointsArray[0]) {
-				//bufferCtx.closePath();
-				if(pointsArray.length > 2){
-					curveGen();
-					pointsArray = [];
-					startDraw = false;
-				}// pointArray is emptied out to get it ready for the next shape
-			}
-
-		bufferCtx.stroke();
-		if(pointsArray[0]){
-			pointStroking = true;
-			if(distance(pointsArray[0][0] - mousePos.x, pointsArray[0][1] - mousePos.y) < closePathRadius){ // sets closedPath = true if the cursor is hovering over the first set of points and also creates the lightgreen highlight
-				bufferCtx.save();
-				bufferCtx.fillStyle = 'lightgreen';
-				bufferCtx.beginPath();
-				bufferCtx.arc(pointsArray[0][0], pointsArray[0][1], closePathRadius, 0, 2*Math.PI);
-				bufferCtx.fill();
-				bufferCtx.restore();
-				closedPath = true;
-				if(pointsArray.length > 1){
-					pointStroking = false;
+/** pointStart() adds points to the pointsArray on mousedown **/
+function pointStart(){
+	if((shapes || line) && !onObject && !select){
+		startDraw = true;
+		if(!closedPath){
+			var lastpoint = shapeSelection.pointsArray[shapeSelection.pointsArray.length - 1];
+			shapeSelection.pointsArray.push([mousePos.x, mousePos.y]);
+			clickCount = 1;
+			if(shapeSelection.pointsArray.length > 1){
+				if(shapeSelection.pointsArray[0] && distance(mousePos.x - lastpoint[0], mousePos.y - lastpoint[1]) < closePathRadius){
+					clickCount += 1;
 				}
 			}
+		}else{
+			shapeSelection.pointsArray.push([shapeSelection.pointsArray[0][0], shapeSelection.pointsArray[0][1]]); // adds the coordinates of the first point to the pointsArray again when clicking on them in order to closePath
+			startDraw = false;
 		}
-	}										/** this section applies all of the changes and transformations that have been made to the shape **/
-	shapeTransforms(curveArray);
+	}
 }
-
 
 function pencilDrawer(){
 
@@ -2598,50 +2510,22 @@ function shapeTransforms(group){
 
 		//if(Array == circleArray){
 		if(group === 'circle'){
-			// var projCenter = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X, Array[i].Y], zoom);
-			// var projEdge = applyZoom([zoomCenter[0], zoomCenter[1]], [Array[i].X + Array[i].vertices[0][0], Array[i].Y + Array[i].vertices[0][1]], zoom);
 			bufferCtx.beginPath();
-			// bufferCtx.lineTo(projEdge.x + zoom*shift[0], projEdge.y + zoom*shift[1]);
-			// bufferCtx.lineTo(projCenter.x + zoom*shift[0], projCenter.y + zoom*shift[1]);
-
 			bufferCtx.lineTo(ShapesController.getVertex(group, i, 0, false)[0], ShapesController.getVertex(group, i, 0, false)[1]);
 			bufferCtx.lineTo(ShapesController.getCentroid(group, i).x , ShapesController.getCentroid(group, i).y);
-
 			bufferCtx.stroke();
 		}
 
 	if(reShape){
 		onReshape = false;
-		//for(var j = 0; j < Array[i].vertices.length; j++){
 		for(var j = 0; j <ShapesController.getProperty(group, i, 'vertices').length; j++){
-				// var x = Array[i].vertices[j][0] + Array[i].X;
-				// var y = Array[i].vertices[j][1] + Array[i].Y;
 				var x = ShapesController.getVertex(group, i, j, false)[0];
 				var y = ShapesController.getVertex(group, i, j, false)[1];
 
-				// var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-				//
-				// var Xpoint = proj.x;
-				// var Ypoint = proj.y;
-
-				//var mouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x + shift[0] , mousePos.y + shift[1]], zoom);
-				var mouse = applyZoom([zoomCenter[0], zoomCenter[1]], [mousePos.x, mousePos.y], zoom, true);
-
-				//if(distance(mouse.x - Xpoint, mouse.y - Ypoint) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
-				if(distance(mouse.x - x, mouse.y - y) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
-				//if(distance(mousePos.x - x, mousePos.y - y) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
+				if(distance(mousePos.xPhysical - x, mousePos.yPhysical - y) < 5){ // detects when the cursor is hovering over a vertex and highlights it in darkblue
 					onReshape = true;
 					bufferCtx.fillStyle = 'darkblue';
 					for(var k = 0; k < ShapesController.getProperty(group, i, 'vertices').length; k++){ //draws the small blue dots for each vertex
-					//for(var k = 0; k < Array[i].vertices.length; k++){ //draws the small blue dots for each vertex
-						// var x = Array[i].vertices[k][0] + Array[i].X + shift[0];
-						// var y = Array[i].vertices[k][1] + Array[i].Y + shift[1];
-
-						// var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-
-						// var Xpoint = proj.x;
-						// var Ypoint = proj.y;
-
 						var Xpoint = ShapesController.getVertex(group, i, k, false)[0];
 						var Ypoint = ShapesController.getVertex(group, i, k, false)[1];
 
@@ -2656,11 +2540,6 @@ function shapeTransforms(group){
 			if(isZooming){
 			 	screenWriter('x ' + Math.round(zoom * 10)/10, [mousePos.xPhysical + 48, mousePos.yPhysical + 5], bufferCtx, '30', 'Arial', 'black');
 			}
-	// if(physics && Array != wallArray){
-	// 	if(Array[i].gravity){
-	// 		Array[i].velocity[1] += gravity/20;
-	// 	}
-	// }
 
 			if(physics && group !== 'wall'){
 				if(ShapesController.getProperty(group, i, 'gravity')){

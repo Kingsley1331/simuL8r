@@ -4,9 +4,9 @@ module.exports = mongoose.model('scenes', {
 	name: String,
 	userID: String,
 	isPublic: Boolean,
-	imageUrl: String, 
+	imageUrl: String,
 	canvas: {
-		width: Number, 
+		width: Number,
 		height: Number
 	},
 	shapes: {
@@ -15,7 +15,6 @@ module.exports = mongoose.model('scenes', {
 		triangle: Array,
 		customShape: Array,
 		pencil: Array,
-		curve: Array,
 		wall: Array
 	}
 });
