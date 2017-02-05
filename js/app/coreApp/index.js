@@ -8,7 +8,7 @@ var customShapeArray = [];
 var pencilArray = [];
 var curveArray = [];
 var wallArray = [];
-var startPencil = false;
+var isPencilDrawing = false;
 var shapes = false;
 var circles = false;
 var triangles = false;
@@ -48,10 +48,11 @@ var shapeSelection = {                    //shapeSelection.shapes[shape][2]
 							pencil: [true, pencilGen, pencilArray, 4],
 							wall: [false, wallGen, wallArray, 5]
 						},
-						pointsArray: []
+						pointsArray: [],
+						pencilPointsArray: []
 					};
 
-var pencilPointsArray = [];
+//var pencilPointsArray = [];
 var superPencilPoints = [];
 var triangle;
 var square;
@@ -198,12 +199,17 @@ var ShapesController = (function(){
 		}
 	}
 
-	function getArrayPoint(index){
-		var pointsArray = shapeSelection.pointsArray[index];
+	function getArrayPoint(index, array){
+		if(array === 'custom'){
+			var pointsArray = shapeSelection.pointsArray[index];
+		}
+		if(array === 'pencil'){
+			var pointsArray = shapeSelection.pencilPointsArray[index];
+		}
 		proj = applyZoom([zoomCenter[0], zoomCenter[1]], pointsArray, zoom, true);
 		return {
-				x:proj.x,
-			  y:proj.y
+				x: proj.x,
+			  y: proj.y
 		 };
 	}
 
@@ -221,25 +227,6 @@ var ShapesController = (function(){
 	};
 
 })();
-
-
-// 	 function getProperty2(group, shapeIndex, property){
-// 		//var shape = shapeSelection.shapes[group][2][shapeIndex];
-// 		if(group !== 'wall'){
-// 			console.log('================> group', group);
-// 			console.log('================> shapeIndex', shapeIndex);
-// 			console.log('================> property', property);
-// 			//console.log('================> colour', shape[property]);
-// 			///console.log('================> original colour2', shapeSelection.shapes['square'][2][0].colour);
-// 		// for(var prop in shape){
-// 		// 	if(prop === 'findBoundingRectMaxX' || prop === 'findBoundingRectMinX' || prop === 'findBoundingRectMaxY' || prop === 'findBoundingRectMinY'){
-// 		// 		console.log(prop + ' ==>', typeof shapeSelection.shapes[group][2][shapeIndex][prop], group);
-// 		// 	}
-// 		// }
-// 		return shapeSelection.shapes[group][2][shapeIndex][property]();
-// 		//return shapeSelection.shapes['square'][2][0].pickColour();
-// 	}
-// };
 
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
@@ -717,10 +704,9 @@ function mouseDown(){
 	//onRotateDial = true;
 	var points = [1,1];
 	var arrays = [[1,2], [2,2], [3,3]];
-	if(pencils){startPencil = true;}
+	if(pencils){isPencilDrawing = true;}
 	}, false)
 }
-
 
 function mouseUp(){
 	canvas.addEventListener('mouseup', function(evt){
@@ -728,7 +714,7 @@ function mouseUp(){
 	onSlider = false;
 	onRotator = false;
 	onRotateDial = false;
-	startPencil = false;
+	isPencilDrawing = false;
 	superPencilPointsMachine();
 	ShapesController.copyShape();
 	ShapesController.drop();
@@ -740,15 +726,16 @@ function mouseUp(){
 
 // this function generates initial set of points (pencilPointsArray) which eventually define the individual strokes and shapes
 function pencilPoints(){
-	if(pencils && startPencil){
-		pencilPointsArray.push([mousePos.x, mousePos.y]);
+	if(pencils && isPencilDrawing){
+	shapeSelection.pencilPointsArray.push([mousePos.x, mousePos.y]);
 	}
 }
 
 //superPencilPointsMachine() uses pencilPointsArray to create an array of strokes and shapes
 function superPencilPointsMachine(){
+	//console.log('===============================================>superPencilPoints', superPencilPoints);
 	if(pencils)
-		superPencilPoints.push(pencilPointsArray);
+		superPencilPoints.push(shapeSelection.pencilPointsArray);
 }
 
 
@@ -1752,7 +1739,7 @@ function Pencil(array){
 Pencil.prototype = new CustomShape();
 
 function pencilGen(){
-	if(onObject == false && pencils && pencilPointsArray[0]){ //the pencilPointsArray[0] condition ensures that no new instance of Pencil can be created when there are no points for it to use
+	if(onObject == false && pencils && shapeSelection.pencilPointsArray[0]){ //the pencilPointsArray[0] condition ensures that no new instance of Pencil can be created when there are no points for it to use
 		var pencil = new Pencil();
 		pencilArray[pencilArray.length] = pencil;
 		pencil.findOuterRadius();
@@ -1762,7 +1749,7 @@ function pencilGen(){
 		pencil.makeBoundingRect();
 		pencil.calculateMass(pencil.vertices, pencil.boundingRectangle.width, pencil.boundingRectangle.height, resolution);
 	}
-	pencilPointsArray = []; // pencilPointsArray is on emptied after its been used
+	shapeSelection.pencilPointsArray = []; // pencilPointsArray is on emptied after its been used
 }
 
 /** centralize() calculates the centroid and sets the centre (X,Y) of the shape equal to it **/
@@ -2251,7 +2238,7 @@ function customShapeDrawer(){
 		bufferCtx.fill();
 
 		if(shapeSelection.pointsArray[0]){
-			var startPoint = ShapesController.getArrayPoint(0);
+			var startPoint = ShapesController.getArrayPoint(0, 'custom');
 		}
 
 		if(startDraw){bufferCtx.moveTo(startPoint.x, startPoint.y);} // first point of the custom shape is drawn here
@@ -2259,7 +2246,7 @@ function customShapeDrawer(){
 		closedPath = false;
 		for(var i = 0; i < shapeSelection.pointsArray.length; i++){
 			if(i != 0){
-				var projPoints = ShapesController.getArrayPoint(i);
+				var projPoints = ShapesController.getArrayPoint(i, 'custom');
 				bufferCtx.lineTo(projPoints.x, projPoints.y); // all the other points are drawn here
 			}
 		}
@@ -2310,38 +2297,15 @@ function pointStart(){
 }
 
 function pencilDrawer(){
-
-	if(pencilPointsArray[0] && pencils && !select){
-
-		var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[0][0] + shift[0], pencilPointsArray[0][1] + shift[1]], zoom);
-
+	if(shapeSelection.pencilPointsArray[0] && pencils && !select){
+		var startPoint = ShapesController.getArrayPoint(0, 'pencil');
 		bufferCtx.beginPath();
-		bufferCtx.moveTo(proj.x, proj.y);
-			for(var j = 0; j < pencilPointsArray.length; j++){
-				var projPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [pencilPointsArray[j][0] + shift[0], pencilPointsArray[j][1] + shift[1]], zoom);
-				bufferCtx.lineTo(projPoints.x, projPoints.y);
-			}
+		bufferCtx.moveTo(startPoint.x, startPoint.y);
+		for(var j = 0; j < shapeSelection.pencilPointsArray.length; j++){
+			var arrayPoint = ShapesController.getArrayPoint(j, 'pencil');
+			bufferCtx.lineTo(arrayPoint.x, arrayPoint.y);
+		}
 		bufferCtx.stroke();
-
-		}
-
-	for(var j = 0; j < pencilArray.length; j++){
-
-	if(pencilPointsArray[0]){
-		bufferCtx.beginPath();
-		var x = pencilArray[j].X + pencilArray[j].vertices[0][0];
-		var y = pencilArray[j].Y + pencilArray[j].vertices[0][1];
-		var projPencilPoint = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-		bufferCtx.moveTo(projPencilPoint.x, projPencilPoint.y);
-
-		for(var k = 0; k < pencilArray[j].vertices.length; k++){
-			if(pencilArray[j].vertices[k])
-			  var x = pencilArray[j].X + pencilArray[j].vertices[0][0];
-			  var y = pencilArray[j].Y + pencilArray[j].vertices[0][1];
-				var projPencilPoints = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
-				bufferCtx.lineTo(projPencilPoints.x, projPencilPoints.y);
-			}
-		}
 	}
 }
 
