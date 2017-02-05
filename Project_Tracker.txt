@@ -84,10 +84,6 @@
 
 		(b) size of scene (in terms of data)
 
-12. Responsive scenes
+12. superPencilPoints arrays
 
-	- Since making scenes responsive, the performance of some and possibly all scenes have suffered, in some cases very severely.
-
-	- This might be due to memory leaks, a function being called too many times or some of the new function being more expensive than they appear.
-
-	- These changes were made in commits ee49f03 and c7c205d on Jan 20 2016
+	- all pencil shapes are stored in an array called superPencilPoints as well as in shapeSelector, this duplication is costly and should not be necessary

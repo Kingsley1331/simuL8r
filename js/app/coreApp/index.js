@@ -117,7 +117,6 @@ var numberOfShapes = 0;
 var currentlyReshaping = null; //there must be a better way to do this
 
 var ShapesController = (function(){
-
 	function getShapeArray(shape){
 		var shapesArray = [];
 		var length = shapeSelection.shapes[shape][2].length;
@@ -135,12 +134,12 @@ var ShapesController = (function(){
 	}
 
 	function getVertex(group, shapeIndex, vertexIndex, bool){
-		if(shapeSelection.shapes[group][2][0] !== undefined /*&& group !== 'wall'*/){
+		if(shapeSelection.shapes[group][2][0] !== undefined){
 			var centroid = [shapeSelection.shapes[group][2][shapeIndex].X, shapeSelection.shapes[group][2][shapeIndex].Y];
-			var vertex = shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex]; //console.log('==============================vertex[3]', vertex, group);
+			var vertex = shapeSelection.shapes[group][2][shapeIndex].vertices[vertexIndex];
 			var x = vertex[0] + centroid[0];
 			var y = vertex[1] + centroid[1];
-			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom, true);
+			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 			if(bool && vertex.length === 4){  // to make it compatible with walls (wall do not have {collision: boolean} in their vertex arrays)
 				return [proj.x, proj.y, vertex[2], {collision: vertex[3].collision}];
 			} else {
@@ -183,8 +182,8 @@ var ShapesController = (function(){
 	function getCentroid(group, shapeIndex){
 		if(shapeSelection.shapes[group][2][0] !== undefined){
 			var centroid = [shapeSelection.shapes[group][2][shapeIndex].X, shapeSelection.shapes[group][2][shapeIndex].Y];
-			var x = centroid[0] + shift[0];
-			var y = centroid[1] + shift[1];
+			var x = centroid[0];
+			var y = centroid[1];
 			proj = applyZoom([zoomCenter[0], zoomCenter[1]], [x, y], zoom);
 			return {
 				  x:proj.x,
@@ -200,13 +199,14 @@ var ShapesController = (function(){
 	}
 
 	function getArrayPoint(index, array){
+		var arrayPoint;
 		if(array === 'custom'){
-			var pointsArray = shapeSelection.pointsArray[index];
+			arrayPoint = shapeSelection.pointsArray[index];
 		}
 		if(array === 'pencil'){
-			var pointsArray = shapeSelection.pencilPointsArray[index];
+			arrayPoint = shapeSelection.pencilPointsArray[index];
 		}
-		proj = applyZoom([zoomCenter[0], zoomCenter[1]], pointsArray, zoom, true);
+		proj = applyZoom([zoomCenter[0], zoomCenter[1]], arrayPoint, zoom);
 		return {
 				x: proj.x,
 			  y: proj.y
@@ -1181,8 +1181,8 @@ ShapesController.animator = function(){
 	}
 	ShapesController.collisionDetector();
 }
-
-function getMousePos(evt, canvas) {       //canvas.addEventListener uses this function to calculate mouse position
+//canvas.addEventListener uses this function to calculate mouse position
+function getMousePos(evt, canvas) {
 	var rect = canvas.getBoundingClientRect();
 
 	if(evt.clientX && evt.clientY){
@@ -1190,15 +1190,10 @@ function getMousePos(evt, canvas) {       //canvas.addEventListener uses this fu
 		var y = evt.clientY - rect.top;
 	}
 
-	// if(isShifting(evt)){
-	// 	var x = mousePos.xPhysical;
-	// 	var y = mousePos.yPhysical;
-	// }
-
 	var shiftedX = x - zoom * shift[0];
 	var shiftedY = y - zoom * shift[1];
 
-	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom, true);
 
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
@@ -2355,7 +2350,7 @@ function zoomer(e){
 
 	var shiftedX = mousePos.xPhysical - zoom * shift[0];
 	var shiftedY = mousePos.yPhysical - zoom * shift[1];
-	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom);
+	var proj = applyZoom([zoomCenter[0], zoomCenter[1]], [shiftedX, shiftedY], 1/zoom, true);
 
 	var zoomedX = proj.x;
 	var zoomedY = proj.y;
@@ -2388,18 +2383,14 @@ function screenWriter(text, position, context, fontSize, fontFamily, colour){
 	context.fillText(text, position[0],position[1]);
 }
 
-function applyZoom(center, point, zoom, bool){ // bool is a temporary parameter
+function applyZoom(center, point, zoom, bool){
 	var Xpoint = point[0];
 	var Ypoint = point[1];
-	if(zoom !== 1 || shift[0] !== 0 || shift[1] !== 0){
-		var x = point[0];
-		var y = point[1];
-		var centerX = center[0];
-		var centerY = center[1];
-		Xpoint = x - (x - centerX) * (1 - zoom);
-		Ypoint = y - (y - centerY) * (1 - zoom);
+	var x;
+	var y;
 
-		if(bool){// this condition and if block is temporary
+	if(zoom !== 1 || shift[0] !== 0 || shift[1] !== 0){
+		if(!bool){
 			x = point[0] + shift[0];
 			y = point[1] + shift[1];
 			var centerX = center[0];
@@ -2407,7 +2398,14 @@ function applyZoom(center, point, zoom, bool){ // bool is a temporary parameter
 			Xpoint = x - (x - centerX) * (1 - zoom);
 			Ypoint = y - (y - centerY) * (1 - zoom);
 		}
-
+		if(bool){
+			x = point[0];
+			y = point[1];
+			var centerX = center[0];
+			var centerY = center[1];
+			Xpoint = x - (x - centerX) * (1 - zoom);
+			Ypoint = y - (y - centerY) * (1 - zoom);
+		}
 	}
 		return {
 				x: Xpoint,
