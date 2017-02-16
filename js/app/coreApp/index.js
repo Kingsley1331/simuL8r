@@ -2135,17 +2135,17 @@ function shapeCursor(buffer, projection, Template){
 	bufferCtx.lineWidth = 0.5;
 	var shape = new Template(); // no need to do this for every frame
 	var sides = shape.side/2;
-	var points = shape.pointsArray.map(function(point){return [(point[0] - mousePos.x) * zoom + projection.xPhysical, (point[1] - mousePos.y) * zoom + projection.yPhysical]});
-	var numPoints = points.length;
+	var cursorPoints = shape.pointsArray.map(function(point){return [(point[0] - mousePos.x) * zoom + projection.xPhysical, (point[1] - mousePos.y) * zoom + projection.yPhysical]});
+	var numPoints = cursorPoints.length;
 	buffer.beginPath();
-	buffer.moveTo(points[0][0], points[0][1]);
+	buffer.moveTo(cursorPoints[0][0], cursorPoints[0][1]);
 	for(var i = 0; i < numPoints; i++){
-		buffer.lineTo(points[i][0], points[i][1]);
+		buffer.lineTo(cursorPoints[i][0], cursorPoints[i][1]);
 	}
 	buffer.closePath();
 		buffer.stroke();
 		buffer.fill();
-		checkOverlap(shape, points, numPoints);
+		checkOverlap(shape, cursorPoints, numPoints);
 }
 //bufferCtx.lineTo(proj.x - 27.5, proj.y - 27.5); shapeTransforms
 
@@ -2160,9 +2160,9 @@ function shapeCursor(buffer, projection, Template){
 //TODO 1: use shape.outerRadius to decide which shape should be checked in detail
 //TODO 2: highlight shapes with shadow when shape cursor overlaps them
 //getVertex(group, shapeIndex, vertexIndex, bool)
-function checkOverlap(shape, points, length){
+function checkOverlap(shape, cursorPoints, length){
 		cursorOverlap = false;
-		for(key in shapeSelection.shapes){
+		for(var key in shapeSelection.shapes){
 			if(key !== 'wall'){
 				if(cursorOverlap){
 					break;
@@ -2172,12 +2172,14 @@ function checkOverlap(shape, points, length){
 					break;
 				}
 				bufferCtx.beginPath();
-				bufferCtx.moveTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[0][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[0][1]);
+				var firstPoint = ShapesController.getVertex(key, i, 0);
+				bufferCtx.moveTo(firstPoint[0], firstPoint[1]);
 				for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){
-						bufferCtx.lineTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0],shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1]);
+						var otherPoints = ShapesController.getVertex(key, i, k);
+						bufferCtx.lineTo(otherPoints[0], otherPoints[1]);
 				}
 				for(var j = 0; j < length; j++) {
-					if(bufferCtx.isPointInPath(points[j][0], points[j][1])) {
+					if(bufferCtx.isPointInPath(cursorPoints[j][0], cursorPoints[j][1])) {
 						cursorOverlap = true;
 						onObject = true;
 						break;
@@ -2191,7 +2193,7 @@ function checkOverlap(shape, points, length){
 	}
 
 	if(!cursorOverlap){
-			for(key in shapeSelection.shapes) {
+			for(var key in shapeSelection.shapes) {
 				if(key !== 'wall'){
 					if(cursorOverlap){
 						break;
@@ -2201,12 +2203,13 @@ function checkOverlap(shape, points, length){
 						break;
 					}
 					bufferCtx.beginPath();
-					bufferCtx.moveTo(points[0][0], points[0][1]);
+					bufferCtx.moveTo(cursorPoints[0][0], cursorPoints[0][1]);
 					for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){
 						for(var n = 0; n < length; n++){
-							bufferCtx.lineTo(points[n][0], points[n][1]);
+							bufferCtx.lineTo(cursorPoints[n][0], cursorPoints[n][1]);
 						}
-						if(bufferCtx.isPointInPath(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1])){
+						var shapePoint = ShapesController.getVertex(key, i, k);
+						if(bufferCtx.isPointInPath(shapePoint[0], shapePoint[1])){
 							cursorOverlap = true;
 							onObject = true;
 							break;
