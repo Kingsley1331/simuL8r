@@ -2131,9 +2131,9 @@ function shapeDrawer(group, Shape){
 	shapeTransforms(group);
 }
 
-function shapeCursor(buffer, projection, template){
+function shapeCursor(buffer, projection, Template){
 	bufferCtx.lineWidth = 0.5;
-	var shape = new template(); // no need to do this for every frame
+	var shape = new Template(); // no need to do this for every frame
 	var sides = shape.side/2;
 	var points = shape.pointsArray.map(function(point){return [(point[0] - mousePos.x) * zoom + projection.xPhysical, (point[1] - mousePos.y) * zoom + projection.yPhysical]});
 	var numPoints = points.length;
@@ -2159,6 +2159,7 @@ function shapeCursor(buffer, projection, template){
 
 //TODO 1: use shape.outerRadius to decide which shape should be checked in detail
 //TODO 2: highlight shapes with shadow when shape cursor overlaps them
+//getVertex(group, shapeIndex, vertexIndex, bool)
 function checkOverlap(shape, points, length){
 		cursorOverlap = false;
 		for(key in shapeSelection.shapes){
@@ -2222,6 +2223,70 @@ function checkOverlap(shape, points, length){
 		canvas.style.cursor = 'not-allowed';
 	}
 }
+
+// function checkOverlap(shape, points, length){
+// 		cursorOverlap = false;
+// 		for(key in shapeSelection.shapes){
+// 			if(key !== 'wall'){
+// 				if(cursorOverlap){
+// 					break;
+// 				}
+// 			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+// 				if(cursorOverlap){
+// 					break;
+// 				}
+// 				bufferCtx.beginPath();
+// 				bufferCtx.moveTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[0][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[0][1]);
+// 				for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){
+// 						bufferCtx.lineTo(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0],shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1]);
+// 				}
+// 				for(var j = 0; j < length; j++) {
+// 					if(bufferCtx.isPointInPath(points[j][0], points[j][1])) {
+// 						cursorOverlap = true;
+// 						onObject = true;
+// 						break;
+// 					} else {
+// 						cursorOverlap = false;
+// 						onObject = false;
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+//
+// 	if(!cursorOverlap){
+// 			for(key in shapeSelection.shapes) {
+// 				if(key !== 'wall'){
+// 					if(cursorOverlap){
+// 						break;
+// 					}
+// 				for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+// 					if(cursorOverlap){
+// 						break;
+// 					}
+// 					bufferCtx.beginPath();
+// 					bufferCtx.moveTo(points[0][0], points[0][1]);
+// 					for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){
+// 						for(var n = 0; n < length; n++){
+// 							bufferCtx.lineTo(points[n][0], points[n][1]);
+// 						}
+// 						if(bufferCtx.isPointInPath(shapeSelection.shapes[key][2][i].X + shapeSelection.shapes[key][2][i].vertices[k][0], shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].vertices[k][1])){
+// 							cursorOverlap = true;
+// 							onObject = true;
+// 							break;
+// 						} else {
+// 							cursorOverlap = false;
+// 							onObject = false;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	if(cursorOverlap){
+// 		canvas.style.cursor = 'not-allowed';
+// 	}
+// }
 
 function customShapeDrawer(){
 									/** this section draws the initial shape before any changes and transformations are applied to it **/

@@ -3,4 +3,5 @@
 #images/bg-images/ *
 node_modules
 js/lib
-
+simuL8r.min.js
+simuL8r.js
