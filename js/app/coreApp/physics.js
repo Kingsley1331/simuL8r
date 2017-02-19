@@ -362,6 +362,7 @@ ShapesController.physTest = function(){
 	}
 }
 
+//setTimeout(function(){alert('physics');}, 2000);
 
 ShapesController.physMove = function(){
 	for(key in shapeSelection.shapes){
@@ -422,7 +423,9 @@ function seperate(shapeA, shapeB) {
 	shapeB.Y -= ABdistanceVector[1]/(ABdistance*massB*factor);
 }
 
-ShapesController.collisionDetector = function(){ console.log('===============> setSeperation', setSeperation); if(setSeperation){alert('setSeperation');}
+
+
+ShapesController.collisionDetector = function(){ console.log('===============> setSeperation2', setSeperation);
 if(physics)
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -496,7 +499,16 @@ if(physics)
 									if(isPointInShape([collidingVertex[0], collidingVertex[1]], shapeSelection.shapes[unit][2][j].vertices, shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y)){
 										shapeSelection.shapes[key][2][i].contactList[0] = shapeSelection.shapes[unit][2][j].id;
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
-										seperate(shapeSelection.shapes[key][2][i], shapeSelection.shapes[unit][2][j]);
+										if(setSeperation){console.log('===============> isSeparating!!');
+											console.count();
+											shapeSelection.shapes[key][2][i].isSeparating = true;
+											shapeSelection.shapes[unit][2][j].isSeparating = true;
+										}
+										if(shapeSelection.shapes[key][2][i].isSeparating){
+											console.log('%cSeperating!! = true', 'font-size:35px; color:blue;');
+											seperate(shapeSelection.shapes[key][2][i], shapeSelection.shapes[unit][2][j]);
+										}
+
 										if(shapeSelection.shapes[key][2][i].vertices[k][3].collision === false){
 										/*****************************************Body A ***************************************************/
 										//finding collision points on A
@@ -868,7 +880,9 @@ if(physics)
 									break;
 								}
 							}
-
+							if(!shapeSelection.shapes[key][2][i].collision){
+								shapeSelection.shapes[key][2][i].isSeparating = false;
+							}
 							//}
 						}
 					}

@@ -113,6 +113,7 @@ var circularArray = [];
 var numberOfShapes = 0;
 var currentlyReshaping = null; //there must be a better way to do this
 var setSeperation = false;
+var frameCounter = 0;
 
 var ShapesController = (function(){
 	function getShapeArray(shape){
@@ -339,7 +340,7 @@ $(document).ready(function(){
 			setTimeout(listStyleCallback, 2500);
 		})
 	})
-})
+});
 
 $(document).ready(function(){
 	$('#bar').hover(function(){
@@ -349,7 +350,14 @@ $(document).ready(function(){
 			setTimeout(listStyleCallback, 2500);
 		})
 	})
-})
+});
+
+// $(document).ready(function(){
+// 	document.getElementById("physics").addEventListener("click", function(){
+// 		alert('physics');
+// 	});
+// });
+
 
 
 function listStyleCallback(){
@@ -643,10 +651,18 @@ window.requestAnimFrame = (function(callback) {
 
 
 function animate(){
+	// if(physics){frameCounter++;}
+	// //console.log('====================== frameCounter', frameCounter);
+	// if(frameCounter > 1){
+	// 	setSeperation = false;
+	// 	frameCounter = 0;
+	// 	//console.log('%csetSeperation = false', 'font-size:35px; color:blue;');
+	// }
 	draw();
 	requestAnimFrame(function() {
-		animate();
+			animate();
 	});
+
 }
 
 
@@ -1178,8 +1194,15 @@ ShapesController.animator = function(){
 		}
 	}
 	ShapesController.collisionDetector();
-	setSeperation = false;
+	if(physics){frameCounter++;}
+	//console.log('====================== frameCounter', frameCounter);
+	if(frameCounter > 1){
+		setSeperation = false;
+		frameCounter = 0;
+		//console.log('%csetSeperation = false', 'font-size:35px; color:blue;');
+	}
 }
+
 //canvas.addEventListener uses this function to calculate mouse position
 function getMousePos(evt, canvas) {
 	var rect = canvas.getBoundingClientRect();
@@ -2540,6 +2563,8 @@ function shapeSelector(id){
 		if(physics === true){
 			physics = false;
 		}else if(physics === false){
+			setSeperation = true
+			console.log('===================================>, setSeperation1', setSeperation);
 			physics = true;
 		}
 	}
