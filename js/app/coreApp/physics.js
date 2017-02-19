@@ -410,7 +410,19 @@ ShapesController.clearPhysMove = function(){
 	}
 }
 
-ShapesController.collisionDetector = function(){
+function seperate(shapeA, shapeB) {
+	var massA = shapeA.mass;
+	var massB = shapeB.mass;
+	var factor = 0.2;
+	var ABdistanceVector = [shapeA.X - shapeB.X,  shapeA.Y - shapeB.Y];
+	var ABdistance = distance(ABdistanceVector[0], ABdistanceVector[1]);
+	shapeA.X += ABdistanceVector[0]/(ABdistance*massA*factor);
+	shapeA.Y += ABdistanceVector[1]/(ABdistance*massA*factor);
+	shapeB.X -= ABdistanceVector[0]/(ABdistance*massB*factor);
+	shapeB.Y -= ABdistanceVector[1]/(ABdistance*massB*factor);
+}
+
+ShapesController.collisionDetector = function(){ console.log('===============> setSeperation', setSeperation); if(setSeperation){alert('setSeperation');}
 if(physics)
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
@@ -484,6 +496,7 @@ if(physics)
 									if(isPointInShape([collidingVertex[0], collidingVertex[1]], shapeSelection.shapes[unit][2][j].vertices, shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y)){
 										shapeSelection.shapes[key][2][i].contactList[0] = shapeSelection.shapes[unit][2][j].id;
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
+										seperate(shapeSelection.shapes[key][2][i], shapeSelection.shapes[unit][2][j]);
 										if(shapeSelection.shapes[key][2][i].vertices[k][3].collision === false){
 										/*****************************************Body A ***************************************************/
 										//finding collision points on A
@@ -783,6 +796,9 @@ if(physics)
 											//shapeSelection.shapes[key][2][i].X
 
 											var reposition = [calculatedCollisionPointX - collidingVertex[0], calculatedCollisionPointY - collidingVertex[1]];
+
+
+
 
 											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
 											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
