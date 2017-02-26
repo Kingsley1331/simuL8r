@@ -49,7 +49,8 @@ var shapeSelection = {                    //shapeSelection.shapes[shape][2]
 							wall: [false, wallGen, wallArray, 5]
 						},
 						pointsArray: [],
-						pencilPointsArray: []
+						pencilPointsArray: [],
+						clusters: []
 					};
 
 //var pencilPointsArray = [];
@@ -1243,6 +1244,8 @@ function CustomShape(){
 	this.isAsleep = false;
 	this.id = 1;
 	this.contactList = [];
+	this.labels = [];
+	this.clusterId = '';
 	this.pointsArray = shapeSelection.pointsArray;
 	this.centroid = [0,0];
 	this.vertices = [];
@@ -1634,6 +1637,9 @@ function Square(){
 	this.radius = 2*this.side/3 - 5;
 	this.stretchRadius = 2*this.side/3;
 	this.copy = true;
+	this.contactList = [];
+	this.labels = [];
+	this.clusterId = '';
 	var j;
 	centralize(this, this.pointsArray, j); // the values in this.pointsArray are used by the centralize function to calculate this.vertices
 }
@@ -1660,6 +1666,9 @@ function Circle(){
 	this.defaultSide = 55/zoom;
 	this.velocity = [0,0];
 	this.pointsArray = [];
+	this.contactList = [];
+	this.labels = [];
+	this.clusterId = '';
 	var points = 50;
 	var radius = 30/zoom;
 	for(var i = 0; i < points; i++){
@@ -1711,6 +1720,9 @@ function Triangle(){
 						[mousePos.x, mousePos.y - 2 * Math.sqrt(3)/6 * this.side],
 						[mousePos.x - this.side/2, mousePos.y + Math.sqrt(3)/6 * this.side]];
 	this.vertices = [];
+	this.contactList = [];
+	this.labels = [];
+	this.clusterId = '';
 	this.radius = this.side/2;
 	this.stretchRadius = this.side/2;
 	this.copy = true;
@@ -1743,6 +1755,9 @@ function Pencil(array){
 	this.centroid = [0, 0];
 	this.vertices = [0, 0];
 	this.velocity = [0, 0];
+	this.contactList = [];
+	this.labels = [];
+	this.clusterId = '';
 	this.copy = true;
 	if(stroking){
 		this.stroking = true;

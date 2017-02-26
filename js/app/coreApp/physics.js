@@ -424,23 +424,15 @@ function seperate(shapeA, shapeB) {
 }
 
 
-
 ShapesController.collisionDetector = function(){ console.log('===============> setSeperation2', setSeperation);
-if(physics)
+var seperatingShapes = [];
+if(physics){
 	for(key in shapeSelection.shapes){
 		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
-			/*var boundingRectWidthA = shapeSelection.shapes[key][2][i].boundingRectangle.width;
-			var boundingRectHeightA = shapeSelection.shapes[key][2][i].boundingRectangle.height;
-			var boundingRectMinXA = shapeSelection.shapes[key][2][i].boundingRectangle.minX;
-			var boundingRectMinYA = shapeSelection.shapes[key][2][i].boundingRectangle.minY;*/
 			shapeSelection.shapes[key][2][i].preCollision = false;
 			//shapeSelection.shapes[key][2][i].collision = false;
 			for(unit in shapeSelection.shapes){
 				for(var j = 0; j < shapeSelection.shapes[unit][2].length; j++){
-					/*var boundingRectWidthB = shapeSelection.shapes[unit][2][j].boundingRectangle.width;
-					var boundingRectHeightB = shapeSelection.shapes[unit][2][j].boundingRectangle.height;
-					var boundingRectMinXB = shapeSelection.shapes[unit][2][j].boundingRectangle.minX;
-					var boundingRectMinYB = shapeSelection.shapes[unit][2][j].boundingRectangle.minY;*/
 					if(!(i === j && key === unit)){
 						if(distance(shapeSelection.shapes[key][2][i].X - shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[key][2][i].Y - shapeSelection.shapes[unit][2][j].Y) < shapeSelection.shapes[key][2][i].setOuterRadius() + shapeSelection.shapes[unit][2][j].setOuterRadius() ||
 							unit == 'wall' && j == 0 && shapeSelection.shapes[key][2][i].X < shapeSelection.shapes[key][2][i].setOuterRadius() ||
@@ -448,64 +440,28 @@ if(physics)
 							unit == 'wall' && j == 2 && shapeSelection.shapes[key][2][i].Y + shapeSelection.shapes[key][2][i].setOuterRadius() > canvas.height ||
 							unit == 'wall' && j == 3 && shapeSelection.shapes[key][2][i].Y < shapeSelection.shapes[key][2][i].setOuterRadius() + 50){
 							shapeSelection.shapes[key][2][i].preCollision = true;
-						/*for(var k = 0; k < 4; k++){
-							if(k === 0){// top left corner
-								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
-									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
-								){
-									shapeSelection.shapes[key][2][i].preCollision = true;
-									break;
-								}
-							}
 
-							if(k === 1){// top right corner
-								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
-									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
-								){
-									shapeSelection.shapes[key][2][i].preCollision = true;
-									break;
-								}
-							}
-
-							if(k === 2){// bottom right corner
-								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
-									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB + boundingRectWidthB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
-								){
-									shapeSelection.shapes[key][2][i].preCollision = true;
-									break;
-								}
-							}
-
-							if(k === 3){// bottom left corner
-								if(shapeSelection.shapes[unit][2][j].X + boundingRectMinXB >= shapeSelection.shapes[key][2][i].X + boundingRectMinXA &&
-									shapeSelection.shapes[unit][2][j].X + boundingRectMinXB <= shapeSelection.shapes[key][2][i].X + boundingRectMinXA + boundingRectWidthA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB >= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA &&
-									shapeSelection.shapes[unit][2][j].Y + boundingRectMinYB + boundingRectHeightB <= shapeSelection.shapes[key][2][i].Y + boundingRectMinYA + boundingRectWidthA
-								){
-									shapeSelection.shapes[key][2][i].preCollision = true;
-									break;
-								}
-							}
-						}
-							if(shapeSelection.shapes[key][2][i].preCollision === true){*/
 								for(var k = 0; k < shapeSelection.shapes[key][2][i].vertices.length; k++){ // check each vertex of shape A to see if it's in shape B
 									var collidingVertex = [shapeSelection.shapes[key][2][i].vertices[k][0] + shapeSelection.shapes[key][2][i].X, shapeSelection.shapes[key][2][i].vertices[k][1] + shapeSelection.shapes[key][2][i].Y];
 									if(isPointInShape([collidingVertex[0], collidingVertex[1]], shapeSelection.shapes[unit][2][j].vertices, shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y)){
-										shapeSelection.shapes[key][2][i].contactList[0] = shapeSelection.shapes[unit][2][j].id;
+
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
-										if(setSeperation){console.log('===============> isSeparating!!');
-											console.count();
+										if(setSeperation){//console.log('===============> isSeparating!!');
+											var contactList = shapeSelection.shapes[key][2][i].contactList;
+											var aID = shapeSelection.shapes[key][2][i].id;
+											var bID = shapeSelection.shapes[unit][2][j].id;
+											if(contactList.indexOf(bID) === -1){
+												//shapeSelection.shapes[key][2][i].contactList[contactList.length] = shapeSelection.shapes[unit][2][j].id;
+												shapeSelection.shapes[key][2][i].contactList.push(bID);
+											}
+											//console.count();
 											shapeSelection.shapes[key][2][i].isSeparating = true;
 											shapeSelection.shapes[unit][2][j].isSeparating = true;
+												seperatingShapes.push(aID);
+												seperatingShapes.push(bID);
 										}
 										if(shapeSelection.shapes[key][2][i].isSeparating){
-											console.log('%cSeperating!! = true', 'font-size:35px; color:blue;');
+											//console.log('%cSeperating!! = true', 'font-size:35px; color:blue;');
 											seperate(shapeSelection.shapes[key][2][i], shapeSelection.shapes[unit][2][j]);
 										}
 
@@ -676,27 +632,6 @@ if(physics)
 											penDepth = maxDepth;
 										}
 
-										//if(unit != 'wall'){
-											/*console.log('############################################################################################################  repulsion', repulsion);
-											console.log('############################################################################################################  repulsion Magnitude', distance(repulsion[0], repulsion[1]));
-											console.log('############################################################################################################  repulsiveFactor', repulsiveFactor);
-											console.log('############################################################################################################  ABdistance', ABdistance);
-											console.log('############################################################################################################  MagColVelocityAB', MagColVelocityAB);
-											console.log('############################################################################################################  penDepth', penDepth);
-											console.log('############################################################################################################  velocity of A', shapeSelection.shapes[key][2][i].velocity);
-											console.log('############################################################################################################  collision_Data.x', collision_Data.collision_Data.x);*/
-										//}
-
-
-										/***************************** Getting the objects to rest on each other ****************************/
-
-										/*if(penDepth <= 0.01 && key != 'wall'){
-											shapeSelection.shapes[key][2][i].velocity[0] = 0; //Ideally relative velocity should be used here instead of absolute velocity
-											shapeSelection.shapes[key][2][i].velocity[1] = 0;
-										}else{
-											shapeSelection.shapes[key][2][i].gravity = true;
-										}*/
-
 										var perpPointX = collisionPointA_x + shapeSelection.shapes[key][2][i].X;
 										var perpPointY = collisionPointA_y + shapeSelection.shapes[key][2][i].Y;
 
@@ -772,101 +707,32 @@ if(physics)
 											onPath = true;
 										}
 
-										//console.log('##########################################################################################edgeDistance', edgeDistance, checkPointDistance, pointOnB);
 										if(onPath == true && checkPointDistance > edgeDistance){
 											//penDepth *= -1;
 										}
 /*********************************************** END -- Replusion Direction Check ***********************************************************************/
 
-
-
-
-										/*if(penDepth <= 0.01 && unit != 'wall'){
-											shapeSelection.shapes[unit][2][j].velocity[0] = 0; // Ideally relative velocity should be used here instead of absolute velocity
-											shapeSelection.shapes[unit][2][j].velocity[1] = 0;
-										}else{
-											shapeSelection.shapes[unit][2][j].gravity = true;
-										}*/
-
-										//(penDepth >= maxDepth * 4) condition is always false and therefore pointless since (penDepth =< maxDepth)
 										if(key != 'wall' && !shapeSelection.shapes[key][2][i].isFixed){ // this condition is probably redundant
-											//if(Math.abs(normalVector_y / normalVector_x) > 1){
-											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){
-												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
-											}*/
-											/*
-											if(penDepth <= 1){
-												shapeSelection.shapes[key][2][i].X += 0;
-											} else {
-												if(penDepth > 1){penDepth = 0.10}
-												shapeSelection.shapes[key][2][i].X += repulsion[0] * penDepth;
-											}
-											if(penDepth > 0.10){penDepth = 0.10}*/
-
-											//shapeSelection.shapes[key][2][i].X -= repulsion[0] * penDepth;
-											//shapeSelection.shapes[key][2][i].Y -= repulsion[1] * penDepth;
-											//shapeSelection.shapes[key][2][i].X
-
 											var reposition = [calculatedCollisionPointX - collidingVertex[0], calculatedCollisionPointY - collidingVertex[1]];
-
-
-
-
 											shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
 											shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
-
 										}
 
 
 										if(unit != 'wall' && !shapeSelection.shapes[unit][2][j].isFixed){
-											//if(Math.abs(normalVector_y / normalVector_x) > 1){
-											/*if(penDepth >= maxDepth * 4 && Math.abs(normalVector_y / normalVector_x) > 1){
-												shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
-											}*/
-											/*
-											 if( penDepth <= 1){
-												shapeSelection.shapes[unit][2][j].X -= 0;
-											} else {
-												 if(penDepth > 1){penDepth = 0.10}
-												 shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
-											}
-
-											if(penDepth > 0.10){penDepth = 0.10}*/
-											//shapeSelection.shapes[unit][2][j].X -= repulsion[0] * penDepth;
-											//shapeSelection.shapes[unit][2][j].Y -= repulsion[1] * penDepth;
-
 											shapeSelection.shapes[unit][2][j].X -= normalVector_x * penDepth;;
 											shapeSelection.shapes[unit][2][j].Y -= normalVector_y * penDepth;;
 
 										}
-
-										/*if(key != 'wall'){ // this condition is probably redundant
-											if(penDepth >= maxDepth * 4){
-												shapeSelection.shapes[key][2][i].X += normalVector_x * penDepth;
-												shapeSelection.shapes[key][2][i].Y += normalVector_y * penDepth;
-											}
-										}
-
-										if(unit != 'wall'){
-											if(penDepth >= maxDepth * 4){
-												shapeSelection.shapes[unit][2][j].X -= normalVector_x * penDepth;
-												shapeSelection.shapes[unit][2][j].Y -= normalVector_y * penDepth;
-											}
-										}*/
-
-										/** repulsiveF is just for blueprint**/
-										//repulsiveF[0] = -repulsion[0] * penDepth;
-										//repulsiveF[1] = -repulsion[1] * penDepth;
 
 										/** repulsiveF is just for blueprint**/
 										repulsiveF[0] = -normalVector_x * penDepth;
 										repulsiveF[1] = -normalVector_y * penDepth;
 
 									}
-								}// 526
+								}
 								}else{
 									shapeSelection.shapes[key][2][i].vertices[k][3] = {collision: false};
-									shapeSelection.shapes[key][2][i].contactList = [];
 									}
 							}
 
@@ -882,6 +748,7 @@ if(physics)
 							}
 							if(!shapeSelection.shapes[key][2][i].collision){
 								shapeSelection.shapes[key][2][i].isSeparating = false;
+								shapeSelection.shapes[key][2][i].contactList = [];
 							}
 							//}
 						}
@@ -891,6 +758,83 @@ if(physics)
 		}
 	}
 }
+seperatingShapes = seperatingShapes.sort(function(a,b){return a - b;});
+seperatingShapes = seperatingShapes.filter(function(ele, index, arr){
+	return !index || ele !== arr[index - 1];
+});
+if(seperatingShapes.length > 0){
+	createCluster(seperatingShapes);
+	}
+}
+
+function getContacts(id){
+		for(var key in shapeSelection.shapes){
+			if(key !== 'wall'){
+				for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+					if(shapeSelection.shapes[key][2][i].id === id){
+						console.log('========================>shape',shapeSelection.shapes[key][2][i].id);
+						console.log('========================>contactList',shapeSelection.shapes[key][2][i].contactList);
+						console.log('/************************************************************/');
+						return shapeSelection.shapes[key][2][i].contactList;
+				}
+			}
+		}
+	}
+}
+
+/*
+	createCluster takes an array of seperating shapes: it check eaxh shaoe to see if it already in a cluster, if it is nothing happens
+	and the next shape is checked. If the shape is does not belong to a cluster create a new cluster and add all of its contact to it.
+	recursively add all the contacts of the contacts to the newly created cluster.
+*/
+
+function createCluster(seperatingShapes){console.count();
+	var count = 0;
+	var clusters = shapeSelection.clusters;
+	var length = seperatingShapes.length;
+	var numOfClusters = clusters.length;console.log('numOfClusters1', numOfClusters);
+	shapes:
+	for(var i = 0; i < length; i++){
+		for(var j = 0; j < numOfClusters; j++){
+			console.log('j', j);
+			var cluster = clusters[j];
+			if(cluster.shapeIds.indexOf(seperatingShapes[i]) !== -1){
+				console.log('seperatingShapes[i]', seperatingShapes[i]);
+				console.log('cluster.shapeIds', cluster.shapeIds);
+				continue shapes;
+			}else{
+				// console.log('seperatingShapes[i]=>', seperatingShapes[i]);
+				// console.log('cluster.shapeIds=>', cluster.shapeIds);
+				console.log('********************************************************************************************************************************************');
+			}
+		}
+
+		var id = count++;
+
+		var contacts = getContacts(seperatingShapes[i]);
+		var shapeIds = [];
+		for(var n = 0, length = contacts.length; n < length; n++){
+			shapeIds.push(contacts[n]);
+		}
+		shapeIds.push(seperatingShapes[i]);
+		shapeSelection.clusters.push({
+	 		 		id: id,
+			 		//shapeIds: [seperatingShapes[i]],
+					shapeIds: shapeIds,
+			 		centroid: []
+	 	 });
+		 numOfClusters++;
+		 console.log('================================>clusters', shapeSelection.clusters)
+		 console.log('================================>seperatingShapes', seperatingShapes);
+		 console.log('================================>contacts', seperatingShapes[i], contacts);
+		 console.log('================================>shapeIds', shapeIds);
+	}
+
+
+
+}
+
+
 
 function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB, shapeB_Offset){
 	/*if(distance(velocity[0], velocity[1]) < 0.01){ //this is to help repulsion when the collision velocity is zero or there is no collision
