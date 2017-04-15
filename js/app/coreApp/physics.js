@@ -423,6 +423,54 @@ function seperate(shapeA, shapeB) {
 	shapeB.Y -= ABdistanceVector[1]/(ABdistance*massB*factor);
 }
 
+function findClusterCentroid(cluster){
+	var length = cluster.cluster.length; //console.log('cluster.cluster', cluster.cluster);
+	var centroidX = 0;
+	var centroidY = 0;
+	for(var i = 0; i < length; i++){
+		var id = cluster.cluster[i];
+		var shape = getShapeFromId(id); console.log('shape', shape);
+		centroidX += shape.X;
+		centroidY += shape.Y;
+	}
+	centroidX = centroidX/length;
+	centroidY = centroidY/length;
+	return {x:centroidX, y:centroidY};
+}
+
+function getShapeFromId(id){//console.log('getShapeFromId');
+	for(var key in shapeSelection.shapes){
+		if(key !== 'wall'){
+			for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+				if(shapeSelection.shapes[key][2][i].id === id){
+					return shapeSelection.shapes[key][2][i];
+				}
+			}
+		}
+	}
+}
+
+
+function seperator(cluster){
+	var centroid = findClusterCentroid(cluster);
+	var length = cluster.cluster.length;
+	for(var i = 0; i < length; i++){
+		var shape = getShapeFromId(cluster.cluster[i]);
+		var shapeToCentroidX = shape.X - centroid.x;
+		var shapeToCentroidY = shape.Y - centroid.y;
+		shape.X += shapeToCentroidX/100;
+		shape.Y += shapeToCentroidY/100;
+	}
+}
+
+function clusterSeperator(clusters){
+	var length = clusters.length;
+	for(var i = 0; i < length; i++){
+		var cluster = clusters[i];
+		seperator(cluster);
+	}
+}
+
 
 ShapesController.collisionDetector = function(){ console.log('===============> setSeperation2', setSeperation);
 var seperatingShapes = [];
@@ -464,8 +512,8 @@ if(physics){
 												seperatingShapes.push(bID);
 										}
 										if(shapeSelection.shapes[key][2][i].isSeparating){
-											//console.log('%cSeperating!! = true', 'font-size:35px; color:blue;');
-											seperate(shapeSelection.shapes[key][2][i], shapeSelection.shapes[unit][2][j]);
+											//seperate(shapeSelection.shapes[key][2][i], shapeSelection.shapes[unit][2][j]);
+											clusterSeperator(shapeSelection.clusters);
 										}
 
 										if(shapeSelection.shapes[key][2][i].vertices[k][3].collision === false){
