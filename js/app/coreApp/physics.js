@@ -763,7 +763,8 @@ seperatingShapes = seperatingShapes.filter(function(ele, index, arr){
 	return !index || ele !== arr[index - 1];
 });
 if(seperatingShapes.length > 0){
-	createCluster(seperatingShapes);
+	//createCluster(seperatingShapes);
+	makeClusters(seperatingShapes);
 	}
 }
 
@@ -782,19 +783,21 @@ function getContacts(id){
 	}
 }
 
+
 /*
-	createCluster takes an array of seperating shapes: it check eaxh shaoe to see if it already in a cluster, if it is nothing happens
-	and the next shape is checked. If the shape is does not belong to a cluster create a new cluster and add all of its contact to it.
-	recursively add all the contacts of the contacts to the newly created cluster.
+	createCluster takes an array of seperating shapes: it check each shape to see if it already in a cluster, if it is; then nothing happens
+	and the next shape is checked. If the shape does not belong to a new cluster is created and add all of its contacts are added to it.
+	Recursively add all the contacts of the contacts to the newly created cluster.
 */
 
+/*
 function createCluster(seperatingShapes){console.count();
 	var count = 0;
 	var clusters = shapeSelection.clusters;
 	var length = seperatingShapes.length;
 	var numOfClusters = clusters.length;console.log('numOfClusters1', numOfClusters);
 	shapes:
-	for(var i = 0; i < length; i++){
+	for(var i = 0; i < length; i++){ //checks each shape to see if its already in a cluster
 		for(var j = 0; j < numOfClusters; j++){
 			console.log('j', j);
 			var cluster = clusters[j];
@@ -834,6 +837,84 @@ function createCluster(seperatingShapes){console.count();
 
 }
 
+/**************************** START NEW ****************************************/
+var cluster = [];
+var clusterId = 0;
+function createCluster(id) {
+		if(cluster.indexOf(id) === -1) { //if id does not already belong to a cluster
+			cluster.push(id);
+		}
+		for(var key in shapeSelection.shapes) {
+			if(key !== 'wall'){
+				for(var i = 0; i < shapeSelection.shapes[key][2].length; i++) {
+					if(shapeSelection.shapes[key][2][i].id === id){
+						var shape = shapeSelection.shapes[key][2][i];
+						for(var j = 0; j < shape.contactList.length; j++) {
+							if(cluster.indexOf(shape.contactList[j]) === -1){
+								var newItem = shape.contactList[j];
+								cluster.push(newItem);
+								createCluster(newItem);
+							}
+						}
+				}
+			}
+		}
+	}
+
+		return cluster;
+}
+
+//console.log(createCluster(1));
+
+
+function makeClusters(seperatingShapes) {
+	var length = seperatingShapes.length;
+	shapes:
+	for(var i = 0; i < length; i++){
+		var shape = seperatingShapes[i];
+		if(isInCluster(shape)){
+			continue shapes;
+		}
+		var clust = createCluster(shape);
+	//  console.log('clust', clust);
+
+		clusterId++;
+		var newCluster = [];
+		for(var j = 0; j < clust.length; j++){
+			newCluster.push(clust[j]);
+		}
+
+		shapeSelection.clusters.push(
+					{
+						id: clusterId,
+						cluster: newCluster,
+						centroid: {x:205, y:205}
+					}
+			);
+			cluster = [];
+	}
+	console.log('*************************************************************************************************clusters', shapeSelection.clusters);
+	return shapeSelection.clusters;
+}
+
+function isInCluster(id) {
+	var check = false;
+	if(shapeSelection.clusters.length > 0) {//console.log('Clusters', clusters);
+	var length = shapeSelection.clusters.length;
+	for(var i = 0; i < length; i++) { //console.log('newCluster', clusters[i].cluster);
+		var newCluster = shapeSelection.clusters[i].cluster;
+		var size = newCluster.length;
+		for(var j = 0; j < size; j++) {
+			if(newCluster[j] === id) {
+				check = true;
+			}
+		}
+	}
+}
+	return check;
+}
+
+/**************************** END NEW *****************************************/
 
 
 function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB, shapeB_Offset){
