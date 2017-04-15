@@ -447,12 +447,15 @@ if(physics){
 
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
 										if(setSeperation){//console.log('===============> isSeparating!!');
-											var contactList = shapeSelection.shapes[key][2][i].contactList;
+											var contactListA = shapeSelection.shapes[key][2][i].contactList;
+											var contactListB = shapeSelection.shapes[unit][2][j].contactList;
 											var aID = shapeSelection.shapes[key][2][i].id;
 											var bID = shapeSelection.shapes[unit][2][j].id;
-											if(contactList.indexOf(bID) === -1){
-												//shapeSelection.shapes[key][2][i].contactList[contactList.length] = shapeSelection.shapes[unit][2][j].id;
+											if(contactListA.indexOf(bID) === -1){
 												shapeSelection.shapes[key][2][i].contactList.push(bID);
+											}
+											if(contactListB.indexOf(aID) === -1){
+												shapeSelection.shapes[unit][2][j].contactList.push(aID);
 											}
 											//console.count();
 											shapeSelection.shapes[key][2][i].isSeparating = true;
@@ -764,6 +767,10 @@ seperatingShapes = seperatingShapes.filter(function(ele, index, arr){
 });
 if(seperatingShapes.length > 0){
 	//createCluster(seperatingShapes);
+	console.log('====================================================================> seperatingShapes', seperatingShapes);
+	for(var i = 0; i < seperatingShapes.length; i++){
+		getContacts(seperatingShapes[i]);
+	}
 	makeClusters(seperatingShapes);
 	}
 }
@@ -773,9 +780,7 @@ function getContacts(id){
 			if(key !== 'wall'){
 				for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
 					if(shapeSelection.shapes[key][2][i].id === id){
-						console.log('========================>shape',shapeSelection.shapes[key][2][i].id);
-						console.log('========================>contactList',shapeSelection.shapes[key][2][i].contactList);
-						console.log('/************************************************************/');
+						console.log('========================>shape',shapeSelection.shapes[key][2][i].id, shapeSelection.shapes[key][2][i].contactList);
 						return shapeSelection.shapes[key][2][i].contactList;
 				}
 			}

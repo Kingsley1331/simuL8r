@@ -1,0 +1,155 @@
+<html>
+  <head>
+    <script>
+
+      var cluster = [];
+      var clusters = [];
+      var clusterId = 0;
+
+      var shapes = [
+              //cluster 1
+              {
+                id: 1,
+                contactList: [2, 4, 6, 8]
+              },
+              {
+                id: 2,
+                contactList: [1]
+              },
+              {
+                id: 4,
+                contactList: [5, 1]
+              },
+              {
+                id: 5,
+                contactList: [4]
+              },
+              {
+                id: 6,
+                contactList: [1, 7]
+              },
+              {
+                id: 7,
+                contactList: [6]
+              },
+              {
+                id: 8,
+                contactList: [1, 9]
+              },
+              {
+                id: 9,
+                contactList: [8]
+              },
+              //cluster 2
+              {
+                id: 3,
+                contactList: [10]
+              },
+              {
+                id: 10,
+                contactList: [3, 11]
+              },
+              {
+                id: 11,
+                contactList: [10]
+              },
+              //cluster 3
+              {
+                id: 21,
+                contactList: [22, 25]
+              },
+              {
+                id: 22,
+                contactList: [21, 23]
+              },
+              {
+                id: 23,
+                contactList: [22, 24]
+              },
+              {
+                id: 24,
+                contactList: [23, 25]
+              },
+              {
+                id: 25,
+                contactList: [24, 21]
+              }
+          ];
+
+
+      function createCluster(id) {
+          if(cluster.indexOf(id) === -1){
+            cluster.push(id);
+          }
+          var length = shapes.length;
+          for(var i = 0; i < length; i++) {
+            if(shapes[i].id === id){
+              for(var j = 0; j < shapes[i].contactList.length; j++) {
+                if(cluster.indexOf(shapes[i].contactList[j]) === -1){
+                  var newItem = shapes[i].contactList[j];
+                  cluster.push(newItem);
+                  createCluster(newItem);
+                }
+              }
+            }
+          }
+          return cluster;
+      }
+
+      //console.log(createCluster(1));
+
+
+      function makeClusters(seperatingShapes) {
+        var length = seperatingShapes.length;
+        shapes:
+        for(var i = 0; i < length; i++){
+          var shape = seperatingShapes[i];
+          if(isInCluster(shape)){
+            continue shapes;
+          }
+          var clust = createCluster(shape);
+        //  console.log('clust', clust);
+
+          clusterId++;
+          var newCluster = [];
+          for(var j = 0; j < clust.length; j++){
+            newCluster.push(clust[j]);
+          }
+
+          clusters.push(
+                {
+                  id: clusterId,
+                  cluster: newCluster,
+                  centroid: {x:205, y:205}
+                }
+            );
+            cluster = [];
+        }
+        console.log('clusters', clusters);
+        return clusters;
+      }
+
+      function isInCluster(id) {
+        var check = false;
+        if(clusters.length > 0) {//console.log('Clusters', clusters);
+        var length = clusters.length;
+        for(var i = 0; i < length; i++) { //console.log('newCluster', clusters[i].cluster);
+          var newCluster = clusters[i].cluster;
+          var size = newCluster.length;
+          for(var j = 0; j < size; j++) {
+            if(newCluster[j] === id) {
+              check = true;
+            }
+          }
+        }
+      }
+        return check;
+      }
+
+      //console.log(makeClusters([10, 1, 2]));
+      makeClusters([10, 1, 2, 25]);
+      //isInCluster(10);
+
+    </script>
+  </head>
+</html>
