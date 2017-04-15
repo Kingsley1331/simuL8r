@@ -228,6 +228,29 @@ var ShapesController = (function(){
 
 })();
 
+
+
+function getMaxOfArray(numArray) {
+	return Math.max.apply(null, numArray);
+}
+
+function updateNumberOfShapes(num){
+		var shapeCount = [];
+		var max;
+		for(var key in shapeSelection.shapes){
+			if(key !== 'wall'){
+				for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+					var id = shapeSelection.shapes[key][2][i].id;
+					shapeCount.push(id);
+			}
+		}
+	}
+	var max = getMaxOfArray(shapeCount);
+	numberOfShapes = max >= num ? max + 1: num;
+	console.log('numberOfShapes', numberOfShapes);
+	return numberOfShapes;
+}
+
 function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
 	var vars = query.split('&');
@@ -1145,6 +1168,7 @@ function offReshaper(){
 				//}
 					newShape.X = mousePos.x + 5; //places the new copy near where the cursor is
 					newShape.Y = mousePos.y + 5;
+					newShape.id = updateNumberOfShapes(numberOfShapes);
 					if(!copying){shapeSelection.shapes[key][2].push(newShape);}
 			}
 		}
@@ -1571,8 +1595,7 @@ function customShapeGen(){
 	customShapeArray[customShapeArray.length] = customShape;
 	customShape.findOuterRadius();
 	customShape.setVertexCollision(customShape.vertices);
-	numberOfShapes++;
-	customShape.id = numberOfShapes;
+	customShape.id = updateNumberOfShapes(numberOfShapes);
 	customShape.makeBoundingRect();
 	customShape.calculateMass(customShape.vertices, customShape.boundingRectangle.width, customShape.boundingRectangle.height, resolution);
 }
@@ -1614,8 +1637,7 @@ function Curves(){
 function curveGen(){
 	var curve = new Curves();
 	curveArray[curveArray.length] = curve;
-	numberOfShapes++;
-	curve.id = numberOfShapes;
+	curve.id = updateNumberOfShapes(numberOfShapes);
 }
 
 Curves.prototype = new CustomShape();
@@ -1652,8 +1674,7 @@ function squareGen(){
 		squareArray[squareArray.length] = square;
 		square.findOuterRadius();
 		square.setVertexCollision(square.vertices);
-		numberOfShapes++;
-		square.id = numberOfShapes;
+		square.id = updateNumberOfShapes(numberOfShapes);
 		square.makeBoundingRect();
 		square.calculateMass(square.vertices, square.boundingRectangle.width, square.boundingRectangle.height, resolution);
 	}
@@ -1701,8 +1722,7 @@ function circleGen(){
 		circleArray[circleArray.length] = circle;
 		circle.findOuterRadius();
 		circle.setVertexCollision(circle.vertices);
-		numberOfShapes++;
-		circle.id = numberOfShapes;
+		circle.id = updateNumberOfShapes(numberOfShapes);
 		circle.makeBoundingRect();
 		circle.calculateMass(circle.vertices, circle.boundingRectangle.width, circle.boundingRectangle.height, resolution);
 	}
@@ -1738,8 +1758,7 @@ function triangleGen(){
 		triangleArray[triangleArray.length] = triangle;
 		triangle.findOuterRadius();
 		triangle.setVertexCollision(triangle.vertices);
-		numberOfShapes++;
-		triangle.id = numberOfShapes;
+		triangle.id = updateNumberOfShapes(numberOfShapes);
 		triangle.makeBoundingRect();
 		triangle.calculateMass(triangle.vertices, triangle.boundingRectangle.width, triangle.boundingRectangle.height, resolution);
 	}
@@ -1776,8 +1795,7 @@ function pencilGen(){
 		pencilArray[pencilArray.length] = pencil;
 		pencil.findOuterRadius();
 		pencil.setVertexCollision(pencil.vertices);
-		numberOfShapes++;
-		pencil.id = numberOfShapes;
+		pencil.id = updateNumberOfShapes(numberOfShapes);
 		pencil.makeBoundingRect();
 		pencil.calculateMass(pencil.vertices, pencil.boundingRectangle.width, pencil.boundingRectangle.height, resolution);
 	}

@@ -867,7 +867,6 @@ function isInCluster(id) {
 	return check;
 }
 
-
 function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB, shapeB_Offset){
 	/*if(distance(velocity[0], velocity[1]) < 0.01){ //this is to help repulsion when the collision velocity is zero or there is no collision
 		velocity[0] = (collidingVertex[0] - shapeA_Offset[0])/10;
