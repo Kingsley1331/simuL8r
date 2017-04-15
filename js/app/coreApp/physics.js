@@ -795,54 +795,6 @@ function getContacts(id){
 	Recursively add all the contacts of the contacts to the newly created cluster.
 */
 
-/*
-function createCluster(seperatingShapes){console.count();
-	var count = 0;
-	var clusters = shapeSelection.clusters;
-	var length = seperatingShapes.length;
-	var numOfClusters = clusters.length;console.log('numOfClusters1', numOfClusters);
-	shapes:
-	for(var i = 0; i < length; i++){ //checks each shape to see if its already in a cluster
-		for(var j = 0; j < numOfClusters; j++){
-			console.log('j', j);
-			var cluster = clusters[j];
-			if(cluster.shapeIds.indexOf(seperatingShapes[i]) !== -1){
-				console.log('seperatingShapes[i]', seperatingShapes[i]);
-				console.log('cluster.shapeIds', cluster.shapeIds);
-				continue shapes;
-			}else{
-				// console.log('seperatingShapes[i]=>', seperatingShapes[i]);
-				// console.log('cluster.shapeIds=>', cluster.shapeIds);
-				console.log('********************************************************************************************************************************************');
-			}
-		}
-
-		var id = count++;
-
-		var contacts = getContacts(seperatingShapes[i]);
-		var shapeIds = [];
-		for(var n = 0, length = contacts.length; n < length; n++){
-			shapeIds.push(contacts[n]);
-		}
-		shapeIds.push(seperatingShapes[i]);
-		shapeSelection.clusters.push({
-	 		 		id: id,
-			 		//shapeIds: [seperatingShapes[i]],
-					shapeIds: shapeIds,
-			 		centroid: []
-	 	 });
-		 numOfClusters++;
-		 console.log('================================>clusters', shapeSelection.clusters)
-		 console.log('================================>seperatingShapes', seperatingShapes);
-		 console.log('================================>contacts', seperatingShapes[i], contacts);
-		 console.log('================================>shapeIds', shapeIds);
-	}
-
-
-
-}
-
-/**************************** START NEW ****************************************/
 var cluster = [];
 var clusterId = 0;
 function createCluster(id) {
@@ -865,12 +817,8 @@ function createCluster(id) {
 			}
 		}
 	}
-
 		return cluster;
 }
-
-//console.log(createCluster(1));
-
 
 function makeClusters(seperatingShapes) {
 	var length = seperatingShapes.length;
@@ -918,8 +866,6 @@ function isInCluster(id) {
 }
 	return check;
 }
-
-/**************************** END NEW *****************************************/
 
 
 function collisionData(collidingVertex, velocity, shapeA, shapeA_Offset, shapeB, shapeB_Offset){
