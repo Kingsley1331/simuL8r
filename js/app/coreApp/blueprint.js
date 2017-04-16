@@ -16,11 +16,11 @@ var shapeB = [];
 var reset = false;
 var selectAll = false;
 var showBlueprint = {
-		on: false, 
-		all: false, 
-		physics: true, 
-		collidingSide: false, 
-		boundingRect: false, 
+		on: false,
+		all: false,
+		physics: true,
+		collidingSide: false,
+		boundingRect: false,
 		preCollision: false,
 		collisionPoint: false,
 		collisionShadow: false,
@@ -39,7 +39,7 @@ var showBlueprint = {
 function collisionShadow(){
 	if(showBlueprint.collisionShadow && showBlueprint.on){
 		if(collidingShapes[0][0]){
-		bufferCtx.save();										
+		bufferCtx.save();
 		bufferCtx.strokeStyle = 'black';
 		bufferCtx.lineWidth = 0.3;
 		bufferCtx.globalAlpha = 0.03;
@@ -72,7 +72,7 @@ function checkbox(box){
 		box.checked = false;
 		return false;
 	}
-	
+
 	if(box.checked){
 		return true;
 	}else if(!box.checked){
@@ -92,19 +92,19 @@ function displayData(){
 	var preCollision = document.getElementById("preCollision");
 	var centroid = document.getElementById("centroid");
 	var shadowCentroid = document.getElementById("shadowCentroid");
-	var frameRate = document.getElementById("frameRate");	
+	var frameRate = document.getElementById("frameRate");
 	if(checkbox(normal)){
 		showBlueprint.arrow.normal = true;
 	}else{
 		showBlueprint.arrow.normal = false;
 	}
-	
+
 	if(checkbox(repulsionA)){
 		showBlueprint.arrow.repulsionA = true;
 	}else{
 		showBlueprint.arrow.repulsionA = false;
 	}
-	
+
 	if(checkbox(repulsionB)){
 		showBlueprint.arrow.repulsionB = true;
 	}else{
@@ -115,56 +115,56 @@ function displayData(){
 	}else{
 		showBlueprint.arrow.relativeCollisionPointVelocity = false;
 	}
-	
+
 	if(checkbox(collisionPoint)){
 		showBlueprint.collisionPoint = true;
 	}else{
 		showBlueprint.collisionPoint = false;
 	}
-	
+
 	if(checkbox(collidingSide)){
 		showBlueprint.collidingSide = true;
 	}else{
 		showBlueprint.collidingSide = false;
 	}
-	
+
 	if(checkbox(collisionShadow)){
 		showBlueprint.collisionShadow = true;
 	}else{
 		showBlueprint.collisionShadow = false;
 	}
-	
+
 	if(checkbox(boundingRect)){
 		showBlueprint.boundingRect = true;
 	}else{
 		showBlueprint.boundingRect = false;
 	}
-	
+
 	if(checkbox(preCollision)){
 		showBlueprint.preCollision = true;
 	}else{
 		showBlueprint.preCollision = false;
 	}
-	
+
 	if(checkbox(centroid)){
 		showBlueprint.centroid = true;
 	}else{
 		showBlueprint.centroid = false;
 	}
-	
+
 	if(checkbox(shadowCentroid)){
 		showBlueprint.shadowCentroid = true;
 	}else{
 		showBlueprint.shadowCentroid = false;
 	}
-	
+
 	if(checkbox(frameRate)){
 		showBlueprint.frameRate = true;
 		$('#fps').css({display: 'block'});
 	}else{
 		showBlueprint.frameRate = false;
 		$('#fps').css({display: 'none'});
-	}	
+	}
 }
 
 function arrow(firstPoint, secondPoint, type){
@@ -172,12 +172,12 @@ function arrow(firstPoint, secondPoint, type){
 		var firstPointRef = [firstPoint[0], firstPoint[1]];
 		var secondPointRef = [firstPoint[0], firstPoint[1] - 1];
 		var referenceVector = [secondPointRef[0] - firstPointRef[0], secondPointRef[1] - firstPointRef[1]];
-		
+
 		var arrowVector = [secondPoint[0] - firstPoint[0], secondPoint[1] - firstPoint[1]];
 		var arrowVectorMag = distance([firstPoint[0] - secondPoint[0]], [firstPoint[1] - secondPoint[1]]);
-		
+
 		secondPointRef = [firstPoint[0], firstPoint[1] - arrowVectorMag];
-		
+
 		var arrowAngle = calcAngle(referenceVector[0], referenceVector[1], arrowVector[0], arrowVector[1]);
 
 		if(showBlueprint.on){
@@ -197,7 +197,7 @@ function arrow(firstPoint, secondPoint, type){
 			}else{
 				bufferCtx.strokeStyle = 'black';
 			}
-			
+
 			bufferCtx.lineWidth = 1;
 			bufferCtx.beginPath();
 			bufferCtx.moveTo(firstPoint[0], firstPoint[1]);
@@ -225,13 +225,18 @@ function arrow(firstPoint, secondPoint, type){
 		}
 	}
 
+function dotMaker(position, radius, colour){
+	bufferCtx.beginPath();
+	bufferCtx.arc(position.x, position.y, radius, 0, 2*Math.PI);
+	bufferCtx.fill();
+}
 
 var obj = {a:6, b:3, c:5}; //Temporary
 var arr = [1, 2, 3]; //Temporary
 
 function blueprint(array, i){
 	//if(physics){
-	
+
 	if(showBlueprint.on && showBlueprint.collidingSide){
 			bufferCtx.save();
 			bufferCtx.strokeStyle = 'red';
@@ -247,16 +252,16 @@ function blueprint(array, i){
 		// Define shapeA's collision outline
 		for(var s = 0; s < shapeA.length; s++){
 			collidingShapes[0][s] = [];
-			collidingShapes[0][s][0] = shapeACenter[0] + shapeA[s][0]; 
-			collidingShapes[0][s][1] = shapeACenter[1] + shapeA[s][1]; 
+			collidingShapes[0][s][0] = shapeACenter[0] + shapeA[s][0];
+			collidingShapes[0][s][1] = shapeACenter[1] + shapeA[s][1];
 		}
 
 		// Define shapeB's collision outline
 		collidingShapes[1] = [];
 		for(var s = 0; s < shapeB.length; s++){
 			collidingShapes[1][s] = [];
-			collidingShapes[1][s][0] = shapeBCenter[0] + shapeB[s][0]; 
-			collidingShapes[1][s][1] = shapeBCenter[1] + shapeB[s][1]; 
+			collidingShapes[1][s][0] = shapeBCenter[0] + shapeB[s][0];
+			collidingShapes[1][s][1] = shapeBCenter[1] + shapeB[s][1];
 		}
 
 							/** The Shadow Centroid **/
@@ -279,13 +284,13 @@ function blueprint(array, i){
 			bufferCtx.restore();
 		}
 				//}
-	
+
 	arrow([calculatedCollisionPointX, calculatedCollisionPointY], [calculatedCollisionPointX + normalVector_x * 20, calculatedCollisionPointY + normalVector_y * 20], 'normal');// normal vector
 	arrow([shapeACenter[0], shapeACenter[1]], [shapeACenter[0] - repulsiveF[0] * 200, shapeACenter[1] - repulsiveF[1] * 200], 'repulsionA'); // repulsion vector Shape A
 	arrow([shapeBCenter[0], shapeBCenter[1]], [shapeBCenter[0] + repulsiveF[0] * 200, shapeBCenter[1] + repulsiveF[1] * 200], 'repulsionB'); // repulsion vector Shape B
 	arrow([calculatedCollisionPointX, calculatedCollisionPointY], [calculatedCollisionPointX + 20 * colVelocity[0], calculatedCollisionPointY + 20 * colVelocity[1]], 'relativeCollisionPointVelocity'); // collision velocity vector
 	collisionShadow();
-	
+
 	if(showBlueprint.collisionPoint && showBlueprint.on){// Draw collision point
 						/** Outer Circle **/
 		bufferCtx.save();
@@ -300,14 +305,14 @@ function blueprint(array, i){
 		bufferCtx.fill();
 		bufferCtx.restore();
 	}
-	
 
-						
+
+
 	if(showBlueprint.on){
 		bufferCtx.fillStyle = '#505050';
 		bufferCtx.font = "13px sans-serif";
 		bufferCtx.fillText("(" + mousePos.x + ", " + mousePos.y + ")", mousePos.x, mousePos.y - 30);
-		
+
 		for(var i = 0; i < array.length; i++){
 			if(showBlueprint.centroid){
 								/** The Centroid **/
@@ -331,11 +336,11 @@ function blueprint(array, i){
 			bufferCtx.beginPath();
 			bufferCtx.arc(array[i].X, array[i].Y, 4, 0, 2*Math.PI);
 			bufferCtx.fill();
-			
+
 			bufferCtx.beginPath();
 			bufferCtx.arc(array[i].X, array[i].Y, array[i].radius, 0, 2*Math.PI);
 			bufferCtx.stroke();
-			
+
 			bufferCtx.strokeStyle = 'red';
 			bufferCtx.beginPath();
 			bufferCtx.arc(array[i].X, array[i].Y, array[i].stretchRadius, 0, 2*Math.PI);
@@ -360,15 +365,15 @@ function blueprint(array, i){
 					bufferCtx.strokeStyle = 'black';
 					var collisionPoint_x = array[i].X + array[i].collisionPoint.x;
 					var collisionPoint_y = array[i].Y + array[i].collisionPoint.y;
-					
+
 					array[i].lineColour = 'blue';
 					array[i].lineWidth = 4;
-					
+
 					bufferCtx.beginPath();
 					bufferCtx.moveTo(collisionPoint_x, collisionPoint_y);
 					bufferCtx.lineTo(collisionPoint_x + 100 * array[i].collisionPoint.velocity[0], collisionPoint_y + 100 * array[i].collisionPoint.velocity[1]);
 					bufferCtx.stroke();
-					
+
 					bufferCtx.beginPath();
 					bufferCtx.arc(collisionPoint_x, collisionPoint_y, 3, 0, 2*Math.PI);
 					bufferCtx.fill();
@@ -378,7 +383,7 @@ function blueprint(array, i){
 					array[i].lineWidth = 0.7;
 					bufferCtx.restore();
 				}
-				
+
 			}
 			if(showBlueprint.boundingRect){
 				bufferCtx.save();

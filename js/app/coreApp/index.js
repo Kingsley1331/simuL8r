@@ -1846,7 +1846,7 @@ function draw(){
 	blueprint(pencilArray, i);
 	blueprint(curveArray, i);
 	blueprint(wallArray, i);
-
+	showClusterCentroid(shapeSelection.clusters);
 	context.drawImage(bufferCanvas, 0, 0, canvas.width, canvas.height);
 
 }

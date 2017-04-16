@@ -427,15 +427,18 @@ function findClusterCentroid(cluster){
 	var length = cluster.cluster.length; //console.log('cluster.cluster', cluster.cluster);
 	var centroidX = 0;
 	var centroidY = 0;
+	var centroid = {};
 	for(var i = 0; i < length; i++){
 		var id = cluster.cluster[i];
-		var shape = getShapeFromId(id); console.log('shape', shape);
+		var shape = getShapeFromId(id);
 		centroidX += shape.X;
 		centroidY += shape.Y;
 	}
 	centroidX = centroidX/length;
 	centroidY = centroidY/length;
-	return {x:centroidX, y:centroidY};
+	centroid = {x:centroidX, y:centroidY};
+	cluster.centroid = centroid;
+	return centroid;
 }
 
 function getShapeFromId(id){//console.log('getShapeFromId');
@@ -472,7 +475,16 @@ function clusterSeperator(clusters){
 }
 
 
-ShapesController.collisionDetector = function(){ console.log('===============> setSeperation2', setSeperation);
+function showClusterCentroid(clusters){
+	var length = clusters.length;
+	for(var i = 0; i < length; i++){
+		var x = clusters[i].centroid.x;
+		var y = clusters[i].centroid.y;
+		dotMaker({x:x, y:y}, 10);
+	}
+}
+
+ShapesController.collisionDetector = function(){ //console.log('===============> setSeperation2', setSeperation);
 var seperatingShapes = [];
 if(physics){
 	for(key in shapeSelection.shapes){
@@ -889,7 +901,7 @@ function makeClusters(seperatingShapes) {
 					{
 						id: clusterId,
 						cluster: newCluster,
-						centroid: {x:205, y:205}
+						centroid: {}
 					}
 			);
 			cluster = [];
