@@ -459,10 +459,13 @@ function seperator(cluster){
 	var length = cluster.cluster.length;
 	for(var i = 0; i < length; i++){
 		var shape = getShapeFromId(cluster.cluster[i]);
-		var shapeToCentroidX = shape.X - centroid.x;
-		var shapeToCentroidY = shape.Y - centroid.y;
-		shape.X += shapeToCentroidX/100;
-		shape.Y += shapeToCentroidY/100;
+		//if(shape.isSeparating){
+		if(shape.contactList.length){
+			var shapeToCentroidX = shape.X - centroid.x;
+			var shapeToCentroidY = shape.Y - centroid.y;
+			shape.X += shapeToCentroidX/100;
+			shape.Y += shapeToCentroidY/100;
+		}
 	}
 }
 
@@ -484,11 +487,11 @@ function showClusterCentroid(clusters){
 	}
 }
 
-ShapesController.collisionDetector = function(){ //console.log('===============> setSeperation2', setSeperation);
+ShapesController.collisionDetector = function(){ //console.log('===============> seperatingShapes', seperatingShapes);
 var seperatingShapes = [];
 if(physics){
 	for(key in shapeSelection.shapes){
-		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){
+		for(var i = 0; i < shapeSelection.shapes[key][2].length; i++){;
 			shapeSelection.shapes[key][2][i].preCollision = false;
 			//shapeSelection.shapes[key][2][i].collision = false;
 			for(unit in shapeSelection.shapes){
@@ -506,7 +509,8 @@ if(physics){
 									if(isPointInShape([collidingVertex[0], collidingVertex[1]], shapeSelection.shapes[unit][2][j].vertices, shapeSelection.shapes[unit][2][j].X, shapeSelection.shapes[unit][2][j].Y)){
 
 										//shapeSelection.shapes[unit][2][j].contactList[0] = shapeSelection.shapes[key][2][i].id;
-										if(setSeperation){//console.log('===============> isSeparating!!');
+										//if(setSeperation){//console.log('===============> isSeparating!!');
+										if(true){
 											var contactListA = shapeSelection.shapes[key][2][i].contactList;
 											var contactListB = shapeSelection.shapes[unit][2][j].contactList;
 											var aID = shapeSelection.shapes[key][2][i].id;
@@ -811,6 +815,13 @@ if(physics){
 							}
 							if(!shapeSelection.shapes[key][2][i].collision){
 								shapeSelection.shapes[key][2][i].isSeparating = false;
+								// var shapeId = shapeSelection.shapes[key][2][i].id;
+								var index = seperatingShapes.indexOf(shapeSelection.shapes[key][2][i].id);
+								seperatingShapes = seperatingShapes.splice(index, 1);
+								// removeFromAllContacts(shapeId, shapeSelection.shapes[key][2][i].contactList);
+								// if(shapeSelection.shapes[key][2][i].contactList.length > 0){
+								// 	removeIdFromClusters(shapeId);
+								// }
 								shapeSelection.shapes[key][2][i].contactList = [];
 							}
 							//}
@@ -834,6 +845,29 @@ if(seperatingShapes.length > 0){
 	makeClusters(seperatingShapes);
 	}
 }
+// function removeFromContact(id, contactId){
+// 	var shape = getShapeFromId(contactId);
+// 	var index = shape.contactList.indexOf(id);
+// 	shape.contactList = shape.contactList.splice(index, 1);
+// }
+//
+// function removeFromAllContacts(id, contactList){
+// 	var length = contactList.length;
+// 	for(var i = 0; i < length; i++){
+// 		removeFromContact(id, contactList[i]);
+// 	}
+// }
+//
+// function removeIdFromClusters(id){
+// 	var length = shapeSelection.clusters.length;
+// 	for(var i = 0; i < length; i++){
+// 		var shapes = shapeSelection.clusters[i].cluster;
+// 		var index = shapes.indexOf(id);
+// 		if(index !== -1){
+// 			shapes.contactList = shapes.splice(index, 1);
+// 		}
+// 	}
+// }
 
 function getContacts(id){
 		for(var key in shapeSelection.shapes){

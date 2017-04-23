@@ -675,13 +675,6 @@ window.requestAnimFrame = (function(callback) {
 
 
 function animate(){
-	// if(physics){frameCounter++;}
-	// //console.log('====================== frameCounter', frameCounter);
-	// if(frameCounter > 1){
-	// 	setSeperation = false;
-	// 	frameCounter = 0;
-	// 	//console.log('%csetSeperation = false', 'font-size:35px; color:blue;');
-	// }
 	draw();
 	requestAnimFrame(function() {
 			animate();
@@ -1220,7 +1213,6 @@ ShapesController.animator = function(){
 	}
 	ShapesController.collisionDetector();
 	if(physics){frameCounter++;}
-	//console.log('====================== frameCounter', frameCounter);
 	if(frameCounter > 1){
 		setSeperation = false;
 		frameCounter = 0;
