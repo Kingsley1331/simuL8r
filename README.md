@@ -18,7 +18,7 @@ Eventually users should be able to the following:
 - create systems of particles capable of demonstrating thermodynamic concepts such as entropy
  
 
-## Installation (for developers)
+## Installation
 
 To run this app on your local machine follow the steps below
 
